@@ -2,6 +2,7 @@ import Order from './component/order.jsx';
 import Invoice from './component/invoice.jsx';
 import InputPanel from './inputpanel.jsx';
 import { hashHistory } from 'react-router';
+import LinkBox from './linkbox.jsx';
 
 let routerOrder = {
 	path : 'order',
@@ -14,8 +15,8 @@ let routerInvoice = {
 };
 
 let routerInput = {
-	path : 'inputpanel',
-	component : InputPanel,
+	path : 'inputpanel/:linkid',
+	component : LinkBox,
 	// indexRoute : {onEnter:(nextstate, replace)=>{replace(hashHistory.getCurrentLocation().pathname+'/order');}},
 	// childRoutes : [
 	// 	routerOrder,

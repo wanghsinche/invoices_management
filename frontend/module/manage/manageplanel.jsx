@@ -8,27 +8,52 @@ class Manage extends React.Component{
 			items : [],
 			pagenum : 1,
 			pagecurrent : 1,
-			from : '3',
-			to : '4',
+			from : 0,
+			to : 0,
 			filter : ''
 		};
 	}
 	filteFunc(word){
 		this.setState({filter : word});
 	}
-	update(page){
-		this.setState({
-			items : [
-				{name : 'oo', price : 1, num : 1, date : 33, recordid : 1},
-				{name : 'oo3', price : 1, num : 1, date : 33, recordid : 2},
-				{name : 'oof', price : 1, num : 1, date : 333, recordid : 3}
-			],
-			pagenum : 2,
-			pagecurrent : 1
-		});		
+	dateFunc(type, num){
+		if (type === 'fdate') {
+			this.setState({from: num});
+		}
+		if (type === 'tdate') {
+			this.setState({to: num});
+		}		
+		
+	}
+	update(){
+		if (this.state.from === 0 && this.state.to === 0) {
+			return;
+		}
+		else{
+			$.ajax({
+				type:'GET',
+				url:'/history',
+				data:{
+					fdate:parseInt(this.state.from, 10),
+					tdate:parseInt(this.state.to, 10),
+					userid:1,
+					page:this.state.pagecurrent-1
+				},
+				dataType:'json',
+				success:function (rs) {
+					if (rs.msg === 'ok') {
+						this.setState({
+							items : rs.data,
+							pagenum : 1 + rs.num / 10,
+							pagecurrent : 1
+						});
+					}					
+				}.bind(this)
+			});
+		}	
 	}
 	componentDidMount(){
-		this.update(1);
+		this.update();
 	}
 	render(){
 		if (this.props.children) {
@@ -45,8 +70,8 @@ class Manage extends React.Component{
 		});
 		return (
 			<div className="manage">
-				<DateSearcher />
-				<Filter handel={this.filteFunc.bind(this)} />
+				<DateSearcher fdate={this.state.from} tdate={this.state.to} handel={this.dateFunc.bind(this)} search={this.update.bind(this)} />
+				<Filter handel={this.filteFunc.bind(this)} filter={this.state.filter} />
 				<div className="content">
 					{out}
 				</div>
@@ -58,14 +83,17 @@ class Manage extends React.Component{
 }
 
 class DateSearcher extends React.Component{
+	handelChange(type, e){
+		this.props.handel(type, parseInt(e.target.value, 10));
+	}
 	render(){
 		return (
 			<div className="searcher">
 				<span>from</span>
-				<input type="text" placeholder="date" />
+				<input type="text" placeholder="date" value={this.props.fdate} onChange={this.handelChange.bind(this, 'fdate')} />
 				<span>to</span>
-				<input type="text" placeholder="date" />
-				<input type="button" value="search" />				
+				<input type="text" placeholder="date" value={this.props.tdate} onChange={this.handelChange.bind(this, 'tdate')} />
+				<input type="button" value="search" onClick={this.props.search} />				
 			</div>
 			);
 
@@ -79,7 +107,7 @@ class Filter extends React.Component{
 	render(){
 		return (
 			<div className="filter">
-				<input type="text" placeholder="filter" onChange={this.handel.bind(this)} />
+				<input type="text" placeholder="filter" onChange={this.handel.bind(this)} value={this.props.filter} />
 			</div>
 			);
 
@@ -88,14 +116,14 @@ class Filter extends React.Component{
 
 class Recorder extends React.Component{
 	render(){
-		var {name, price, num, date, recordid} = this.props.data; 
+		var {name, priceAll, invsid, buyDate, id} = this.props.data; 
 		return (
 			<div className="recorder">
 				<span>{name}</span>
-				<span>{price}</span>
-				<span>{num}</span>
-				<span>{date}</span>
-				<Link to={'/manage/detail?recordid='+recordid}  >detail</Link>
+				<span>{priceAll}</span>
+				<span>{invsid}</span>
+				<span>{buyDate}</span>
+				<Link to={'/manage/detail?recordid='+id}  >detail</Link>
 			</div>
 			);
 

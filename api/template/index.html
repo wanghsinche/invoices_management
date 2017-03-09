@@ -1,0 +1,31 @@
+$def with ()
+<html>
+	<head>
+		<title>
+			test
+		</title>
+	</head>
+	<body>
+		<form action="/user" method="post" target="_blank">
+			<input type="hidden" name="action" value="login" />
+			<input type="text" name="name" placeholder="name" />
+			<input type="text" name="pswd" placeholder="pswd" />
+			<input type="submit" value="submit" />
+		</form>		
+		<form action="/user" method="get" target="_blank">
+			<input type="hidden" name="action" value="logout" />
+			<input type="submit" value="logout" />
+		</form>
+		<form action="/user" method="get" target="_blank">
+			<input type="hidden" name="action" value="alluser" />
+			<input type="submit" value="all" />
+		</form>		
+		<form action="/history" method="get" target="_blank">
+			<input type="hidden" name="fdate" value="0" />
+			<input type="hidden" name="tdate" value="10000" />
+			<input type="hidden" name="userid" value="1" />
+			<input type="hidden" name="page" value="0" />
+			<input type="submit" value="go" />
+		</form>		
+	</body>
+</html>

@@ -7,7 +7,7 @@ class App extends React.Component{
 			<div className="container">
 				<div className="row">
 					<div className="col-md-12 col-sm-12">
-						<h1>test</h1>
+						<h1>invoice</h1>
 					</div>
 				</div>
 				<div className="row">
