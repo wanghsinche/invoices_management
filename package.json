@@ -7,9 +7,9 @@
     "start": "webpack --watch"
   },
   "keywords": [
-    "trading"
+    "management"
   ],
-  "author": "peng.zhang",
+  "author": "wanghsinche@hotmail.com",
   "license": "ISC",
   "devDependencies": {
     "babel": "^6.5.2",
@@ -27,6 +27,12 @@
     "react-dom": "^0.14.7",
     "style-loader": "^0.13.0",
     "webpack": "^1.12.14",
-    "webpack-dev-server": "^1.14.1"
+    "webpack-dev-server": "^1.14.1",
+    "electron-connect":"^0.6.1",
+    "electron-connect-webpack-plugin":"^0.1.1",
+    "react-photonkit":"^0.4.1",
+    "redux": "^3.7.1",
+    "react-redux":"^5.0.5",
+    "react-route": "^1.0.3"
   }
 }

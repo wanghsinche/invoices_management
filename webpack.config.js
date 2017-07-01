@@ -1,6 +1,7 @@
 var path = require('path');
 var webpack = require('webpack');
 var CopyWebpackPlugin = require('copy-webpack-plugin');
+var ElectronConnectWebpackPlugin = require('electron-connect-webpack-plugin');
 var APP_PATH = path.resolve(__dirname, 'app');
 var SRC_PATH = path.resolve(__dirname, 'src');
 
@@ -10,7 +11,7 @@ module.exports = {
 	
     devtool: 'source-map',
     entry: {
-        ui: './src/ui/ui'
+        index: './src/ui/index'
     },
     output: {
         path: APP_PATH,
@@ -42,6 +43,10 @@ module.exports = {
         new webpack.optimize.DedupePlugin(),
         //new webpack.optimize.UglifyJsPlugin({comments: false}),
         new webpack.EnvironmentPlugin(["NODE_ENV"]),
+        new ElectronConnectWebpackPlugin({
+            path:path.join(__dirname, "app"),
+            logLevel: 0
+        }),
         new CopyWebpackPlugin([
 		    { from: path.resolve(SRC_PATH, 'main.js'), to: 'main.js' },
 			{ from: path.resolve(SRC_PATH, 'backend'), to: 'backend' },
