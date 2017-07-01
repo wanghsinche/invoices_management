@@ -10,7 +10,7 @@
     "management"
   ],
   "author": "wanghsinche@hotmail.com",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "babel": "^6.5.2",
     "babel-core": "^6.7.2",
@@ -20,6 +20,7 @@
     "babel-register": "^6.7.2",
     "copy-webpack-plugin": "^1.1.1",
     "css-loader": "^0.23.1",
+    "electron":"^1.6.11",
     "electron-prebuilt": "^0.36.11",
     "jQuery": "^1.7.4",
     "less-loader": "^2.2.2",
