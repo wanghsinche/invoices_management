@@ -1,7 +1,8 @@
 import React, { Component, PropTypes} from 'react';
 import { Window, Toolbar, Content } from "react-photonkit";
 const Record = ( {ordid,usrid,invsid,recid})=>(
-    <tr >
+    <tr onClick={()=>{
+      location.hash="#/About";}} >
          <td>{ordid}</td>
          <td>{usrid}</td>
          <td>{invsid}</td>

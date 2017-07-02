@@ -1,6 +1,6 @@
 require('../../css/ui.css');
 import React from 'react';
-import { Window, Toolbar, Content,Actionbar } from "react-photonkit";
+import { Window, Toolbar, Content,Actionbar, Button } from "react-photonkit";
 import { connect } from 'react-redux';
 import Record from './record';
 import AddBtn from './addbtn';
@@ -33,6 +33,7 @@ const App = ({loadingProps}) => {
                     <AddBtn text="add2" usrid="ggo" />
                     <AddBtn text="add3" usrid="seg" />
                     <AddBtn text="add4" usrid="cpp" />
+                    
                 </Actionbar>
             </Toolbar>
         </Window>
