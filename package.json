@@ -34,6 +34,9 @@
     "react-photonkit":"^0.4.1",
     "redux": "^3.7.1",
     "react-redux":"^5.0.5",
-    "react-route": "^1.0.3"
+    "react-route": "^1.0.3",
+    "redux-thunk":"^2.2.0",
+    "axios": "^0.16.2",
+    "json-loader": "^0.5.4"
   }
 }

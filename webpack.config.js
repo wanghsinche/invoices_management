@@ -8,7 +8,7 @@ var SRC_PATH = path.resolve(__dirname, 'src');
 module.exports = {
     cache: true,
     target: 'electron',
-	
+
     devtool: 'source-map',
     entry: {
         index: './src/ui/index'
@@ -35,8 +35,9 @@ module.exports = {
                     presets: ['es2015', 'react'],
                 }
             },
+            { test: /\.json$/, loader: 'json-loader' },
             { test: /\.css$/, loader: 'style-loader!css-loader' },
-            { test: /\.less$/, loader: 'style-loader!css-loader!less-loader'}
+            { test: /\.less$/, loader: 'style-loader!css-loader!less-loader' }
         ]
     },
     plugins: [
@@ -44,12 +45,12 @@ module.exports = {
         //new webpack.optimize.UglifyJsPlugin({comments: false}),
         new webpack.EnvironmentPlugin(["NODE_ENV"]),
         new ElectronConnectWebpackPlugin({
-            path:path.join(__dirname, "app"),
+            path: path.join(__dirname, "app"),
             logLevel: 0
         }),
         new CopyWebpackPlugin([
-		    { from: path.resolve(SRC_PATH, 'main.js'), to: 'main.js' },
-			{ from: path.resolve(SRC_PATH, 'backend'), to: 'backend' },
+            { from: path.resolve(SRC_PATH, 'main.js'), to: 'main.js' },
+            { from: path.resolve(SRC_PATH, 'backend'), to: 'backend' },
             { from: path.resolve(SRC_PATH, 'ui/index.html'), to: 'index.html' },
             { from: path.resolve(SRC_PATH, 'package.json'), to: 'package.json' }
         ])

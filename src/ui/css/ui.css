@@ -1,3 +1,8 @@
-div {
-  border-color: red;
+@keyframes rotate{
+  from{
+    transform: rotateZ(360deg);
+  }
+  to{
+    transform: rotateZ(0deg);
+  }
 }
