@@ -1,6 +1,8 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { Icon } from "react-photonkit";
+import { Icon } from "../photon/photon";
+import {requestStatus} from '../redux/action';
+
 const itStyle = {
     position: "fixed",
     top: "40%",
@@ -8,19 +10,18 @@ const itStyle = {
     "fontSize": "50px",
     "zIndex": 99, animation: "2s rotate linear infinite"
 };
-class Loading extends Component {
+const app =({loadingProps})=> (
+    <Icon glyph="arrows-ccw" style={itStyle} hidden={!loadingProps}/>
+);
 
-    render() {
-        return (<Icon glyph="arrows-ccw" style={itStyle} />);
-    }
-}
+app.propTypes = {
+    loadingProps:PropTypes.bool.isRequired
 
-Loading.propTypes = {
 };
 
 const mapStateToProps = (state) => {
     return {
-
+        loadingProps:  state.rdsAsync.status === requestStatus.REQUEST
     };
 };
 
@@ -29,6 +30,14 @@ const mapDispatchToProps = (dispatch) => {
 
     };
 };
+
+
+
+
+const Loading = connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(app);;
 
 export { Loading };
 // export default connect(

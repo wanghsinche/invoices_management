@@ -1,5 +1,5 @@
 import React, { Component, PropTypes} from 'react';
-import { Window, Toolbar, Content } from "react-photonkit";
+import { Window, Toolbar, Content } from "../photon/photon";
 const Record = ( {ordid,usrid,invsid,recid})=>(
     <tr onClick={()=>{
       location.hash="#/About";}} >

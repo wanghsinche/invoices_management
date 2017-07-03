@@ -1,7 +1,7 @@
 // action types 
 import axios from 'axios';
 
-const PAGINGNUM = 10;
+export const PAGINGNUM = 40;
 
 export const ADD_RECORD = 'ADD_RECORD';
 export const REFRESH_RECORDS = 'REFRESH_RECORDS';
@@ -67,7 +67,7 @@ export function requestAction(status, msg) {
 export function asyncAction() {
     return function (dispatch) {
         dispatch(requestAction(requestStatus.REQUEST));
-        return axios.get('http://mytest.163.com/getrecords').then(function (res) {
+        return axios.get('http://mytest.163.com/api/records').then(function (res) {
             dispatch(requestAction(requestStatus.SUCCESS));
             dispatch(refreshRecords(res.data));
 

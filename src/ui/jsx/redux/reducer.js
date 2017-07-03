@@ -8,7 +8,8 @@ import {
     REFRESH_RECORDS,
     XHR_REQUEST,
     requestStatus,
-    CHANGE_PAGE
+    CHANGE_PAGE,
+    PAGINGNUM
 } from './action';
 //reducer is a store that cant hold state, it is created to change states by previous state
 //store is a really store to hold state
@@ -66,7 +67,7 @@ function rdsAsync(state = {
     }
 }
 
-function rdsPage(state = { current: 0, paging: 10}, action) {
+function rdsPage(state = { current: 0, paging: PAGINGNUM}, action) {
     let {current,paging} = action, tmp;
     switch (action.type) {
         case CHANGE_PAGE:

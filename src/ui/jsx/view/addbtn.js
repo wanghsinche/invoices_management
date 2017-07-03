@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { Button } from "react-photonkit";
+import { Button } from "../photon/photon";
 import { addRecord } from "../redux/action";
 const AddBtn = ({ text, usrid, onAddClick }) => (
     <Button text={text} ptStyle="primary" onClick={() => {

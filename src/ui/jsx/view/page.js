@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { ButtonGroup, Button, Toolbar, Actionbar } from "react-photonkit";
+import { ButtonGroup, Button, Toolbar, Actionbar } from "../photon/photon";
 import {pageAction} from '../redux/action';
 const Page = ({ current, total,onPageClick }) => {
     let i, renderContent = [];
