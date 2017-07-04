@@ -4,7 +4,7 @@ import Tbody from './tbody';
 
 const App = ({}) => {
     return (
-        <Pane className="">
+        <Pane>
             <table className="table-striped">
                 <thead>
                     <tr>

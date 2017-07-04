@@ -26,12 +26,10 @@ export const SHOW_PAGE = 'SHOW_PAGE';
 // action function
 export function addRecord(ordid, usrid, invsid, recid) {
     return {
-        type: ADD_RECORD,
-        ordid: ordid,
-        usrid: usrid,
-        invsid: invsid,
-        recid: recid
-    };
+                type: ADD_RECORD,
+                ordid, usrid, invsid, recid
+            };
+
 }
 
 export function rmRecord(recid) {
@@ -89,5 +87,28 @@ export function pageShowAction(show){
     return {
         type: SHOW_PAGE,
         show: show
+    };
+}
+
+export function postAndAdd(data) {
+    return (dispatch)=>{
+        dispatch(requestAction(requestStatus.REQUEST));
+        console.log(data);
+        return axios.post('http://mytest.163.com/postrecord',data).then((res)=>{
+            if(parseInt(res.data.code,10) === 1){
+                console.log(res.statusText);
+                dispatch(requestAction(requestStatus.SUCCESS));
+                dispatch(addRecord(data.Order, data.User, data.Good, data.Num));
+                alert('success');
+            }
+            else{
+                dispatch(requestAction(requestStatus.ERROR));
+                console.log(res.statusText);
+            }
+
+        }).catch((err)=>{
+            console.log(err,'err');
+            dispatch(requestAction(requestStatus.ERROR));
+        });
     };
 }

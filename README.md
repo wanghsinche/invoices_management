@@ -1,10 +1,3 @@
 # electron-react-webpack
-demo projects
-
-To run it:
-1, Go to root dir. Run "npm install"
-2, Run "webpack"
-3, npm install -g electron-prebuild
-4, run "electron app"
-
-Blog: http://my.oschina.net/xpbug/blog/637864
+## mark  
+1. action creator分为同步creator和异步creator，异步action不能直接返回action，要dispatch同步的creator来返回   
