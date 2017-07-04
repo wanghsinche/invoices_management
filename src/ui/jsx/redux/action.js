@@ -22,7 +22,7 @@ export const requestStatus = {
 };
 
 export const CHANGE_PAGE = 'CHANGE_PAGE';
-
+export const SHOW_PAGE = 'SHOW_PAGE';
 // action function
 export function addRecord(ordid, usrid, invsid, recid) {
     return {
@@ -82,5 +82,12 @@ export function pageAction(toPage) {
         type: CHANGE_PAGE,
         current: toPage,
         paging: PAGINGNUM
+    };
+}
+
+export function pageShowAction(show){
+    return {
+        type: SHOW_PAGE,
+        show: show
     };
 }

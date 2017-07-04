@@ -1,6 +1,8 @@
 import React from "react";
 import {  Pane, NavGroup, NavTitle, NavGroupItem } from "../photon/photon";
 import { Route, Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import {pageShowAction} from '../redux/action';
  
 class NavLink extends NavGroupItem {
   constructor(props){
@@ -21,23 +23,49 @@ class NavLink extends NavGroupItem {
 }
 
 class Sidebar extends React.Component {
-  onSelect(key) {
 
-  }
 
   render() {
+    let onSelectRedux = this.props.onSelectRedux;
     return (
       <Pane ptSize="sm" sidebar>
-        <NavGroup activeKey={0} onSelect={this.onSelect}>
+        <NavGroup activeKey={'Home'} onSelect={
+          (key)=>{onSelectRedux(key);}
+        }>
           <NavTitle>nav group icon &amp; text</NavTitle>
-          <NavLink eventKey={0} glyph="home" text="Home" to="/"/>
-          <NavLink eventKey={1} glyph="doc-text-inv" text="List" to="/List"/>
-          <NavLink eventKey={2} glyph="info-circled" text="About" to="/About"/>
-          <NavLink eventKey={2} glyph="plus-circled" text="Post" to="/Post"/>
+          <NavLink eventKey={'Home'} glyph="home" text="Home" to="/"/>
+          <NavLink eventKey={'List'} glyph="doc-text-inv" text="List" to="/List"/>
+          <NavLink eventKey={'About'} glyph="info-circled" text="About" to="/About"/>
+          <NavLink eventKey={'Post'} glyph="plus-circled" text="Post" to="/Post"/>
         </NavGroup>
       </Pane>
     );
   }
 }
 
-export default Sidebar;
+const mapStateToProps = (state) => {
+  return{
+
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        onSelectRedux: (key) => {
+            if(key === 'List'){
+              dispatch(pageShowAction(true));
+            }
+            else{
+              dispatch(pageShowAction(false));
+            }
+            
+        }
+    };
+};
+
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(Sidebar);;
+

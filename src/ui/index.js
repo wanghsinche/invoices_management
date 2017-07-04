@@ -12,7 +12,7 @@ import AddBtn from './jsx/view/addbtn';
 import Sidebar from './jsx/view/sidebar';
 import Post from './jsx/view/post';
 import {Loading} from './jsx/view/modal';
-
+import Header from './jsx/view/header';
 import {
     HashRouter as Router,
     Route,
@@ -23,7 +23,7 @@ render((
     <Provider store={store}>
         <Router >
             <Window>
-                <Toolbar title="vortex" />
+                <Header />
                 <Content>
                     <PaneGroup>
                         <Sidebar />
@@ -34,12 +34,7 @@ render((
                     </PaneGroup>
                 </Content>
                 <Toolbar ptType="footer">
-                    <Actionbar>
-                        <AddBtn text="add1" usrid="wxz" />
-                        <AddBtn text="add2" usrid="ggo" />
-                        <AddBtn text="add3" usrid="seg" />
-                        <AddBtn text="add4" usrid="cpp" />
-                    </Actionbar>
+
                 </Toolbar>
                 <Loading />
             </Window>

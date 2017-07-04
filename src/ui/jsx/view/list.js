@@ -1,10 +1,10 @@
 import React from 'react';
 import { Pane  } from "../photon/photon";
 import Tbody from './tbody';
-import Page from './page';
+
 const App = ({}) => {
     return (
-        <Pane className="padded-more">
+        <Pane className="">
             <table className="table-striped">
                 <thead>
                     <tr>
@@ -16,7 +16,6 @@ const App = ({}) => {
                 </thead>
                 <Tbody />
             </table>
-            <Page />
         </Pane>
     );
 };

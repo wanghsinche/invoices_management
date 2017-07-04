@@ -1,8 +1,10 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { ButtonGroup, Button, Toolbar, Actionbar } from "../photon/photon";
+import BtnGPR from './btngp';
 import {pageAction} from '../redux/action';
-const Page = ({ current, total,onPageClick }) => {
+
+const Page = ({ current, total,onPageClick, show, style }) => {
     let i, renderContent = [];
     for (i = 0; i < total; i++) {
         renderContent.push((<Button key={i} text={i + 1} active={i === current}
@@ -14,26 +16,26 @@ const Page = ({ current, total,onPageClick }) => {
         />));
     }
     return (
-        <Actionbar>
-            <ButtonGroup>
-                {renderContent}
-            </ButtonGroup>
-        </Actionbar>
+            <BtnGPR style={style}>
+                {show?renderContent:''}
+            </BtnGPR>
     );
 };
 
 Page.propTypes = {
     current: PropTypes.number.isRequired,
     total: PropTypes.number.isRequired,
-    onPageClick: PropTypes.func.isRequired
+    onPageClick: PropTypes.func.isRequired,
+    show: PropTypes.bool.isRequired
 };
 
 const mapStateToProps = (state) => {
-    let { current, paging } = state.rdsPage,
+    let { current, paging, show } = state.rdsPage,
     recordNum = state.rdsRecords.length;
     return {
         current, 
-        total: Math.ceil(recordNum/paging)||1
+        total: Math.ceil(recordNum/paging)||1,
+        show: show
     };
 };
 

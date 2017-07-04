@@ -9,7 +9,8 @@ import {
     XHR_REQUEST,
     requestStatus,
     CHANGE_PAGE,
-    PAGINGNUM
+    PAGINGNUM,
+    SHOW_PAGE
 } from './action';
 //reducer is a store that cant hold state, it is created to change states by previous state
 //store is a really store to hold state
@@ -67,7 +68,7 @@ function rdsAsync(state = {
     }
 }
 
-function rdsPage(state = { current: 0, paging: PAGINGNUM}, action) {
+function rdsPage(state = { show: false, current: 0, paging: PAGINGNUM}, action) {
     let {current,paging} = action, tmp;
     switch (action.type) {
         case CHANGE_PAGE:
@@ -75,10 +76,16 @@ function rdsPage(state = { current: 0, paging: PAGINGNUM}, action) {
                 current, paging
             });
             return tmp;
+        case SHOW_PAGE:
+            return Object.assign({},state,{
+                show: action.show
+            });
         default:
             return state;
     }
 }
+
+
 
 //combine reducers
 const reducer = combineReducers({
