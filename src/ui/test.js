@@ -5,7 +5,7 @@ import {
   Route,
   Link
 } from 'react-router-dom';
-
+<DatePicker dateFormat="YYYY-MM-DD" selected={moment(buyDate)} onChange={onChange}  />
 const BasicExample = () => (
   <Router>
     <div>

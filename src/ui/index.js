@@ -26,8 +26,8 @@ render((
                 <Header />
                 <Content>
                     <PaneGroup>
-                        <Sidebar />
-                        <Route path="/" exact component={Home} />
+                        <Route path='/:place' component={Sidebar}/>
+                        <Route path="/Home" exact component={Home} />
                         <Route path="/About" component={About} />
                         <Route path="/Post" component={Post} />
                         <Route path="/List" component={List} />

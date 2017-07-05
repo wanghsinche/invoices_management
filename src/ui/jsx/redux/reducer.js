@@ -10,12 +10,14 @@ import {
     requestStatus,
     CHANGE_PAGE,
     PAGINGNUM,
-    SHOW_PAGE
+    SHOW_PAGE,
+    REFRESH_GOOD,
+    SET_CURRENT
 } from './action';
 //reducer is a store that cant hold state, it is created to change states by previous state
 //store is a really store to hold state
 function rdsRecords(state = [], action) {
-    let tmp, { recid, ordid, usrid, invsid } = action;
+    let tmp, { recid, ordid, usrid, invsid, done } = action;
 
     switch (action.type) {
         case ADD_RECORD:
@@ -24,7 +26,8 @@ function rdsRecords(state = [], action) {
                 ordid: ordid,
                 usrid: usrid,
                 invsid: invsid,
-                recid: recid
+                recid: recid,
+                done: done
             });
             return tmp;
         case RM_RECORD:
@@ -35,7 +38,8 @@ function rdsRecords(state = [], action) {
                     ordid: v.ordid,
                     usrid: v.usrid,
                     invsid: v.invsid,
-                    recid: v.recid
+                    recid: v.recid,
+                    done: v.done
                 };
             });
             return tmp;
@@ -68,16 +72,16 @@ function rdsAsync(state = {
     }
 }
 
-function rdsPage(state = { show: false, current: 0, paging: PAGINGNUM}, action) {
-    let {current,paging} = action, tmp;
+function rdsPage(state = { show: true, current: 0, paging: PAGINGNUM }, action) {
+    let { current, paging } = action, tmp;
     switch (action.type) {
         case CHANGE_PAGE:
-            tmp = Object.assign({},state,{
+            tmp = Object.assign({}, state, {
                 current, paging
             });
             return tmp;
         case SHOW_PAGE:
-            return Object.assign({},state,{
+            return Object.assign({}, state, {
                 show: action.show
             });
         default:
@@ -85,11 +89,36 @@ function rdsPage(state = { show: false, current: 0, paging: PAGINGNUM}, action) 
     }
 }
 
+function rdsGoods(state = [], action) {
+    let { type, goods } = action,
+        tmp;
+    switch (type) {
+        case REFRESH_GOOD:
+            return goods.slice();
+        default:
+            return state;
+    }
+}
 
+function rdsCurrent(state = {
+    ordid: null,
+    usrid: null,
+    invsid: null,
+    recid: null,
+    done: false
+}, action) {
+    let {type, record} = action;
+    switch(type){
+        case SET_CURRENT:
+        return Object.assign({},state,record);
+        default:
+        return state;
+    }
+}
 
 //combine reducers
 const reducer = combineReducers({
-    rdsRecords, rdsFilter, rdsAsync,rdsPage
+    rdsRecords, rdsFilter, rdsAsync, rdsPage, rdsGoods, rdsCurrent
 });
 
 export default reducer;

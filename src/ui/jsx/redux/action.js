@@ -23,11 +23,18 @@ export const requestStatus = {
 
 export const CHANGE_PAGE = 'CHANGE_PAGE';
 export const SHOW_PAGE = 'SHOW_PAGE';
+
+//good
+export const REFRESH_GOOD = 'REFRESH_GOOD';
+
+//current
+export const SET_CURRENT = 'SET_CURRENT'; 
+
 // action function
 export function addRecord(ordid, usrid, invsid, recid) {
     return {
                 type: ADD_RECORD,
-                ordid, usrid, invsid, recid
+                ordid, usrid, invsid, recid, done
             };
 
 }
@@ -53,6 +60,12 @@ export function refreshRecords(records) {
     };
 }
 
+export function refreshGoods(goods){
+    return {
+        type: REFRESH_GOOD,
+        goods: goods
+    };
+}
 
 export function requestAction(status, msg) {
     return {
@@ -83,6 +96,15 @@ export function pageAction(toPage) {
     };
 }
 
+export function setCurrentAction(record){
+    return {
+        type: SET_CURRENT,
+        record: record
+    };
+}
+
+
+
 export function pageShowAction(show){
     return {
         type: SHOW_PAGE,
@@ -98,7 +120,7 @@ export function postAndAdd(data) {
             if(parseInt(res.data.code,10) === 1){
                 console.log(res.statusText);
                 dispatch(requestAction(requestStatus.SUCCESS));
-                dispatch(addRecord(data.Order, data.User, data.Good, data.Num));
+                dispatch(addRecord(data.Order, data.User, data.Good, data.Num, data.done));
                 alert('success');
             }
             else{
@@ -108,6 +130,19 @@ export function postAndAdd(data) {
 
         }).catch((err)=>{
             console.log(err,'err');
+            dispatch(requestAction(requestStatus.ERROR));
+        });
+    };
+}
+
+export function refreshGoodAction() {
+    return function (dispatch) {
+        dispatch(requestAction(requestStatus.REQUEST));
+        return axios.get('http://mytest.163.com/api/goods').then(function (res) {
+            dispatch(requestAction(requestStatus.SUCCESS));
+            dispatch(refreshGoods(res.data));
+
+        }).catch(function (err) {
             dispatch(requestAction(requestStatus.ERROR));
         });
     };

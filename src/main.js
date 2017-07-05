@@ -21,12 +21,12 @@ app.on('window-all-closed', function () {
 app.on('ready', function () {
   // Create the browser window.
   mainWindow = new BrowserWindow({
-    width: 1024, height: 750, 'accept-first-mouse': true,
+    width: 1024+200, height: 800, 'accept-first-mouse': true,
     'title-bar-style': 'hidden'
   });
 
   // and load the index.html of the app.
-  mainWindow.loadURL('file://' + __dirname + '/index.html?');
+  mainWindow.loadURL('file://' + __dirname + '/index.html?#Home');
 
   // Open the DevTools.
   mainWindow.webContents.openDevTools();

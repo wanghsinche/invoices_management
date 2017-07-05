@@ -11,7 +11,7 @@ class Tbody extends Component {
         let { records } = this.props, empty, renderContent;
         if (records.length > 0) {
             renderContent = records.map((v) => (
-                <Record key={v.recid} ordid={v.ordid} usrid={v.usrid} invsid={v.invsid} recid={v.recid} />
+                <Record key={v.recid} ordid={v.ordid} usrid={v.usrid} invsid={v.invsid} recid={v.recid} done={v.done}/>
             ));
         }
         else {

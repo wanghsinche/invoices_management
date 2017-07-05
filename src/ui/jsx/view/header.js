@@ -1,6 +1,5 @@
 import React from "react";
 import { Toolbar, Actionbar, Button, ButtonGroup } from "../photon/photon";
-import Page from './page';
 import BtnGPR from './btngp';
 
 class Header extends React.Component {
@@ -13,7 +12,6 @@ class Header extends React.Component {
             <Button glyph="home" />
             <Button glyph="github" />
           </BtnGPR>
-          <Page style={{float:'right'}}/>
         </Actionbar>
       </Toolbar>
     );

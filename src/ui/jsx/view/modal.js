@@ -37,11 +37,16 @@ const mapDispatchToProps = (dispatch) => {
 const Loading = connect(
     mapStateToProps,
     mapDispatchToProps
-)(app);;
+)(app);
 
-export { Loading };
-// export default connect(
-//     mapStateToProps,
-//     mapDispatchToProps
-// )(loading);
+
+const EmptyContent = ({text})=>(
+    <div style={{textAlign:'center',fontSize:'20px'}}>
+        <Icon glyph="comment" withText={true} style={{color:'#57acf5',fontSize:'50px', verticalAlign: 'middle'}}/>&nbsp;{text}
+    </div>
+);
+
+
+export { Loading, EmptyContent };
+
 
