@@ -11,7 +11,7 @@ import {
     CHANGE_PAGE,
     PAGINGNUM,
     SHOW_PAGE,
-    REFRESH_GOOD,
+    REFRESH_LIST,
     SET_CURRENT
 } from './action';
 //reducer is a store that cant hold state, it is created to change states by previous state
@@ -89,12 +89,12 @@ function rdsPage(state = { show: true, current: 0, paging: PAGINGNUM }, action) 
     }
 }
 
-function rdsGoods(state = [], action) {
-    let { type, goods } = action,
+function rdsList(state = {goods:[],users:[], marks:[]}, action) {
+    let { type, list } = action,
         tmp;
     switch (type) {
-        case REFRESH_GOOD:
-            return goods.slice();
+        case REFRESH_LIST:
+            return Object.assign({},list);
         default:
             return state;
     }
@@ -118,7 +118,7 @@ function rdsCurrent(state = {
 
 //combine reducers
 const reducer = combineReducers({
-    rdsRecords, rdsFilter, rdsAsync, rdsPage, rdsGoods, rdsCurrent
+    rdsRecords, rdsFilter, rdsAsync, rdsPage, rdsList, rdsCurrent
 });
 
 export default reducer;

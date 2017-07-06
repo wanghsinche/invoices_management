@@ -11,7 +11,7 @@ import { Window, Toolbar, Content,Actionbar, Button,PaneGroup,Pane  } from "./js
 import AddBtn from './jsx/view/addbtn';
 import Sidebar from './jsx/view/sidebar';
 import Post from './jsx/view/post';
-import {Loading} from './jsx/view/modal';
+import {Loading, ErrorModal} from './jsx/view/modal';
 import Header from './jsx/view/header';
 import {
     HashRouter as Router,
@@ -36,6 +36,7 @@ render((
                 <Toolbar ptType="footer">
 
                 </Toolbar>
+                <ErrorModal />
                 <Loading />
             </Window>
         </Router>

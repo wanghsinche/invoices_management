@@ -24,11 +24,13 @@ export const requestStatus = {
 export const CHANGE_PAGE = 'CHANGE_PAGE';
 export const SHOW_PAGE = 'SHOW_PAGE';
 
-//good
-export const REFRESH_GOOD = 'REFRESH_GOOD';
+//list
+export const REFRESH_LIST = 'REFRESH_LIST';
+
 
 //current
 export const SET_CURRENT = 'SET_CURRENT'; 
+
 
 // action function
 export function addRecord(ordid, usrid, invsid, recid) {
@@ -60,10 +62,10 @@ export function refreshRecords(records) {
     };
 }
 
-export function refreshGoods(goods){
+export function refreshList(list){
     return {
-        type: REFRESH_GOOD,
-        goods: goods
+        type: REFRESH_LIST,
+        list: list
     };
 }
 
@@ -120,7 +122,6 @@ export function postAndAdd(data) {
             if(parseInt(res.data.code,10) === 1){
                 console.log(res.statusText);
                 dispatch(requestAction(requestStatus.SUCCESS));
-                dispatch(addRecord(data.Order, data.User, data.Good, data.Num, data.done));
                 alert('success');
             }
             else{
@@ -135,12 +136,12 @@ export function postAndAdd(data) {
     };
 }
 
-export function refreshGoodAction() {
+export function refreshListAction() {
     return function (dispatch) {
         dispatch(requestAction(requestStatus.REQUEST));
-        return axios.get('http://mytest.163.com/api/goods').then(function (res) {
+        return axios.get('http://mytest.163.com/api/list').then(function (res) {
             dispatch(requestAction(requestStatus.SUCCESS));
-            dispatch(refreshGoods(res.data));
+            dispatch(refreshList(res.data));
 
         }).catch(function (err) {
             dispatch(requestAction(requestStatus.ERROR));
