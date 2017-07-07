@@ -89,7 +89,7 @@ function rdsPage(state = { show: true, current: 0, paging: PAGINGNUM }, action) 
     }
 }
 
-function rdsList(state = {goods:[],users:[], marks:[]}, action) {
+function rdsList(state = {goods:[],users:[], marks:[], invs:[]}, action) {
     let { type, list } = action,
         tmp;
     switch (type) {

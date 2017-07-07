@@ -139,7 +139,8 @@ const mapStateToProps = (state) => {
         users: state.rdsList.users,
         goods: state.rdsList.goods,
         record: state.rdsCurrent,
-        marks: state.rdsList.marks
+        marks: state.rdsList.marks,
+        invs: state.rdsList.invs
     };
 };
 
