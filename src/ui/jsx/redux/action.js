@@ -26,7 +26,7 @@ export const SHOW_PAGE = 'SHOW_PAGE';
 
 //list
 export const REFRESH_LIST = 'REFRESH_LIST';
-
+export const UPDATE_LIST = 'UPDATE_LIST';
 
 //current
 export const SET_CURRENT = 'SET_CURRENT'; 
@@ -36,7 +36,7 @@ export const SET_CURRENT = 'SET_CURRENT';
 export function addRecord(ordid, usrid, invsid, recid) {
     return {
                 type: ADD_RECORD,
-                ordid, usrid, invsid, recid, done
+                ordid, usrid, invsid, recid
             };
 
 }
@@ -67,6 +67,13 @@ export function refreshList(list){
         type: REFRESH_LIST,
         list: list
     };
+}
+
+export function updateList(good, mark, invs){
+    return {
+            type: UPDATE_LIST,
+            good, mark, invs
+        };
 }
 
 export function requestAction(status, msg) {
@@ -122,6 +129,7 @@ export function postAndAdd(data) {
             if(parseInt(res.data.code,10) === 1){
                 console.log(res.statusText);
                 dispatch(requestAction(requestStatus.SUCCESS));
+                dispatch(updateList({},{},{}));
                 alert('success');
             }
             else{

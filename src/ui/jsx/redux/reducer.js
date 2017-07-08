@@ -12,12 +12,13 @@ import {
     PAGINGNUM,
     SHOW_PAGE,
     REFRESH_LIST,
+    UPDATE_LIST,
     SET_CURRENT
 } from './action';
 //reducer is a store that cant hold state, it is created to change states by previous state
 //store is a really store to hold state
 function rdsRecords(state = [], action) {
-    let tmp, { recid, ordid, usrid, invsid, done } = action;
+    let tmp, { recid, ordid, usrid, invsid } = action;
 
     switch (action.type) {
         case ADD_RECORD:
@@ -26,8 +27,7 @@ function rdsRecords(state = [], action) {
                 ordid: ordid,
                 usrid: usrid,
                 invsid: invsid,
-                recid: recid,
-                done: done
+                recid: recid
             });
             return tmp;
         case RM_RECORD:
@@ -38,8 +38,7 @@ function rdsRecords(state = [], action) {
                     ordid: v.ordid,
                     usrid: v.usrid,
                     invsid: v.invsid,
-                    recid: v.recid,
-                    done: v.done
+                    recid: v.recid
                 };
             });
             return tmp;
@@ -95,6 +94,8 @@ function rdsList(state = {goods:[],users:[], marks:[], invs:[]}, action) {
     switch (type) {
         case REFRESH_LIST:
             return Object.assign({},list);
+        case UPDATE_LIST:
+            return state;
         default:
             return state;
     }
@@ -104,8 +105,7 @@ function rdsCurrent(state = {
     ordid: null,
     usrid: null,
     invsid: null,
-    recid: null,
-    done: false
+    recid: null
 }, action) {
     let {type, record} = action;
     switch(type){
