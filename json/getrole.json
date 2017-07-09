@@ -1,0 +1,11 @@
+jsonp111({
+    "code": 1,
+    "data": {
+        "roleid": "9851800555",
+        "rolename": "萤火之怒",
+        "profession": "魅者",
+        "grade": "123",
+        "black": "落霞峰",
+        "server": "天作之合"
+    }
+})

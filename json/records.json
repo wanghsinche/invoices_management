@@ -1,0 +1,31 @@
+ [{
+    "recid":"1",
+    "goodid": "8389738",
+    "usrid": "1",
+    "invsid": "1",
+    "markid": "1"
+}, {
+    "recid":"2",
+    "goodid": "807843",
+    "usrid": "2",
+    "invsid": "2",
+    "markid": ""
+}, {
+    "recid":"3",
+    "goodid": "24784163",
+    "usrid": "3",
+    "invsid": "3",
+    "markid": "2"
+}, {
+    "recid":"4",
+    "goodid": "49038401",
+    "usrid": "4",
+    "invsid": "4",
+    "markid": ""
+}, {
+    "recid":"5",
+    "goodid": "12342334",
+    "usrid": "5",
+    "invsid": "",
+    "markid": "3"
+}]
