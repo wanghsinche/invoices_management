@@ -16,7 +16,7 @@ class Detail extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            id: '', User: '', name: '', num: '',
+            User: '', name: '', num: '', recid: '',
             Mark: '', link: '',
             price: '', priceAll: '', buyDate: moment(),
             invsid: '', invoicePrice: '', invoiceDate: '', code: '',
@@ -32,19 +32,19 @@ class Detail extends Component {
 
     componentWillReceiveProps(nextProps) {
         let good, user, mark, invs;
-        if (nextProps.record && nextProps.record.ordid) {
-            good = this.getGood(nextProps.record.ordid);
+        if (nextProps.record && nextProps.record.goodid) {
+            good = this.getGood(nextProps.record.goodid);
             user = this.getUser(nextProps.record.usrid);
-            mark = this.getMark(nextProps.record.ordid);
+            mark = this.getMark(nextProps.record.markid);
             invs = this.getInvs(nextProps.record.invsid);
             this.setState(Object.assign({}, good, {
+                recid: nextProps.record.recid,
                 User: user.name,
                 Mark: mark.content,
                 link: mark.link,
                 code: invs.code,
                 invoicePrice: invs.price,
-                invoiceDate: invs.createDate,
-                invsid: nextProps.record.invsid
+                invoiceDate: invs.createDate
             }));
         }
     }
@@ -64,7 +64,7 @@ class Detail extends Component {
     }
 
     getMark(id) {
-        let res = this.getinfo(id, 'ordid', 'marks');
+        let res = this.getinfo(id, 'id', 'marks');
         return Object.assign({ content: '' }, res);
 
     }
@@ -103,7 +103,7 @@ class Detail extends Component {
 
     render() {
         let {
-            id, User, name, num,
+            recid, User, name, num,
             Mark, link,
             price, priceAll, buyDate,
             invoicePrice, invoiceDate, code,
@@ -112,11 +112,11 @@ class Detail extends Component {
         return (
             <div style={{ borderTop: '1px solid #dddbdd' }}>
                 <h5 style={{ margin: '10px 0 0 20px', 'fontWeight': '600', 'fontSize': '16px' }}><Icon glyph="credit-card" />&nbsp;Detail:</h5>
-                <div className="grid grid-pad" hidden={id !== ''}>
+                <div className="grid grid-pad" hidden={recid !== ''}>
                     <EmptyContent text="Please click an item" />
                 </div>
-                <div className="grid grid-pad" hidden={id === ''}>
-                    <div className="col-4-12"><Input label="Order" value={id} readOnly /></div>
+                <div className="grid grid-pad" hidden={recid === ''}>
+                    <div className="col-4-12"><Input label="Order" value={recid} readOnly /></div>
                     <div className="col-4-12"><Input label="Good" value={name} readOnly /></div>
                     <div className="col-2-12"><Input label="price" value={price} disabled={!canEdit} onChange={(e) => { this.handleChange({ price: e.target.value }); }} /></div>
                     <div className="col-2-12"><Input label="Number" value={num} disabled={!canEdit} onChange={(e) => { this.handleChange({ num: e.target.value }); }} /></div>

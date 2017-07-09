@@ -29,15 +29,15 @@ export const REFRESH_LIST = 'REFRESH_LIST';
 export const UPDATE_LIST = 'UPDATE_LIST';
 
 //current
-export const SET_CURRENT = 'SET_CURRENT'; 
+export const SET_CURRENT = 'SET_CURRENT';
 
 
 // action function
-export function addRecord(ordid, usrid, invsid, recid) {
+export function addRecord(goodid, usrid, invsid, recid, markid) {
     return {
-                type: ADD_RECORD,
-                ordid, usrid, invsid, recid
-            };
+        type: ADD_RECORD,
+        goodid, usrid, invsid, recid, markid
+    };
 
 }
 
@@ -62,18 +62,19 @@ export function refreshRecords(records) {
     };
 }
 
-export function refreshList(list){
+
+export function refreshList(list) {
     return {
         type: REFRESH_LIST,
         list: list
     };
 }
 
-export function updateList(good, mark, invs){
+export function updateList(good, mark, invs) {
     return {
-            type: UPDATE_LIST,
-            good, mark, invs
-        };
+        type: UPDATE_LIST,
+        good, mark, invs
+    };
 }
 
 export function requestAction(status, msg) {
@@ -105,7 +106,7 @@ export function pageAction(toPage) {
     };
 }
 
-export function setCurrentAction(record){
+export function setCurrentAction(record) {
     return {
         type: SET_CURRENT,
         record: record
@@ -114,7 +115,7 @@ export function setCurrentAction(record){
 
 
 
-export function pageShowAction(show){
+export function pageShowAction(show) {
     return {
         type: SHOW_PAGE,
         show: show
@@ -122,23 +123,26 @@ export function pageShowAction(show){
 }
 
 export function postAndAdd(data) {
-    return (dispatch)=>{
+    return (dispatch) => {
         dispatch(requestAction(requestStatus.REQUEST));
         console.log(data);
-        return axios.post('http://mytest.163.com/postrecord',data).then((res)=>{
-            if(parseInt(res.data.code,10) === 1){
+        return axios.post('http://mytest.163.com/postrecord', data).then((res) => {
+            if (parseInt(res.data.code, 10) === 1) {
                 console.log(res.statusText);
                 dispatch(requestAction(requestStatus.SUCCESS));
-                dispatch(updateList({},{},{}));
+                dispatch(updateList(res.data.good, res.data.mark, res.data.invs));
+                if(res.data.record){
+                    dispatch(addRecord(res.data.record));
+                }
                 alert('success');
             }
-            else{
+            else {
                 dispatch(requestAction(requestStatus.ERROR));
                 console.log(res.statusText);
             }
 
-        }).catch((err)=>{
-            console.log(err,'err');
+        }).catch((err) => {
+            console.log(err, 'err');
             dispatch(requestAction(requestStatus.ERROR));
         });
     };

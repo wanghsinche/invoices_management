@@ -2,18 +2,18 @@ import React, { Component, PropTypes} from 'react';
 import { Window, Toolbar, Content, Icon } from '../photon/photon';
 import {setCurrentAction} from '../redux/action';
 import {connect} from 'react-redux';
-const Record = ( {ordid,usrid,invsid,recid,seeDetail})=>(
+const Record = ( {goodid,usrid,invsid,recid,markid,seeDetail})=>(
     <tr onClick={()=>{
-        seeDetail({ordid,usrid,invsid,recid});}} >
+        seeDetail({goodid,usrid,invsid,recid,markid});}} >
         <td style={{textAlign:'center'}}><Icon glyph="record" style={invsid.trim()!==''?{color:'#34c84a'}:{color:'#fdbc40'}}/></td>
-         <td>{ordid}</td>
+         <td>{goodid}</td>
          <td>{usrid}</td>
          <td>{invsid}</td>
          <td>{recid}</td>
     </tr>
 );
 Record.propTypes = {
-  ordid: PropTypes.string.isRequired,
+  goodid: PropTypes.string.isRequired,
   usrid: PropTypes.string.isRequired,
   invsid: PropTypes.string.isRequired,
   recid: PropTypes.string.isRequired
