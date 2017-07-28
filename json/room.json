@@ -1,0 +1,139 @@
+{
+    "roomId": 70802,
+    "template": "1",
+    "liveRoomTrigger": "on",
+    "channal": {
+        "domain": "game",
+        "name": "游戏频道",
+        "id": "0031"
+    },
+    "order": "asc",
+    "tabs": [{
+        "type": 0,
+        "title": "直播",
+        "defaultTab": 1
+    }, {
+        "type": 1,
+        "title": "聊天",
+        "defaultTab": 0
+    }],
+    "duration": 86513000,
+    "statExist": true,
+    "endDate": "2015-12-11 17:50:21",
+    "nextPage": 0,
+    "count": 69,
+    "section": ["2015-12-03", "2015-12-07", "2015-12-09", "2015-12-10", "2015-12-11"],
+    "roomName": "星耀大话-大话玩家见面会",
+    "chatRoomTrigger": "on",
+    "messages": [{
+        "msg": {
+            "align": "center",
+            "content": "456745867",
+            "fontType": "font-weight: normal;",
+            "fontColor": "color:;"
+        },
+        "section": "2015-12-11",
+        "id": 674576,
+        "time": "2015-12-11 16:22:09",
+        "commentator": {
+            "name": "直播员 爱玩网小编"
+        },
+        "images": [{
+            "fullSrcSize": "832*624",
+            "fullSizeSrc": "http:\/\/img4.cache.netease.com\/pcluster\/live\/post\/7fc\/6c8\/618\/5e0a7191ff67a0d1b06e25c.jpg",
+            "src": "http:\/\/img4.cache.netease.com\/pcluster\/live\/post\/7fc\/6c8\/618\/5e0a7191ff67a0d1b06e25c_128x86.jpg"
+        }]
+    },{
+        "msg": {
+            "align": "center",
+            "content": "dgsdgsdfg",
+            "fontType": "font-weight: normal;",
+            "fontColor": "color:;"
+        },
+        "section": "2015-12-11",
+        "id": 2734174,
+        "time": "2015-12-11 16:22:09",
+        "commentator": {
+            "name": "直播员 爱玩网小编"
+        },
+        "images": [{
+            "fullSrcSize": "832*624",
+            "fullSizeSrc": "http:\/\/img4.cache.netease.com\/pcluster\/live\/post\/7fc\/6c8\/618\/5e0a7191ff67a0d1b06e25c.jpg",
+            "src": "http:\/\/img4.cache.netease.com\/pcluster\/live\/post\/7fc\/6c8\/618\/5e0a7191ff67a0d1b06e25c_128x86.jpg"
+        }]
+    },{
+        "msg": {
+            "align": "center",
+            "content": "任泉出现了！这是要干嘛？难道是来宣布大话西游和热辣壹号的合作？！大话@北京即将来袭！",
+            "fontType": "font-weight: normal;",
+            "fontColor": "color:;"
+        },
+        "section": "2015-12-11",
+        "id": 2734132,
+        "time": "2015-12-11 16:19:27",
+        "commentator": {
+            "name": "直播员 爱玩网小编"
+        },
+        "images": [{
+            "fullSrcSize": "832*520",
+            "fullSizeSrc": "http:\/\/img2.cache.netease.com\/pcluster\/live\/post\/df9\/ae4\/39b\/dfdadd265ddb51ff86f62c0.jpg",
+            "src": "http:\/\/img2.cache.netease.com\/pcluster\/live\/post\/df9\/ae4\/39b\/dfdadd265ddb51ff86f62c0_128x86.jpg"
+        }]
+    }, {
+        "msg": {
+            "align": "center",
+            "content": "“大话@北京”正式启动！打造全新大话游戏体验，这份情义从线上穿越到现实，你期待吗？",
+            "fontType": "font-weight: normal;",
+            "fontColor": "color:;"
+        },
+        "section": "2015-12-11",
+        "id": 2734137,
+        "time": "2015-12-11 16:20:44",
+        "commentator": {
+            "name": "直播员 爱玩网小编"
+        },
+        "images": [{
+            "fullSrcSize": "832*624",
+            "fullSizeSrc": "http:\/\/img4.cache.netease.com\/pcluster\/live\/post\/e5e\/a4e\/293\/089a75a8f864c8c2042ecfd.jpg",
+            "src": "http:\/\/img4.cache.netease.com\/pcluster\/live\/post\/e5e\/a4e\/293\/089a75a8f864c8c2042ecfd_128x86.jpg"
+        }]
+    }, {
+        "msg": {
+            "align": "center",
+            "content": "到了此时此刻，2015心耀大话·玩家年度盛典活动也接近尾声。",
+            "fontType": "font-weight: normal;",
+            "fontColor": "color:;"
+        },
+        "section": "2015-12-11",
+        "id": 2734141,
+        "time": "2015-12-11 16:22:09",
+        "commentator": {
+            "name": "直播员 爱玩网小编"
+        },
+        "images": [{
+            "fullSrcSize": "832*624",
+            "fullSizeSrc": "http:\/\/img4.cache.netease.com\/pcluster\/live\/post\/7fc\/6c8\/618\/5e0a7191ff67a0d1b06e25c.jpg",
+            "src": "http:\/\/img4.cache.netease.com\/pcluster\/live\/post\/7fc\/6c8\/618\/5e0a7191ff67a0d1b06e25c_128x86.jpg"
+        }]
+    },{
+        "msg": {
+            "align": "center",
+            "content": "到了此时dgfsdfgdsfg此刻，2015心耀大话·玩家年度盛典活动也接近尾声。",
+            "fontType": "font-weight: normal;",
+            "fontColor": "color:;"
+        },
+        "section": "2015-12-11",
+        "id": 2734144,
+        "time": "2015-12-11 16:22:09",
+        "commentator": {
+            "name": "直播员 爱玩网小编"
+        },
+        "images": [{
+            "fullSrcSize": "832*624",
+            "fullSizeSrc": "http:\/\/img4.cache.netease.com\/pcluster\/live\/post\/7fc\/6c8\/618\/5e0a7191ff67a0d1b06e25c.jpg",
+            "src": "http:\/\/img4.cache.netease.com\/pcluster\/live\/post\/7fc\/6c8\/618\/5e0a7191ff67a0d1b06e25c_128x86.jpg"
+        }]
+    }],
+    "startDate": "2015-12-07 14:50:02",
+    "roomDes": "星耀大话-大话玩家见面会"
+}
