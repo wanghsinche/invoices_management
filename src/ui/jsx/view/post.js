@@ -1,13 +1,21 @@
 import React, { Component, PropTypes } from 'react';
-import { Pane, Input, TextArea, Button } from "../photon/photon";
+import { Pane, Input, TextArea, Button, CheckBox } from "../photon/photon";
 import { postAndAdd } from '../redux/action';
 import { connect } from 'react-redux';
+import DatePicker from 'react-datepicker';
+import moment from 'moment';
+import 'react-datepicker/dist/react-datepicker.css';
+import { shell } from 'electron';
 
 class Post extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            Order:'',User:'',Good:'',Num:'',Mark:''
+            User: '', name: '', num: '', recid: '',
+            Mark: '', link: '',
+            price: '', priceAll: '', buyDate: moment(),
+            invsid: '', invoicePrice: '', invoiceDate: '', code: '',
+            remind: true
         };
     }
     handleChange(obj){
@@ -15,22 +23,52 @@ class Post extends Component {
         let newState = Object.assign({},this.state,obj);
         this.setState(newState);
     }
+
+    handleClick() {
+
+        if (confirm('sure?')) {
+            this.props.postData(this.state);
+        }
+        
+    }
+
+    handleClear(){
+        this.setState({
+            User: '', name: '', num: '', recid: '',
+            Mark: '', link: '',
+            price: '', priceAll: '', buyDate: moment(),
+            invsid: '', invoicePrice: '', invoiceDate: '', code: ''
+        });
+    }
+
     render() {
-        let { Order,User,Good,Num,Mark} = this.state,
-        {handleSubmit} = this.props;
+        let {
+            recid, User, name, num,
+            Mark, link,
+            price, priceAll, buyDate,
+            invoicePrice, invoiceDate, code,
+            remind
+        } = this.state;
         return (
             <Pane className="padded-more">
                 <h2>Post</h2>
                 <form className="grid grid-pad">
-                    <div className="col-1-2"><Input label="Order" value={Order} onChange={(e)=>{this.handleChange({Order:e.target.value});}}/></div>
                     <div className="col-1-2"><Input label="User" value={User} onChange={(e)=>{this.handleChange({User:e.target.value});}}/></div>
-                    <div className="col-1-2"><Input label="Good" value={Good} onChange={(e)=>{this.handleChange({Good:e.target.value});}}/></div>
-                    <div className="col-1-2"><Input label="Number" value={Num} onChange={(e)=>{this.handleChange({Num:e.target.value});}}/></div>
+                    <div className="col-1-2"><Input label="Good" value={name} onChange={(e)=>{this.handleChange({name:e.target.value});}}/></div>
+                    <div className="col-1-2"><Input label="price" value={price} onChange={(e)=>{this.handleChange({price:e.target.value});}}/></div>
+                    <div className="col-1-2"><Input label="Number" value={num} onChange={(e)=>{this.handleChange({num:e.target.value});}}/></div>
+                    <div className="col-1-2"><div className="form-group"><label>BuyDate</label><DatePicker  dateFormat="YYYY-MM-DD" selected={moment(buyDate)} onChange={(dateString, { dateMoment, timestamp }) => { this.handleChange({ buyDate: dateString }); }} /></div></div>
+                    <div className="col-1-2"><Input label="priceAll" value={priceAll}  onChange={(e) => { this.handleChange({ priceAll: e.target.value }); }} /></div>
+                    <div className="col-1-2"><Input label="invoicecode" value={code}  onChange={(e) => { this.handleChange({ code: e.target.value }); }} /></div>
+                    <div className="col-1-2"><div className="form-group"><label>invoiceDate</label><DatePicker dateFormat="YYYY-MM-DD" selected={invoiceDate === '' ? '' : moment(invoiceDate)} onChange={(dateString, { dateMoment, timestamp }) => { this.handleChange({ invoiceDate: dateString }); }} /></div></div>
+                    <div className="col-1-2"><Input label="invoicePrice" value={invoicePrice} onChange={(e) => { this.handleChange({ invoicePrice: e.target.value }); }} /></div>
+                    <div className="col-5-12"><Input label="Link" value={link}  onChange={(e) => { this.handleChange({ link: e.target.value }); }} /></div>
+                    <div className="col-1-12"><div className="form-group"><label></label><CheckBox label="remind" checked={remind}  onChange={(e) => { this.handleChange({ remind: e.target.checked }); }} /></div></div>
                     <div className="col-1-1"><TextArea label="Mark" value={Mark} style={{ resize: 'none' }}  onChange={(e)=>{this.handleChange({Mark:e.target.value});}}/></div>
                     <div className="col-1-1">
                         <div className="form-actions" style={{ 'textAlign': 'right' }}>
-                            <Button type="submit" ptStyle="default" text="Cancel" />
-                            <Button type="submit" ptStyle="primary" text="OK" onClick={() => {handleSubmit(this.state); }} />
+                            <Button type="submit" ptStyle="default" text="clear"  onClick={this.handleClear.bind(this)} />
+                            <Button type="submit" ptStyle="primary" text="Submit" onClick={this.handleClick.bind(this)} />
                         </div>
                     </div>
                 </form>
@@ -47,9 +85,9 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        handleSubmit: (data) => {
+        postData: (data) => {
             dispatch(postAndAdd(data));
-        }
+        },
     };
 };
 

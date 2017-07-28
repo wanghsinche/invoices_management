@@ -21,7 +21,7 @@ app.on('window-all-closed', function () {
 app.on('ready', function () {
   // Create the browser window.
   mainWindow = new BrowserWindow({
-    width: 1024+200, height: 800, 'accept-first-mouse': true,
+    width: 1024+500, height: 800+100, 'accept-first-mouse': true,
     'title-bar-style': 'hidden'
   });
 
