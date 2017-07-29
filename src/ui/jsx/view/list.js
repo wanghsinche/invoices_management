@@ -21,7 +21,7 @@ const App = ({}) => {
                     <thead>
                         <tr>
                             <th>done</th>
-                            <th>ordid</th>
+                            <th>name</th>
                             <th>usrid</th>
                             <th>invsid</th>
                             <th>recid</th>

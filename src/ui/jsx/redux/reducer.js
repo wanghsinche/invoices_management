@@ -18,13 +18,13 @@ import {
 //reducer is a store that cant hold state, it is created to change states by previous state
 //store is a really store to hold state
 function rdsRecords(state = [], action) {
-    let tmp, { recid, goodid, usrid, invsid, markid } = action;
+    let tmp, { recid, goodid, usrid, invsid, markid, name } = action;
 
     switch (action.type) {
         case ADD_RECORD:
             tmp = state.slice();
             tmp.push({
-                recid, goodid, usrid, invsid, markid
+                recid, goodid, usrid, invsid, markid, name
             });
             return tmp;
         case RM_RECORD:
@@ -32,6 +32,7 @@ function rdsRecords(state = [], action) {
         case REFRESH_RECORDS:
             tmp = action.records.map(function (v) {
                 return {
+                    name: v.name,
                     goodid: v.goodid,
                     usrid: v.usrid,
                     invsid: v.invsid,
@@ -128,6 +129,7 @@ function rdsList(state = { goods: [], users: [], marks: [], invs: [] }, action) 
 }
 
 function rdsCurrent(state = {
+    name: null,
     goodid: null,
     usrid: null,
     invsid: null,

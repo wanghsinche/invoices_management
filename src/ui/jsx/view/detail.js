@@ -18,8 +18,8 @@ class Detail extends Component {
         this.state = {
             User: '', name: '', num: '', recid: '',
             Mark: '', link: '',
-            price: '', priceAll: '', buyDate: moment(),
-            invsid: '', invoicePrice: '', invoiceDate: '', code: '',
+            price: '', priceAll: '', buyDate: Date.now()/1000,
+            invsid: '', invoicePrice: '', invoiceDate: 0, code: '',
             canEdit: false
         };
     }
@@ -122,13 +122,13 @@ class Detail extends Component {
                     <div className="col-2-12"><Input label="Number" value={num} disabled={!canEdit} onChange={(e) => { this.handleChange({ num: e.target.value }); }} /></div>
 
                     <div className="col-4-12"><Input label="Mark" value={Mark} readOnly={!canEdit} onChange={(e) => { this.handleChange({ Mark: e.target.value }); }} /></div>
-                    <div className="col-4-12"><div className="form-group"><label>BuyDate</label><DatePicker disabled dateFormat="YYYY-MM-DD" selected={moment(buyDate)} onChange={(dateString, { dateMoment, timestamp }) => { this.handleChange({ buyDate: dateString }); }} /></div></div>
+                    <div className="col-4-12"><div className="form-group"><label>BuyDate</label><DatePicker disabled dateFormat="YYYY-MM-DD" selected={moment.unix(buyDate)} onChange={(date) => { this.handleChange({ buyDate: date.unix() }); }} /></div></div>
                     <div className="col-2-12"><Input label="priceAll" value={priceAll} disabled={!canEdit} onChange={(e) => { this.handleChange({ priceAll: e.target.value }); }} /></div>
 
                     <div className="col-2-12"><Input label="User" value={User} disabled /></div>
 
                     <div className="col-4-12"><Input label="invoicecode" value={code} readOnly={!canEdit} onChange={(e) => { this.handleChange({ code: e.target.value }); }} /></div>
-                    <div className="col-4-12"><div className="form-group"><label>invoiceDate</label><DatePicker disabled={!canEdit} dateFormat="YYYY-MM-DD" selected={invoiceDate === '' ? '' : moment(invoiceDate)} onChange={(dateString, { dateMoment, timestamp }) => { this.handleChange({ invoiceDate: dateString }); }} /></div></div>
+                    <div className="col-4-12"><div className="form-group"><label>invoiceDate</label><DatePicker disabled={!canEdit} dateFormat="YYYY-MM-DD" selected={invoiceDate === 0 ? '' : moment.unix(invoiceDate)} onChange={(date) => { this.handleChange({ invoiceDate: date.unix() }); }} /></div></div>
                     <div className="col-2-12"><Input label="invoicePrice" value={invoicePrice} disabled={!canEdit} onChange={(e) => { this.handleChange({ invoicePrice: e.target.value }); }} /></div>
 
                     <div className="col-2-12"><div className="form-group"><label>Link</label>
