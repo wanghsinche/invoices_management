@@ -5,35 +5,35 @@
     "price": 1.2,
     "priceAll": 1.2,
     "num": 1,
-    "buyDate": "2007-04-05"
+    "buyDate": "20070405000"
   }, {
     "id": 807843,
     "name": "fdsgsf",
     "price": 19.2,
     "priceAll": 19.2,
     "num": 1,
-    "buyDate": "2007-04-11"
+    "buyDate": "20070411000"
   }, {
     "id": 24784163,
     "name": "fg",
     "price": 19.2,
     "priceAll": 19.2,
     "num": 1,
-    "buyDate": "2007-04-25"
+    "buyDate": "20070425000"
   }, {
     "id": 49038401,
     "name": "afsdf",
     "price": 1.33,
     "priceAll": 1.33,
     "num": 1,
-    "buyDate": "2007-04-15"
+    "buyDate": ""
   }, {
     "id": 12342334,
     "name": "ads",
     "price": 1.7,
     "priceAll": 1.77,
     "num": 1,
-    "buyDate": "2007-09-15"
+    "buyDate": "20070915000"
   }],
   "marks": [{
     "id": 1,
@@ -78,27 +78,27 @@
     "id": 1,
     "code": "3245245",
     "price": 0,
-    "createDate": "2007-04-25"
+    "createDate": "20070425000"
   }, {
     "id": 2,
     "code": "3543534",
     "price": 1.22,
-    "createDate": "2007-04-26"
+    "createDate": "20070426000"
   }, {
     "id": 3,
     "code": "6585678",
     "price": 1.2,
-    "createDate": "2017-04-25"
+    "createDate": "20170425000"
 
   }, {
     "id": 4,
     "code": "1341234",
     "price": 6.2,
-    "createDate": "2017-04-25"
+    "createDate": "20170425000"
   }, {
     "id": 5,
     "code": "6758678",
     "price": 7.2,
-    "createDate": "2017-04-25"
+    "createDate": "20170425000"
   }]
 }

@@ -1,8 +1,14 @@
+global.myDataBase = './database/formal.db';
 let express = require('express'),
     fs = require('fs'),
     bodyParser = require('body-parser'),
     app = express(),
-    url = require('url');
+    url = require('url'),
+    getAllInfoMD = require('./getAllInfo'),
+    infoCache = require('./infoCache');
+
+
+infoCache.setExpire(10);
 
 app.use(express.static('public'));
 app.use(bodyParser.json());
@@ -61,6 +67,48 @@ app.post('/postrecord', function(req, res) {
     }
     console.log('return', data);
     res.json(data);
+});
+
+
+app.get('/query/records/:user', function(req, res) {
+    let user = req.params.user,
+        info;
+    let {
+        from,
+        to
+    } = url.parse(req.url, true).query;
+    res.setHeader('Content-Type', 'application/json');
+    console.log('get all info', user, from, to);
+    if (from && to) {
+        // get cache or query database
+        infoCache.getCache(['records', user, from, to].join('_')).then(function(recordls){
+            if(recordls){
+                return Promise.resolve(recordls);
+            }
+            else{
+                return getAllInfoMD.getAllInfo(user, from, to);
+            }
+        }).then(function(recordls){
+            infoCache.setCache(['records', user, from, to].join('_'), recordls);
+
+
+            info = recordls.map(v=>{
+                return {
+                    recid:v.recid.toString(),
+                    goodid:v.goodid.toString(),
+                    usrid:user.toString(),
+                    invsid:v.invoiceid.toString(),
+                    markid:v.markid.toString(),
+                    name:v.goodinfo.name,
+                    buyDate: v.goodinfo.buyDate
+                };
+            });
+            res.send(info);
+        });
+    } else {
+        res.send('empty from or to');
+    }
+
 });
 
 
