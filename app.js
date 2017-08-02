@@ -26,12 +26,12 @@ app.use('/query', query);
 
 
 
-app.listen(8083, () => {
-    console.log('listening on 8083');
+app.listen(8080, () => {
+    console.log('listening on 8080');
 });
 
 process.on('SIGINT', function () {
-  console.log('Got a SIGINT. Goodbye cruel world');
+  console.log('Got a exit. Goodbye cruel world');
   closeDataBase();
   process.exit(0);
 });
