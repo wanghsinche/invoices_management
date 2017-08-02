@@ -30,8 +30,8 @@ app.listen(8083, () => {
     console.log('listening on 8083');
 });
 
-process.on('exit', function () {
-  console.log('Got a exit. Goodbye cruel world');
+process.on('SIGINT', function () {
+  console.log('Got a SIGINT. Goodbye cruel world');
   closeDataBase();
   process.exit(0);
 });
