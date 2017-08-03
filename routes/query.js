@@ -1,8 +1,9 @@
-const express = require('express');
-const router = express.Router();
+const router = require('express').Router();
 const getRecordList = require('../model/index').getAllInfo;
 const getDetail = require('../model/index').getDetail;
 const url = require('url');
+
+
 
 router.use(function(req, res, next){
     res.setHeader('Content-Type', 'application/json');
@@ -10,10 +11,6 @@ router.use(function(req, res, next){
 });
 
 
-router.get('/list', function(req, res) {
-    console.log('adm');
-    res.end('adm');
-});
 
 router.get('/records/:users', function(req, res) {
 

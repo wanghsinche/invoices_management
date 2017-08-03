@@ -1,9 +1,14 @@
 global.myDataBase = './database/formal.db';
 let
+    cookieParser = require('cookie-parser'),
     express = require('express'),
     app = express(),
     query = require('./routes/query'),
+    token = require('./routes/token'),
     closeDataBase = require('./model/index').closeDataBase;
+
+
+app.use(cookieParser());
 
 app.all('*', (req, res, next) => {
     res.header('Access-Control-Allow-Origin', req.headers.origin || '*');
@@ -18,10 +23,8 @@ app.all('*', (req, res, next) => {
     }
 });
 
-
 app.use(express.static('public'));
-
-
+app.use('/token', token);
 app.use('/query', query);
 
 
@@ -35,3 +38,4 @@ process.on('SIGINT', function () {
   closeDataBase();
   process.exit(0);
 });
+
