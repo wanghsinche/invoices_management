@@ -61,14 +61,15 @@ function getDetail(database) {
             recordP = Promise.resolve(result);
 
             return Promise.all([recordP, goodP, invsP, userP, markP]);
-        }).catch(err => {
-            console.log(err);
         }).then(([record, good, invs, user, mark]) => {
 
             // attention recordls has been change since element is object
             return Promise.resolve(
                 Object.assign({}, record, good, invs, user, mark)
             );
+        }).catch(err => {
+            console.log(err);
+            return Promise.reject(err);
         });
         return bigPromise;
     };

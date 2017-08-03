@@ -1,4 +1,5 @@
 global.myDataBase = './database/formal.db';
+global.nonceDataBase = './database/nonce.db';
 let
     express = require('express'),
     app = express(),
