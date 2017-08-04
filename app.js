@@ -3,15 +3,17 @@ global.nonceDataBase = './database/nonce.db';
 let
     express = require('express'),
     app = express(),
+    cors = require('cors');
     query = require('./routes/query'),
     tokenMiddleWare = require('./middleware/token'),
     closeDataBase = require('./model/index').closeDataBase;
 
 
+app.use(cors());
 
+app.use(express.static('public'));
 
 app.use(tokenMiddleWare);
-app.use(express.static('public'));
 app.use('/query', query);
 
 

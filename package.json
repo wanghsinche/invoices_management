@@ -1,4 +1,5 @@
 {
+    "version": "0.1",
     "name":"express-server",
     "main":"app.js",
     "scripts":{
@@ -6,7 +7,9 @@
     },
     "dependencies": {
         "express": "^4.15.2",
+        "cors":"^2.8.4",
         "body-parser": "^1.17.2",
-        "sqlite3": "^3.1.8"
+        "sqlite3": "^3.1.8",
+        "crypto-js": "^3.1.9-1"
     }
 }

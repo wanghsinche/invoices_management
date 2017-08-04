@@ -1,5 +1,5 @@
-// const url = require('url');
 const getPSWD = require('../model/index').getPSWD;
+const CryptoJS = require("crypto-js");
 const sqlite3 = require('sqlite3').verbose();
 let noncedb = new sqlite3.Database(global.nonceDataBase);
 
@@ -7,6 +7,14 @@ let noncedb = new sqlite3.Database(global.nonceDataBase);
 // 反正只是防replay，我这里就不处理了
 function generateNonce() {
     return Math.round(Math.random() * 1000000);
+}
+
+
+function checkToken(userid, usrpswd, reqnonce, reqtimes, reqstamp, token) {
+    let hash = CryptoJS.HmacSHA256(userid, usrpswd, reqnonce, reqtimes, reqstamp);
+    let hashInBase64 = CryptoJS.enc.Base64.stringify(hash);
+    console.log(hashInBase64);
+    return token === hashInBase64;
 }
 
 module.exports = function (req, res, next) {
@@ -60,9 +68,7 @@ module.exports = function (req, res, next) {
             }).then(function () {
                 // authorize
                 return getPSWD(parseInt(userid, 10)).then(function (usrpswd) {
-                    var sToken = userid + '' + usrpswd + reqnonce + reqstamp;
-                    console.log('token should be ',sToken);
-                    if (sToken !== token) {
+                    if (checkToken(userid, usrpswd, reqnonce, reqtimes, reqstamp, token)) {
                         return Promise.reject(401);
                     } else {
                         next();
