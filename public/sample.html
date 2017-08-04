@@ -1,0 +1,51 @@
+<!DOCTYPE>
+<html>
+
+<head>
+    <title>
+        test
+    </title>
+    <script src="https://cdn.bootcss.com/axios/0.16.2/axios.min.js"></script>
+    <script src="https://cdn.bootcss.com/crypto-js/3.1.9/crypto-js.min.js"></script>
+</head>
+
+<body>
+    <script>
+        function getToken(userid, usrpswd, reqnonce, reqtimes, reqstamp) {
+            let hash = CryptoJS.HmacSHA256(userid, usrpswd, reqnonce, reqtimes, reqstamp);
+            let hashInBase64 = CryptoJS.enc.Base64.stringify(hash);
+            console.log(hashInBase64);
+            return hashInBase64;
+        }
+
+        function buildAuthContent(userid, nonce, times, stamp, token) {
+            var str = ['userid=' + userid, 'nonce=' + nonce, 'times=' + times, 'stamp=' + stamp, 'token=' + token].join(';');
+            return str;
+        }
+
+        var usrpswd = '525469';
+        var userid = '3', nonce = '386425', times = '1', stamp = Date.now().toString();
+
+        
+
+        var token = getToken(userid, usrpswd, nonce, times, stamp);
+
+
+
+
+
+
+        axios({
+            method: 'get',
+            url: 'http://mycloud/query/detail/4',
+            headers: {
+                'Authorization':buildAuthContent(userid,nonce,times,stamp,token)
+            }
+        })
+            .then(function (response) {
+                console.log(response);
+            });
+    </script>
+</body>
+
+</html>
