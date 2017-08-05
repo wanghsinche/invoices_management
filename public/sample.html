@@ -5,6 +5,9 @@
     <title>
         test
     </title>
+    <button type="submit" onclick="preAuthorize()">preAuthorize</button>
+    <label><input type="input" id="detail" name="" value=""></label>
+    <button type="submit" onclick="getinfo()"> get info</button>
     <script src="https://cdn.bootcss.com/axios/0.16.2/axios.min.js"></script>
     <script src="https://cdn.bootcss.com/crypto-js/3.1.9/crypto-js.min.js"></script>
 </head>
@@ -23,28 +26,38 @@
             return str;
         }
 
-        var usrpswd = '525469';
-        var userid = '3', nonce = '386425', times = '1', stamp = Date.now().toString();
+        var usrpswd = '981755';
+        var userid = '1', times = 0, stamp, nonce= '6812'; 
 
         
 
-        var token = getToken(userid, usrpswd, nonce, times, stamp);
+        function preAuthorize(){
+            axios({
+                method: 'get',
+                url: 'http://localhost:8000/query/login',
+            }).then(function(response){
+                nonce = response.data.data.nonce;
+                console.log(nonce);
+                
+            });           
+        }
 
 
-
-
-
-
-        axios({
-            method: 'get',
-            url: 'http://mycloud/query/detail/4',
-            headers: {
-                'Authorization':buildAuthContent(userid,nonce,times,stamp,token)
-            }
-        })
+        function getinfo(){
+            stamp = Date.now().toString();
+            var token = getToken(userid, usrpswd, nonce, times.toString(), stamp);
+            axios({
+                method: 'get',
+                url: 'http://localhost:8000/query/detail/4',
+                headers: {
+                    'Authorization':buildAuthContent(userid,nonce,times,stamp,token)
+                }
+            })
             .then(function (response) {
-                console.log(response);
+                    times++;
+                    console.log(response);
             });
+        }
     </script>
 </body>
 

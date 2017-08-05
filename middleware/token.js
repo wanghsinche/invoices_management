@@ -1,23 +1,44 @@
 const getPSWD = require('../model/index').getPSWD;
-const CryptoJS = require("crypto-js");
+const CryptoJS = require('crypto-js');
 const sqlite3 = require('sqlite3').verbose();
 let noncedb = new sqlite3.Database(global.nonceDataBase);
 
 // 其实客户端传过来不就好了么。。。
 // 反正只是防replay，我这里就不处理了
+
+
+
 function generateNonce() {
-    return Math.round(Math.random() * 1000000);
+    let nonce = Math.round(Math.random() * 10000);
+    return nonce;
 }
 
+function simpleCheckNonce(nonce){
+    return /\d{4}/.test(nonce);
+}
+
+// every 60 minutes
+(function clearNoncedb(period) {
+    let expire = Date.now() - period;
+    console.log('clearNoncedb');
+    noncedb.run('DELETE FROM nonce WHERE stamp <= $stamp', {
+        $stamp: expire
+    });
+
+    setTimeout(clearNoncedb, period, period);
+
+})(1000 * 60*60);
 
 function checkToken(userid, usrpswd, reqnonce, reqtimes, reqstamp, token) {
     let hash = CryptoJS.HmacSHA256(userid, usrpswd, reqnonce, reqtimes, reqstamp);
     let hashInBase64 = CryptoJS.enc.Base64.stringify(hash);
     console.log(hashInBase64);
+    console.log(token, token === hashInBase64);
     return token === hashInBase64;
 }
 
-module.exports = function (req, res, next) {
+
+module.exports = function(req, res, next) {
     let cAuth = req.get('Authorization'),
         userid, token, reqnonce, reqtimes, reqstamp,
         nonce = generateNonce();
@@ -25,11 +46,16 @@ module.exports = function (req, res, next) {
         res.set({
             'WWW-Authenticate': ['nonce=', nonce].join('')
         });
-        res.status(401).send('Unauthorized');
+        res.status(200).send({
+            msg:'Pleace login',
+            data:{
+                nonce:nonce
+            }
+        });
     } else {
         userid = cAuth.match(/userid=(\d+)/);
         userid = userid && userid[1];
-        token = cAuth.match(/token=([\w\.\-\~\_\%]+)/);
+        token = cAuth.match(/token=([\w+/=]+)/);
         token = token && token[1].toString();
         reqnonce = cAuth.match(/nonce=(\d+)/);
         reqnonce = reqnonce && reqnonce[1];
@@ -38,55 +64,79 @@ module.exports = function (req, res, next) {
         reqstamp = cAuth.match(/stamp=(\d+)/);
         reqstamp = reqstamp && reqstamp[1];
 
-        if (!(userid && token && reqnonce && reqtimes && reqstamp)) {
-            res.set({
-                'WWW-Authenticate': ['nonce=', nonce].join('')
-            });
-            res.status(401).send('Unauthorized');
+        if (!(userid && token && reqnonce && reqtimes && reqstamp && simpleCheckNonce(Number(reqnonce)))) {
+            res.status(401).send('Some headers were missed');
         } else {
             console.log(userid, token, reqnonce, reqtimes, reqstamp);
 
             // check nonce database
 
             new Promise((resolve, reject) => {
-                noncedb.get('SELECT lastnum FROM nonce WHERE stamp = ' + Number(reqstamp) + ' AND nonce = ' + Number(reqnonce), function (err, row) {
-                    if (err) {
-                        reject(err);
-                    }
-                    else {
-                        console.log(row);
-                        if (typeof row === 'undefined') {
-                            // new nonce
-                            // write into database
-                            resolve();
-                        }
-                        else {
-                            reject(403);
-                        }
-                    }
-                });
-            }).then(function () {
-                // authorize
-                return getPSWD(parseInt(userid, 10)).then(function (usrpswd) {
-                    if (checkToken(userid, usrpswd, reqnonce, reqtimes, reqstamp, token)) {
-                        return Promise.reject(401);
-                    } else {
-                        next();
-                    }
-                })
-            }).catch(function (err) {
-                console.log(err);
-                if (err === 403) {
-                    res.status(403).send('Unauthorized');
-                }
-                else {
-                    res.set({
-                        'WWW-Authenticate': ['nonce=', nonce].join('')
-                    });
-                    res.status(401).send('Unauthorized');
-                }
 
-            });
+                    if (isNaN(Number(reqstamp)) || isNaN(Number(reqnonce)) || isNaN(Number(reqtimes))) {
+                        reject(403);
+                    } else {
+                        noncedb.get('SELECT rowid, lastnum FROM nonce WHERE nonce = $nonce', {
+                            $nonce: Number(reqnonce)
+                        }, function(err, row) {
+                            if (err) {
+                                reject(err);
+                            } else {
+                                console.log(row);
+                                if (typeof row === 'undefined') {
+                                    // new nonce
+                                    // write into nonce database
+                                    console.log('new nonce, write into nonce database');
+                                    noncedb.run('INSERT INTO nonce VALUES ($stamp, $nonce, $lastum)', {
+                                        $stamp: reqstamp,
+                                        $nonce: reqnonce,
+                                        $lastum: reqtimes
+                                    });
+                                    resolve();
+                                } else if (row.lastnum > -1 && row.lastnum < Number(reqtimes) && Number(reqtimes) <= row.lastnum + 9) {
+                                    // old nonce, new time
+                                    // update
+                                    console.log('old nonce, new time, update');
+                                    console.log(row.lastnum , Number(reqtimes));
+                                    noncedb.run('Update nonce SET stamp = $stamp, lastnum = $lastum WHERE rowid = $rowid', {
+                                        $stamp: reqstamp,
+                                        $lastum: reqtimes,
+                                        $rowid: row.rowid
+                                    });
+                                    resolve();
+                                } else {
+                                    // old nonce, bad time, abandon nonce
+                                    console.log('old nonce, bad time, abandon nonce');
+                                    noncedb.run('Update nonce SET lastnum = -1 WHERE rowid = $rowid', {
+                                        $rowid: row.rowid
+                                    });
+                                    reject(403);
+                                }
+                            }
+                        });
+                    }
+                }).then(function() {
+                    // authorize
+                    return getPSWD(parseInt(userid, 10));
+                }).then(function(usrpswd) {
+                    if (checkToken(userid, usrpswd, reqnonce, reqtimes, reqstamp, token)) {
+
+                        return Promise.resolve();
+                    } else {
+                        return Promise.reject(401);
+                    }
+                }).then(function() {
+                    next();
+                })
+                .catch(function(err) {
+                    console.log(err);
+                    if (err === 403) {
+                        res.status(403).send('Forbidern');
+                    } else {
+                        res.status(401).send('Unauthorized');
+                    }
+
+                });
 
         }
     }
