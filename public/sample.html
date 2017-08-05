@@ -29,12 +29,12 @@
         var usrpswd = '981755';
         var userid = '1', times = 0, stamp, nonce= '6812'; 
 
-        
+        var host = 'http://mycloud';
 
         function preAuthorize(){
             axios({
                 method: 'get',
-                url: 'http://localhost:8000/query/login',
+                url: host+'/query/login',
             }).then(function(response){
                 nonce = response.data.data.nonce;
                 console.log(nonce);
@@ -48,7 +48,7 @@
             var token = getToken(userid, usrpswd, nonce, times.toString(), stamp);
             axios({
                 method: 'get',
-                url: 'http://localhost:8000/query/detail/4',
+                url: host+'/query/detail/4',
                 headers: {
                     'Authorization':buildAuthContent(userid,nonce,times,stamp,token)
                 }
