@@ -16,11 +16,12 @@ router.get('/records/:users', function(req, res) {
     let users = req.params.users.split('+'),
         {
             from,
-            to
+            to,
+            page
         } = url.parse(req.url, true).query;
 
     if(users&&from&&to){
-        getRecordList(users, from, to).then(function(list){
+        getRecordList(users, from, to, page).then(function(list){
             res.send(list);
         });
     }

@@ -9,16 +9,19 @@ function array2Map(array, map, key) {
 
 
 function getAllInfo(database) {
-    return (users, from, to) => {
+    return (users, from, to, page) => {
         console.log('read data base');
+        let limit = 20,
+            offset = limit * page;
         var bigPromise = new Promise((resolve, reject) => {
-            database.all('SELECT rowid as recid, goodid, userid, invoiceid, markid, date FROM records WHERE userid in (' + users.join(',') + ') AND date <' + to + ' AND date >=' + from, (err, rows) => {
-                if (err) {
-                    reject(err);
-                } else {
-                    resolve(rows);
-                }
-            });
+            database.all('SELECT rowid as recid, goodid, userid, invoiceid, markid, date FROM records WHERE userid in (' + users.join(',') + ') AND date <' + to + ' AND date >=' + from + ' LIMIT ' + limit + ' OFFSET ' + offset,
+                (err, rows) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(rows);
+                    }
+                });
         }).then(result => {
             let goodcon = result.map(v => v.goodid).join(','),
                 invscon = result.map(v => v.invoiceid).join(',');

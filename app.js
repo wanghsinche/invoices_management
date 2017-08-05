@@ -9,7 +9,7 @@ let
     tokenMiddleWare = require('./middleware/token'),
     patch = require('./middleware/patch');
 
-patch.patchConsole_log(console);
+// patch.patchConsole_log(console);
 
 app.use(cors());
 
