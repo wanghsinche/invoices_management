@@ -82,7 +82,6 @@ module.exports = function(req, res, next) {
                             if (err) {
                                 reject(err);
                             } else {
-                                console.log(row);
                                 if (typeof row === 'undefined') {
                                     // new nonce
                                     // write into nonce database

@@ -1,13 +1,15 @@
 global.myDataBase = './database/formal.db';
 global.nonceDataBase = './database/nonce.db';
+global.logDataBase = './database/log.db';
 let
     express = require('express'),
     app = express(),
     cors = require('cors'),
     query = require('./routes/query'),
     tokenMiddleWare = require('./middleware/token'),
-    closeDataBase = require('./model/index').closeDataBase;
+    patch = require('./middleware/patch');
 
+patch.patchConsole_log(console);
 
 app.use(cors());
 
@@ -24,7 +26,6 @@ app.listen(8000, () => {
 
 process.on('SIGINT', function () {
   console.log('Got a exit. Goodbye cruel world');
-  closeDataBase();
   process.exit(0);
 });
 
