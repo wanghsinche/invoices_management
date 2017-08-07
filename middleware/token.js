@@ -29,18 +29,20 @@ function simpleCheckNonce(nonce){
 
 })(1000 * 60*60);
 
-function checkToken(userid, usrpswd, reqnonce, reqtimes, reqstamp, token) {
-    let hash = CryptoJS.HmacSHA256(userid, usrpswd, reqnonce, reqtimes, reqstamp);
+function checkToken(usercode, usrpswd, reqnonce, reqtimes, reqstamp, token) {
+    console.log(usercode, usrpswd, reqnonce, reqtimes, reqstamp, token);
+    let hash = CryptoJS.HmacSHA256(usercode, usrpswd, reqnonce, reqtimes, reqstamp);
     let hashInBase64 = CryptoJS.enc.Base64.stringify(hash);
     console.log(hashInBase64);
     console.log(token, token === hashInBase64);
+    console.log(usercode, usrpswd, reqnonce, reqtimes, reqstamp, token);
     return token === hashInBase64;
 }
 
 
 module.exports = function(req, res, next) {
     let cAuth = req.get('Authorization'),
-        userid, token, reqnonce, reqtimes, reqstamp,
+        usercode, token, reqnonce, reqtimes, reqstamp,
         nonce = generateNonce();
     if (!cAuth) {
         res.set({
@@ -53,8 +55,8 @@ module.exports = function(req, res, next) {
             }
         });
     } else {
-        userid = cAuth.match(/userid=(\d+)/);
-        userid = userid && userid[1];
+        usercode = cAuth.match(/usercode=(\d+)/);
+        usercode = usercode && usercode[1];
         token = cAuth.match(/token=([\w+/=]+)/);
         token = token && token[1].toString();
         reqnonce = cAuth.match(/nonce=(\d+)/);
@@ -64,10 +66,10 @@ module.exports = function(req, res, next) {
         reqstamp = cAuth.match(/stamp=(\d+)/);
         reqstamp = reqstamp && reqstamp[1];
 
-        if (!(userid && token && reqnonce && reqtimes && reqstamp && simpleCheckNonce(Number(reqnonce)))) {
+        if (!(usercode && token && reqnonce && reqtimes && reqstamp && simpleCheckNonce(Number(reqnonce)))) {
             res.status(401).send('Some headers were missed');
         } else {
-            console.log(userid, token, reqnonce, reqtimes, reqstamp);
+            console.log(usercode, token, reqnonce, reqtimes, reqstamp);
 
             // check nonce database
 
@@ -116,15 +118,16 @@ module.exports = function(req, res, next) {
                     }
                 }).then(function() {
                     // authorize
-                    return getPSWD(parseInt(userid, 10));
-                }).then(function(usrpswd) {
-                    if (checkToken(userid, usrpswd, reqnonce, reqtimes, reqstamp, token)) {
-
+                    return getPSWD(usercode.toString());
+                }).then(function({userid,usrpswd}) {
+                if (checkToken(usercode, usrpswd, reqnonce, reqtimes, reqstamp, token)) {
+                        req.extraInfo = {userid: userid, nonce: reqnonce };
                         return Promise.resolve();
                     } else {
-                        return Promise.reject(401);
+                        return Promise.reject(403);
                     }
                 }).then(function() {
+                    // give userid
                     next();
                 })
                 .catch(function(err) {

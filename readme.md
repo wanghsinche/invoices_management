@@ -15,3 +15,4 @@ Host: example.org
 Authentication: hmac johndoe:123456:[digest]
 Date: 20 apr 2013 12:59:24
 ```
+验证用usercode，查询用userid

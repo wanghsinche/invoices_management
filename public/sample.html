@@ -8,33 +8,34 @@
     <button type="submit" onclick="preAuthorize()">preAuthorize</button>
     <label><input type="input" id="detail" name="" value=""></label>
     <button type="submit" onclick="getinfo()"> get info</button>
+     <button type="submit" onclick="getList()"> get list</button>
     <script src="https://cdn.bootcss.com/axios/0.16.2/axios.min.js"></script>
     <script src="https://cdn.bootcss.com/crypto-js/3.1.9/crypto-js.min.js"></script>
 </head>
 
 <body>
     <script>
-        function getToken(userid, usrpswd, reqnonce, reqtimes, reqstamp) {
-            let hash = CryptoJS.HmacSHA256(userid, usrpswd, reqnonce, reqtimes, reqstamp);
+        function getToken(usercode, usrpswd, reqnonce, reqtimes, reqstamp) {
+            let hash = CryptoJS.HmacSHA256(usercode, usrpswd, reqnonce, reqtimes, reqstamp);
             let hashInBase64 = CryptoJS.enc.Base64.stringify(hash);
             console.log(hashInBase64);
             return hashInBase64;
         }
 
-        function buildAuthContent(userid, nonce, times, stamp, token) {
-            var str = ['userid=' + userid, 'nonce=' + nonce, 'times=' + times, 'stamp=' + stamp, 'token=' + token].join(';');
+        function buildAuthContent(usercode, nonce, times, stamp, token) {
+            var str = ['usercode=' + usercode, 'nonce=' + nonce, 'times=' + times, 'stamp=' + stamp, 'token=' + token].join(';');
             return str;
         }
 
-        var usrpswd = '981755';
-        var userid = '1', times = 0, stamp, nonce= '6812'; 
-
+        var usrpswd = '369462';
+        var usercode = '21425047', times = 0, stamp, nonce= '6812'; 
+        var accessToken = '';
         var host = 'http://localhost:8000';
 
         function preAuthorize(){
             axios({
                 method: 'get',
-                url: host+'/query/login',
+                url: host+'/api/query/getnonce',
             }).then(function(response){
                 nonce = response.data.data.nonce;
                 console.log(nonce);
@@ -45,12 +46,31 @@
 
         function getinfo(){
             stamp = Date.now().toString();
-            var token = getToken(userid, usrpswd, nonce, times.toString(), stamp);
+            var token = getToken(usercode, usrpswd, nonce, times.toString(), stamp);
             axios({
                 method: 'get',
-                url: host+'/query/records/4?from=0&to=999999999&page=0',
+                url: host+'/api/account/getidentity',
                 headers: {
-                    'Authorization':buildAuthContent(userid,nonce,times,stamp,token)
+                    'Authorization':buildAuthContent(usercode,nonce,times,stamp,token)
+                }
+            })
+            .then(function (response) {
+                    times++;
+                    console.log(response);
+                    accessToken = response.data.accessToken;
+                    console.log(accessToken);
+            });
+        }
+
+
+        function getList(){
+            stamp = Date.now().toString();
+            var token = getToken(usercode, usrpswd, nonce, times.toString(), stamp);
+            axios({
+                method: 'get',
+                url: host+'/api/query/records/1+2+3?from=0&to=999999999&page=0&accessToken='+accessToken,
+                headers: {
+                    'Authorization':buildAuthContent(usercode,nonce,times,stamp,token)
                 }
             })
             .then(function (response) {

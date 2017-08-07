@@ -1,15 +1,17 @@
+const CryptoJS = require('crypto-js');
+
 function getPSWD(database) {
-    return (userid) => {
-        console.log('getPSWD read data base', userid);
+    return (usercode) => {
+        console.log('getPSWD read data base');
         var bigPromise = new Promise((resolve, reject) => {
-            database.get('SELECT pswd FROM users WHERE rowid = ' + userid, (err, row) => {
+            database.get('SELECT pswd, rowid FROM users WHERE code = ' + usercode, (err, row) => {
                 if (err) {
                     reject(err);
                 } else {
                     if (!row) {
                         reject(err);
                     } else {
-                        resolve(row && row.pswd);
+                        resolve(row && {userid: row.rowid, usrpswd: row.pswd});
                     }
 
                 }
@@ -20,10 +22,10 @@ function getPSWD(database) {
 }
 
 function getAccessls(database) {
-    return (username) => {
+    return (userid, nonce) => {
         console.log('get user list');
         var bigPromise = new Promise((resolve, reject) => {
-            database.get('SELECT rowid as userid, name FROM users WHERE name = ' + username, (err, row) => {
+            database.get('SELECT rowid as userid, name FROM users WHERE rowid = ' + userid, (err, row) => {
                 if (err) {
                     reject(err);
                 } else {
@@ -36,6 +38,7 @@ function getAccessls(database) {
             });
         }).then(function(people) {
             return new Promise((resolve, reject) => {
+                console.log(people);
                 database.get('SELECT userid FROM superusers WHERE userid = ' + people.userid, (err, row) => {
                     if (err) {
                         reject(err);
@@ -43,13 +46,14 @@ function getAccessls(database) {
                         if (!row) {
                             resolve({
                                 'role': 'normaluser',
-                                'info': people
+                                'info': people,
+                                'accessToken':  CryptoJS.enc.Base64.stringify(CryptoJS.HmacSHA256('normaltoken', people.userid.toString(), nonce.toString()))
                             });
                         } else {
                             resolve({
                                 'role': 'superuser',
-                                'info': people
-                                //add token
+                                'info': people,
+                                'accessToken':  CryptoJS.enc.Base64.stringify(CryptoJS.HmacSHA256('supertoken', people.userid.toString(), nonce.toString()))
                             });
                         }
                     }
@@ -94,5 +98,27 @@ function getAccessls(database) {
     };
 }
 
+function getUserid(database) {
+    return (usercode) => {
+        console.log('getPSWD read data base');
+        var bigPromise = new Promise((resolve, reject) => {
+            database.get('SELECT rowid as userid FROM users WHERE code = ' + usercode, (err, row) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    if (!row) {
+                        reject(err);
+                    } else {
+                        resolve(row && row.userid);
+                    }
+
+                }
+            });
+        });
+        return bigPromise;
+    };
+}
+
 module.exports.getPSWD = getPSWD;
 module.exports.getAccessls = getAccessls;
+module.exports.getUserid = getUserid;
