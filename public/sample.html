@@ -9,6 +9,9 @@
     <label><input type="input" id="detail" name="" value=""></label>
     <button type="submit" onclick="getinfo()"> get info</button>
      <button type="submit" onclick="getList()"> get list</button>
+     <div id="panel">    
+
+     </div>
     <script src="https://cdn.bootcss.com/axios/0.16.2/axios.min.js"></script>
     <script src="https://cdn.bootcss.com/crypto-js/3.1.9/crypto-js.min.js"></script>
 </head>
@@ -27,8 +30,15 @@
             return str;
         }
 
-        var usrpswd = '369462';
-        var usercode = '21425047', times = 0, stamp, nonce= '6812'; 
+        function output(){
+            var textNode = document.createTextNode(Array.prototype.join.call(arguments,'\s'));
+            var p = document.createElement('p');
+            p.appendChild(textNode);
+            document.querySelector('#panel').appendChild(p);
+        }
+
+        var usrpswd = '981755';
+        var usercode = '21425789', times = 0, stamp, nonce= '6812'; 
         var accessToken = '';
         var host = 'http://localhost:8000';
 
@@ -55,28 +65,29 @@
                 }
             })
             .then(function (response) {
-                    times++;
                     console.log(response);
                     accessToken = response.data.accessToken;
                     console.log(accessToken);
             });
+                 times++;
         }
-
-
+//  host+'/api/query/detail/3?accessToken='+accessToken,
+// host+'/api/query/records/1+2+3?from=0&to=999999999&page=0&accessToken='+accessToken,
         function getList(){
             stamp = Date.now().toString();
             var token = getToken(usercode, usrpswd, nonce, times.toString(), stamp);
             axios({
                 method: 'get',
-                url: host+'/api/query/records/1+2+3?from=0&to=999999999&page=0&accessToken='+accessToken,
+                url: host+'/api/query/records/1+2+3?from=0&to=999999999&accessToken='+accessToken,
                 headers: {
                     'Authorization':buildAuthContent(usercode,nonce,times,stamp,token)
                 }
             })
             .then(function (response) {
-                    times++;
+                   
                     console.log(response);
             });
+            times++;
         }
     </script>
 </body>

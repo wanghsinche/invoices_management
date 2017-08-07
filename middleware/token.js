@@ -9,7 +9,7 @@ let noncedb = new sqlite3.Database(global.nonceDataBase);
 
 
 function generateNonce() {
-    let nonce = Math.round(Math.random() * 10000);
+    let nonce = Math.floor(Math.random() * (10000-1000)+1000);
     return nonce;
 }
 
