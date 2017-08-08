@@ -9,6 +9,7 @@
     <label><input type="input" id="detail" name="" value=""></label>
     <button type="submit" onclick="getinfo()"> get info</button>
      <button type="submit" onclick="getList()"> get list</button>
+     <button type="submit" onclick="newRecord()">put</button>
      <div id="panel">    
 
      </div>
@@ -89,6 +90,40 @@
             });
             times++;
         }
+
+
+        function newRecord(){
+            stamp = Date.now().toString();
+            var token = getToken(usercode, usrpswd, nonce, times.toString(), stamp);
+            axios({
+                method: 'put',
+                url: host+'/api/change/newRecord',
+                headers: {
+                    'Authorization':buildAuthContent(usercode,nonce,times,stamp,token)
+                },
+                contentType: 'application/json; charset=utf-8',
+                data:{
+                    name:'测试',
+                    price:'1000',
+                    priceall:'100.00',
+                    num:'10',
+                    buyDate:Date.now(),
+                    invscode:'',
+                    invsprice:'',
+                    invsdate:'',
+                    link:'https://baidu.com',
+                    content:''
+                },
+
+            })
+            .then(function (response) {
+                   
+                    console.log(response);
+            });
+            times++;
+        }
+
+
     </script>
 </body>
 

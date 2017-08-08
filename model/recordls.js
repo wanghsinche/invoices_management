@@ -58,8 +58,6 @@ function getAllInfo(database) {
             recordP = Promise.resolve(result);
 
             return Promise.all([recordP, goodP, invsP, userP]);
-        }).catch(err => {
-            console.log(err);
         }).then(([recordls, goodls, invsls, userP]) => {
             //list to map
             var goodmap = {},

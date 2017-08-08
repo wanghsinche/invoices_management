@@ -12,6 +12,7 @@ function closeDataBase(){
 
 module.exports.getAllInfo = recordls.getAllInfo(database);
 module.exports.getDetail = detail.getDetail(database);
+module.exports.insertDetail = detail.insertDetail(database);
 module.exports.getPSWD = user.getPSWD(database);
 module.exports.getAccess = user.getAccessls(database);
 module.exports.getUserid = user.getUserid(database);

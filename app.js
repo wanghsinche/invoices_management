@@ -6,6 +6,7 @@ let
     app = express(),
     cors = require('cors'),
     query = require('./routes/query'),
+    change = require('./routes/change'),
     account = require('./routes/account'),
     tokenMiddleWare = require('./middleware/token'),
     patch = require('./middleware/patch');
@@ -19,7 +20,7 @@ app.use(express.static('public'));
 app.use(tokenMiddleWare);
 app.use('/api/query', query);
 app.use('/api/account', account);
-
+app.use('/api/change', change);
 
 
 app.listen(8000, () => {
