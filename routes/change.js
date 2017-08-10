@@ -31,6 +31,7 @@ router.put('/newRecord', function(req, res) {
             price,
             priceall,
             num,
+            goodcode,
             buyDate,
             invscode,
             invsprice,
@@ -43,6 +44,7 @@ router.put('/newRecord', function(req, res) {
 
     detail = {
         good: {
+            code: escapeHTML(goodcode) || null,
             name: escapeHTML(name) || null,
             price: Number(price) || NaN,
             priceall: Number(priceall) || NaN,

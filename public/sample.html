@@ -13,6 +13,8 @@
      <button type="submit" onclick="updateRecord()">post</button>
      <button type="submit" onclick="changePSWD()">changePSWD</button>
      <button type="submit" onclick="createUser()">createUser</button>
+     <button type="submit" onclick="makeSuper()">makeSuper</button>
+     <button type="submit" onclick="removeSuper()">removeSuper</button>
      <div id="panel">    
 
      </div>
@@ -98,6 +100,38 @@
         }
 
 
+        function makeSuper(){
+            stamp = Date.now().toString();
+            var token = getToken(usercode, usrpswd, nonce, times.toString(), stamp);
+            axios({
+                method: 'post',
+                url: host+'/api/account/makeSuper/7?accessToken='+accessToken,
+                headers: {
+                    'Authorization':buildAuthContent(usercode,nonce,times,stamp,token)
+                }
+            })
+            .then(function (response) {
+                    console.log(response);
+            });
+                 times++;
+        }   
+        function removeSuper(){
+            stamp = Date.now().toString();
+            var token = getToken(usercode, usrpswd, nonce, times.toString(), stamp);
+            axios({
+                method: 'delete',
+                url: host+'/api/account/removeSuper/7?accessToken='+accessToken,
+                headers: {
+                    'Authorization':buildAuthContent(usercode,nonce,times,stamp,token)
+                }
+            })
+            .then(function (response) {
+                    console.log(response);
+            });
+                 times++;
+        }        
+
+
         function changePSWD(){
             stamp = Date.now().toString();
             var token = getToken(usercode, usrpswd, nonce, times.toString(), stamp);
@@ -150,6 +184,7 @@
                 },
                 contentType: 'application/json; charset=utf-8',
                 data:{
+                    goodcode:'124313354435',
                     name:'测试',
                     price:'1000',
                     priceall:'100.00',

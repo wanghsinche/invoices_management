@@ -19,4 +19,6 @@ module.exports.getAccess = user.getAccessls(database);
 module.exports.getUserid = user.getUserid(database);
 module.exports.createUser = user.createUser(database);
 module.exports.changePassword = user.changePSWD(database);
+module.exports.makeSuper = user.makeSuper(database);
+module.exports.removeSuper = user.removeSuper(database);
 module.exports.closeDataBase = closeDataBase;

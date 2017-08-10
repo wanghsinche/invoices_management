@@ -28,7 +28,7 @@ function getDetail(database) {
             });
 
             goodP = new Promise((resolve, reject) => {
-                database.get('SELECT name, num, price, priceall, buyDate FROM goods WHERE rowid = ' + result.goodid, function(err, row) {
+                database.get('SELECT code, name, num, price, priceall, buyDate FROM goods WHERE rowid = ' + result.goodid, function(err, row) {
                     if (err) {
                         reject('goodP', err);
                     } else {
@@ -84,12 +84,13 @@ function insertDetail(database) {
             userid,
         } = detail;
         goodP = new Promise(function(resolve, reject) {
-            database.run('INSERT INTO goods (name, price, priceall, num, buyDate) VALUES ($name, $price, $priceall, $num, $buyDate)', {
+            database.run('INSERT INTO goods (name, price, priceall, num, buyDate, code) VALUES ($name, $price, $priceall, $num, $buyDate, $code)', {
                 $name: good.name,
                 $price: good.price,
                 $priceall: good.priceall,
                 $num: good.num,
-                $buyDate: good.buyDate
+                $buyDate: good.buyDate,
+                $code: good.code
             }, function(err) {
                 if (err) {
                     console.log(err);

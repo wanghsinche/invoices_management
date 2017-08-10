@@ -2,6 +2,8 @@ const router = require('express').Router();
 const getIdentity = require('../model/index').getAccess;
 const createUser = require('../model/index').createUser;
 const changePSWD = require('../model/index').changePassword;
+const makeSuper = require('../model/index').makeSuper;
+const removeSuper = require('../model/index').removeSuper;
 const accessMiddelware = require('../middleware/access');
 const bodyParser = require('body-parser');
 const escapeHTML = require('escape-html');
@@ -71,5 +73,44 @@ router.post('/changePSWD',function (req, res) {
     });
 
 });
+
+router.post('/makeSuper/:userid', accessMiddelware,function (req, res) {
+    // only superuser can create super
+    let userid = req.params.userid;
+    if(req.extraInfo.superuser){
+        makeSuper(userid).then(function(){
+        res.send({msg:'success'});
+    })
+    .catch(function(err){
+        res.status(500).send('make super failed');
+        console.log(err);
+    });
+    }
+    else{
+        res.status(403).send('not a superuser');
+    }
+    
+
+});
+
+router.delete('/removeSuper/:userid', accessMiddelware,function (req, res) {
+    // only superuser can create super
+    let userid = req.params.userid;
+    if(req.extraInfo.superuser){
+        removeSuper(userid).then(function(){
+        res.send({msg:'success'});
+    })
+    .catch(function(err){
+        res.status(500).send('remove super failed');
+        console.log(err);
+    });
+    }
+    else{
+        res.status(403).send('not a superuser');
+    }
+    
+
+});
+
 
 module.exports = router;

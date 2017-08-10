@@ -39,7 +39,7 @@ function getAccessls(database) {
                     }
                 }
             });
-        }).then(function(people) {
+        }).then(function (people) {
             return new Promise((resolve, reject) => {
                 console.log(people);
                 database.get('SELECT userid FROM superusers WHERE userid = ' + people.userid, (err, row) => {
@@ -62,7 +62,7 @@ function getAccessls(database) {
                     }
                 });
             });
-        }).then(function(msg) {
+        }).then(function (msg) {
             if (msg.role === 'superuser') {
                 return new Promise((resolve, reject) => {
                     database.all('SELECT rowid as userid, name FROM users', (err, rows) => {
@@ -130,11 +130,11 @@ function createUser(database) {
                 $username: username,
                 $password: password,
                 $usercode: usercode
-            }, function(err){
-                if(err){
+            }, function (err) {
+                if (err) {
                     reject(err);
                 }
-                else{
+                else {
                     resolve(this.lastID);
                 }
             });
@@ -143,18 +143,18 @@ function createUser(database) {
     };
 }
 
-function changePSWD(database){
+function changePSWD(database) {
     return (userid, password) => {
         console.log('change PSWD ');
         var bigPromise = new Promise((resolve, reject) => {
             database.run('UPDATE users SET pswd = $password WHERE rowid = $userid', {
                 $password: password,
                 $userid: userid
-            }, function(err){
-                if(err){
+            }, function (err) {
+                if (err) {
                     reject(err);
                 }
-                else{
+                else {
                     resolve();
                 }
             });
@@ -163,8 +163,50 @@ function changePSWD(database){
     };
 }
 
+function makeSuper(database) {
+    return (userid) => {
+        console.log('make super user ', userid);
+        var bigPromise = new Promise((resolve, reject) => {
+            database.run('INSERT INTO superusers (userid) VALUES ($userid)', {
+                $userid:userid
+            }, function (err) {
+                if (err) {
+                    reject(err);
+                }
+                else {
+                    resolve();
+                }
+            });
+        });
+        return bigPromise;
+    };
+}
+
+
+function removeSuper(database) {
+    return (userid) => {
+        console.log('remove super user ', userid);
+        var bigPromise = new Promise((resolve, reject) => {
+            database.run('DELETE FROM superusers WHERE userid = $userid', {
+                $userid:userid
+            }, function (err) {
+                if (err) {
+                    reject(err);
+                }
+                else {
+                    resolve();
+                }
+            });
+        });
+        return bigPromise;
+    };
+}
+
+
 module.exports.getPSWD = getPSWD;
 module.exports.getAccessls = getAccessls;
 module.exports.getUserid = getUserid;
 module.exports.createUser = createUser;
 module.exports.changePSWD = changePSWD;
+module.exports.makeSuper = makeSuper;
+module.exports.removeSuper = removeSuper;
