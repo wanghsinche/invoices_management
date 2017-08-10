@@ -4,7 +4,7 @@ function getPSWD(database) {
     return (usercode) => {
         console.log('getPSWD read data base');
         var bigPromise = new Promise((resolve, reject) => {
-            database.get('SELECT pswd, rowid FROM users WHERE code = ' + usercode, (err, row) => {
+            database.get('SELECT pswd, rowid FROM users WHERE code = ?', usercode, (err, row) => {
                 if (err) {
                     reject(err);
                 } else {
@@ -105,7 +105,7 @@ function getUserid(database) {
     return (usercode) => {
         console.log('getPSWD read data base');
         var bigPromise = new Promise((resolve, reject) => {
-            database.get('SELECT rowid as userid FROM users WHERE code = ' + usercode, (err, row) => {
+            database.get('SELECT rowid as userid FROM users WHERE code = ?',  usercode, (err, row) => {
                 if (err) {
                     reject(err);
                 } else {

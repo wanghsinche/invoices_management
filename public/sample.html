@@ -43,8 +43,8 @@
             document.querySelector('#panel').appendChild(p);
         }
 
-        var usrpswd = 'fe<5464>';
-        var usercode = '21425789', times = 0, stamp, nonce= '6812'; 
+        var usrpswd = 'xxxxxx';
+        var usercode = 'code0', times = 0, stamp, nonce= '6812'; 
         var accessToken = '';
         var host = 'http://localhost:8000';
 
@@ -105,7 +105,7 @@
             var token = getToken(usercode, usrpswd, nonce, times.toString(), stamp);
             axios({
                 method: 'post',
-                url: host+'/api/account/makeSuper/7?accessToken='+accessToken,
+                url: host+'/api/account/makeSuper/4?accessToken='+accessToken,
                 headers: {
                     'Authorization':buildAuthContent(usercode,nonce,times,stamp,token)
                 }
@@ -160,7 +160,7 @@
             var token = getToken(usercode, usrpswd, nonce, times.toString(), stamp);
             axios({
                 method: 'get',
-                url: host+'/api/query/records/1+2+3?from=0&to=999999999&accessToken='+accessToken,
+                url: host+'/api/query/records/1+2+3?from=0&to=1417968000000&accessToken='+accessToken,
                 headers: {
                     'Authorization':buildAuthContent(usercode,nonce,times,stamp,token)
                 }

@@ -55,7 +55,7 @@ module.exports = function(req, res, next) {
             }
         });
     } else {
-        usercode = cAuth.match(/usercode=(\d+)/);
+        usercode = cAuth.match(/usercode=(\w+)/);
         usercode = usercode && usercode[1];
         token = cAuth.match(/token=([\w+/=]+)/);
         token = token && token[1].toString();
@@ -65,7 +65,7 @@ module.exports = function(req, res, next) {
         reqtimes = reqtimes && reqtimes[1];
         reqstamp = cAuth.match(/stamp=(\d+)/);
         reqstamp = reqstamp && reqstamp[1];
-
+        console.log(usercode , token , reqnonce , reqtimes , reqstamp, simpleCheckNonce(Number(reqnonce)));
         if (!(usercode && token && reqnonce && reqtimes && reqstamp && simpleCheckNonce(Number(reqnonce)))) {
             res.status(401).send('Some headers were missed');
         } else {
