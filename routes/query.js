@@ -20,7 +20,7 @@ router.get('/records/:users', function (req, res) {
         {
             from,
             to
-        } = url.parse(req.url, true).query
+        } = url.parse(req.url, true).query;
 
 
 

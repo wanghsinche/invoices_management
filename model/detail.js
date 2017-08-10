@@ -77,7 +77,7 @@ function insertDetail(database) {
     // 再record
     return (detail) => {
         console.log('insert detail to data base');
-        var goodP, invsP, markP, {
+        let goodP, invsP, markP, {
             good,
             invs,
             mark,
@@ -137,7 +137,7 @@ function insertDetail(database) {
                 $invoiceid: invsid,
                 $markid: markid,
                 $date: Date.now()
-            }, function(err){
+            }, function(err) {
                 if (err) {
                     console.log(err);
                     reject(err);
@@ -152,5 +152,112 @@ function insertDetail(database) {
     };
 }
 
+function changeDetail(database) {
+    //全部插入
+    // 先 good, invs, mark
+    // 再record
+    return (detail) => {
+        console.log('change detail to data base');
+        let goodP, invsP, markP, {
+            recordid,
+            good,
+            invs,
+            mark,
+            userid,
+        } = detail;
+
+        let bigPromise = new Promise(function(resolve, reject) {
+            database.get('SELECT goodid, invoiceid, markid, userid FROM records WHERE rowid = ' + recordid, function(err, row) {
+                if (err) {
+                    reject(err);
+                } else {
+                    if (row) {
+                        resolve(row);
+                    } else {
+                        reject('no found');
+                    }
+                }
+            });
+        }).then(function(recordinfo) {
+            if (recordinfo.userid !== userid) {
+                return Promise.reject('forbid to change other user');
+            } else {
+
+                goodP = new Promise(function(resolve, reject) {
+                    var columns = Object.keys(good),
+                        values = [], param = {};
+
+                    columns.forEach(function(k) {
+                        if (!!good[k]) {
+                            values.push(k.concat('=$', k));
+                            param['$'+k] = good[k];
+                        }
+                    });
+
+
+
+                    database.run('UPDATE goods SET ' + values.join(',') + ' WHERE rowid = ' + recordinfo.goodid, param, function(err) {
+                        if (err) {
+                            console.log(err);
+                            reject(err);
+                        } else {
+                            resolve(recordinfo.goodid);
+                        }
+                    });
+                });
+                invsP = new Promise(function(resolve, reject) {
+                    var columns = Object.keys(invs),
+                        values = [], param = {};
+
+                    columns.forEach(function(k) {
+                        if (!!invs[k]) {
+                            values.push(k.concat('=$', k));
+                            param['$'+k] = invs[k];
+                        }
+                    });
+
+
+                    database.run('UPDATE invoices SET ' + values.join(',') + ' WHERE rowid = ' + recordinfo.invoiceid, param, function(err) {
+                        if (err) {
+                            console.log(err);
+                            reject(err);
+                        } else {
+                            resolve(recordinfo.invoiceid);
+                        }
+                    });
+                });
+                markP = new Promise(function(resolve, reject) {
+                    var columns = Object.keys(mark),
+                        values = [], param = {};
+
+                    columns.forEach(function(k) {
+                        if (!!mark[k]) {
+                            values.push(k.concat('=$', k));
+                            param['$'+k] = mark[k];
+                        }
+                    });
+
+
+                    database.run('UPDATE marks SET ' + values.join(',') + ' WHERE rowid = ' + recordinfo.markid, param, function(err) {
+                        if (err) {
+                            console.log(err);
+                            reject(err);
+                        } else {
+                            resolve(recordinfo.markid);
+                        }
+                    });
+                });
+                return Promise.all([goodP, invsP, markP]);
+            }
+        });
+
+        return bigPromise;
+
+
+    };
+}
+
+
 module.exports.getDetail = getDetail;
 module.exports.insertDetail = insertDetail;
+module.exports.changeDetail = changeDetail;

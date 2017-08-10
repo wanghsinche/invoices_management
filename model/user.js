@@ -11,7 +11,10 @@ function getPSWD(database) {
                     if (!row) {
                         reject(err);
                     } else {
-                        resolve(row && {userid: row.rowid, usrpswd: row.pswd});
+                        resolve(row && {
+                            userid: row.rowid,
+                            usrpswd: row.pswd
+                        });
                     }
 
                 }
@@ -47,13 +50,13 @@ function getAccessls(database) {
                             resolve({
                                 'role': 'normaluser',
                                 'info': people,
-                                'accessToken':  CryptoJS.enc.Base64.stringify(CryptoJS.HmacSHA256('normaltoken', people.userid.toString(), nonce.toString()))
+                                'accessToken': CryptoJS.enc.Base64.stringify(CryptoJS.HmacSHA256('normaltoken', people.userid.toString(), nonce.toString()))
                             });
                         } else {
                             resolve({
                                 'role': 'superuser',
                                 'info': people,
-                                'accessToken':  CryptoJS.enc.Base64.stringify(CryptoJS.HmacSHA256('supertoken', people.userid.toString(), nonce.toString()))
+                                'accessToken': CryptoJS.enc.Base64.stringify(CryptoJS.HmacSHA256('supertoken', people.userid.toString(), nonce.toString()))
                             });
                         }
                     }
@@ -119,6 +122,49 @@ function getUserid(database) {
     };
 }
 
+function createUser(database) {
+    return (usercode, username, password) => {
+        console.log('create user ', usercode, username);
+        var bigPromise = new Promise((resolve, reject) => {
+            database.run('INSERT INTO users (name, pswd, code) VALUES ($username, $password, $usercode)', {
+                $username: username,
+                $password: password,
+                $usercode: usercode
+            }, function(err){
+                if(err){
+                    reject(err);
+                }
+                else{
+                    resolve(this.lastID);
+                }
+            });
+        });
+        return bigPromise;
+    };
+}
+
+function changePSWD(database){
+    return (userid, password) => {
+        console.log('change PSWD ');
+        var bigPromise = new Promise((resolve, reject) => {
+            database.run('UPDATE users SET pswd = $password WHERE rowid = $userid', {
+                $password: password,
+                $userid: userid
+            }, function(err){
+                if(err){
+                    reject(err);
+                }
+                else{
+                    resolve();
+                }
+            });
+        });
+        return bigPromise;
+    };
+}
+
 module.exports.getPSWD = getPSWD;
 module.exports.getAccessls = getAccessls;
 module.exports.getUserid = getUserid;
+module.exports.createUser = createUser;
+module.exports.changePSWD = changePSWD;

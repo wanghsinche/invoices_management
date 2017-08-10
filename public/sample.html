@@ -10,6 +10,9 @@
     <button type="submit" onclick="getinfo()"> get info</button>
      <button type="submit" onclick="getList()"> get list</button>
      <button type="submit" onclick="newRecord()">put</button>
+     <button type="submit" onclick="updateRecord()">post</button>
+     <button type="submit" onclick="changePSWD()">changePSWD</button>
+     <button type="submit" onclick="createUser()">createUser</button>
      <div id="panel">    
 
      </div>
@@ -38,7 +41,7 @@
             document.querySelector('#panel').appendChild(p);
         }
 
-        var usrpswd = '981755';
+        var usrpswd = 'fe<5464>';
         var usercode = '21425789', times = 0, stamp, nonce= '6812'; 
         var accessToken = '';
         var host = 'http://localhost:8000';
@@ -71,6 +74,50 @@
                     console.log(accessToken);
             });
                  times++;
+        }
+
+
+        function createUser(){
+            stamp = Date.now().toString();
+            var token = getToken(usercode, usrpswd, nonce, times.toString(), stamp);
+            axios({
+                method: 'put',
+                url: host+'/api/account/create?accessToken='+accessToken,
+                headers: {
+                    'Authorization':buildAuthContent(usercode,nonce,times,stamp,token)
+                },
+                contentType: 'application/json; charset=utf-8',
+                data:{
+                    usercode:'456573', username:'sdfgsdfg'
+                }
+            })
+            .then(function (response) {
+                    console.log(response);
+            });
+                 times++;
+        }
+
+
+        function changePSWD(){
+            stamp = Date.now().toString();
+            var token = getToken(usercode, usrpswd, nonce, times.toString(), stamp);
+            axios({
+                method: 'post',
+                url: host+'/api/account/changePSWD',
+                headers: {
+                    'Authorization':buildAuthContent(usercode,nonce,times,stamp,token)
+                },
+                contentType: 'application/json; charset=utf-8',
+                data:{
+                    password:'fe<5464>'
+                },
+
+            })
+            .then(function (response) {
+                   
+                    console.log(response);
+            });
+            times++;
         }
 //  host+'/api/query/detail/3?accessToken='+accessToken,
 // host+'/api/query/records/1+2+3?from=0&to=999999999&page=0&accessToken='+accessToken,
@@ -123,6 +170,35 @@
             times++;
         }
 
+
+
+        function updateRecord(){
+            stamp = Date.now().toString();
+            var token = getToken(usercode, usrpswd, nonce, times.toString(), stamp);
+            axios({
+                method: 'post',
+                url: host+'/api/change/updateRecord/3',
+                headers: {
+                    'Authorization':buildAuthContent(usercode,nonce,times,stamp,token)
+                },
+                contentType: 'application/json; charset=utf-8',
+                data:{
+                    price:'1000',
+                    priceall:'100.00',
+                    num:'10',
+                    invscode:'456456456',
+                    invsdate:'6465456',
+                    link:'https://baidu22.com',
+                    content:'<script>sffsf<\/script>'
+                },
+
+            })
+            .then(function (response) {
+                   
+                    console.log(response);
+            });
+            times++;
+        }
 
     </script>
 </body>
