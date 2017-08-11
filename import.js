@@ -1,17 +1,18 @@
-const sqlite3 = require('sqlite3').verbose();
-const dburl = './import/real.db';
+const sqlite3 = require('sqlite3');
+const dburl = './database/real.db';
 let database = new sqlite3.Database(dburl);
-var csv = require('node-csv').createParser();
+let csv = require('node-csv').createParser();
+let fs = require('fs');
+fs.writeFile('D:/mine/expressServer/public/static/1_2_3_0_1417968000000_1081191.csv','sdf');
+
+// csv.parseFile('./import/record.csv', function(err, data) {
+//     // console.log(data);
+//     data.shift();
+//     insertAll(data);
 
 
-csv.parseFile('./import/record.csv', function(err, data) {
-    // console.log(data);
-    data.shift();
-    insertAll(data);
 
-
-
-});
+// });
 
 
 let peoplels = {
@@ -23,7 +24,7 @@ let peoplels = {
 '邹成业':6,
 '施凯戈':7,
 '楼君':8,
-'韩婷':9,
+'duplicated':9,
 '李硕':10,
 '韩婷':11,
 '胡健力':12,
@@ -45,10 +46,9 @@ let peoplels = {
 function insertAll(data){
 database.serialize(() => {
 
-    let stmt = database.prepare('INSERT INTO records (goodid, userid, invoiceid, markid, date) VALUES (?, ?, ?, ? ,?)');
+    let stmt = database.prepare('UPDATE marks SET content = $content WHERE rowid = $rowid');
     data.forEach((row, index)=>{
-            console.log(index+1, peoplels[row[4]], index+1, index+1, (new Date(row[0])).getTime());
-            stmt.run(index+1, peoplels[row[4]]||23, index+1, index+1, (new Date(row[0])).getTime());
+            stmt.run(row[7]+row[8], index+1);
         });
     stmt.finalize();
 });

@@ -5,7 +5,7 @@
 * update [done]   
 * query list and detail [done]  
 * add users and change password  [done]
-* import and export exl 
+* import and export exl [almost done]
 
 
 ```javascript

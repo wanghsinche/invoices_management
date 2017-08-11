@@ -11,6 +11,7 @@ function closeDataBase(){
 
 
 module.exports.getAllInfo = recordls.getAllInfo(database);
+module.exports.getAllDetail = recordls.getAllDetail(database);
 module.exports.getDetail = detail.getDetail(database);
 module.exports.insertDetail = detail.insertDetail(database);
 module.exports.updateDetail = detail.changeDetail(database);

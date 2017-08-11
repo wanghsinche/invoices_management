@@ -9,6 +9,7 @@ let
     query = require('./routes/query'),
     change = require('./routes/change'),
     account = require('./routes/account'),
+    exportDetail = require('./routes/export'),
     tokenMiddleWare = require('./middleware/token'),
     patch = require('./middleware/patch');
 
@@ -22,7 +23,7 @@ app.use(tokenMiddleWare);
 app.use('/api/query', query);
 app.use('/api/account', account);
 app.use('/api/change', change);
-
+app.use('/api/export', exportDetail);
 
 app.listen(8000, () => {
     console.log('listening on 8000');

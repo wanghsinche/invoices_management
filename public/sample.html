@@ -1,241 +1,240 @@
 <!DOCTYPE>
 <html>
-
-<head>
-    <title>
+    <head>
+        <title>
         test
-    </title>
-    <button type="submit" onclick="preAuthorize()">preAuthorize</button>
-    <label><input type="input" id="detail" name="" value=""></label>
-    <button type="submit" onclick="getinfo()"> get info</button>
-     <button type="submit" onclick="getList()"> get list</button>
-     <button type="submit" onclick="newRecord()">put</button>
-     <button type="submit" onclick="updateRecord()">post</button>
-     <button type="submit" onclick="changePSWD()">changePSWD</button>
-     <button type="submit" onclick="createUser()">createUser</button>
-     <button type="submit" onclick="makeSuper()">makeSuper</button>
-     <button type="submit" onclick="removeSuper()">removeSuper</button>
-     <div id="panel">    
-
-     </div>
-    <script src="https://cdn.bootcss.com/axios/0.16.2/axios.min.js"></script>
-    <script src="https://cdn.bootcss.com/crypto-js/3.1.9/crypto-js.min.js"></script>
-</head>
-
-<body>
-    <script>
+        </title>
+        <button type="submit" onclick="preAuthorize()">preAuthorize</button>
+        <label><input type="input" id="detail" name="" value=""></label>
+        <button type="submit" onclick="getinfo()"> get info</button>
+        <button type="submit" onclick="getList()"> get list</button>
+        <button type="submit" onclick="newRecord()">put</button>
+        <button type="submit" onclick="updateRecord()">post</button>
+        <button type="submit" onclick="changePSWD()">changePSWD</button>
+        <button type="submit" onclick="createUser()">createUser</button>
+        <button type="submit" onclick="makeSuper()">makeSuper</button>
+        <button type="submit" onclick="removeSuper()">removeSuper</button>
+        <button type="submit" onclick="exportDetail()">exportDetail</button>
+        
+        <div id="panel">
+        </div>
+        <script src="https://cdn.bootcss.com/axios/0.16.2/axios.min.js"></script>
+        <script src="https://cdn.bootcss.com/crypto-js/3.1.9/crypto-js.min.js"></script>
+    </head>
+    <body>
+        <script>
         function getToken(usercode, usrpswd, reqnonce, reqtimes, reqstamp) {
-            let hash = CryptoJS.HmacSHA256(usercode, usrpswd, reqnonce, reqtimes, reqstamp);
-            let hashInBase64 = CryptoJS.enc.Base64.stringify(hash);
-            console.log(hashInBase64);
-            return hashInBase64;
+        let hash = CryptoJS.HmacSHA256(usercode, usrpswd, reqnonce, reqtimes, reqstamp);
+        let hashInBase64 = CryptoJS.enc.Base64.stringify(hash);
+        console.log(hashInBase64);
+        return hashInBase64;
         }
-
         function buildAuthContent(usercode, nonce, times, stamp, token) {
-            var str = ['usercode=' + usercode, 'nonce=' + nonce, 'times=' + times, 'stamp=' + stamp, 'token=' + token].join(';');
-            return str;
+        var str = ['usercode=' + usercode, 'nonce=' + nonce, 'times=' + times, 'stamp=' + stamp, 'token=' + token].join(';');
+        return str;
         }
-
         function output(){
-            var textNode = document.createTextNode(Array.prototype.join.call(arguments,'\s'));
-            var p = document.createElement('p');
-            p.appendChild(textNode);
-            document.querySelector('#panel').appendChild(p);
+        var textNode = document.createTextNode(Array.prototype.join.call(arguments,'\s'));
+        var p = document.createElement('p');
+        p.appendChild(textNode);
+        document.querySelector('#panel').appendChild(p);
         }
-
         var usrpswd = 'xxxxxx';
-        var usercode = 'code0', times = 0, stamp, nonce= '6812'; 
+        var usercode = 'code0', times = 0, stamp, nonce= '6812';
         var accessToken = '';
         var host = 'http://localhost:8000';
-
         function preAuthorize(){
-            axios({
-                method: 'get',
-                url: host+'/api/query/getnonce',
-            }).then(function(response){
-                nonce = response.data.data.nonce;
-                console.log(nonce);
-                
-            });           
+        axios({
+        method: 'get',
+        url: host+'/api/query/getnonce',
+        }).then(function(response){
+        nonce = response.data.data.nonce;
+        console.log(nonce);
+        
+        });
         }
-
-
+        
         function getinfo(){
-            stamp = Date.now().toString();
-            var token = getToken(usercode, usrpswd, nonce, times.toString(), stamp);
-            axios({
-                method: 'get',
-                url: host+'/api/account/getidentity',
-                headers: {
-                    'Authorization':buildAuthContent(usercode,nonce,times,stamp,token)
-                }
-            })
-            .then(function (response) {
-                    console.log(response);
-                    accessToken = response.data.accessToken;
-                    console.log(accessToken);
-            });
-                 times++;
+        stamp = Date.now().toString();
+        var token = getToken(usercode, usrpswd, nonce, times.toString(), stamp);
+        axios({
+        method: 'get',
+        url: host+'/api/account/getidentity',
+        headers: {
+        'Authorization':buildAuthContent(usercode,nonce,times,stamp,token)
         }
-
-
+        })
+        .then(function (response) {
+        console.log(response);
+        accessToken = response.data.accessToken;
+        console.log(accessToken);
+        });
+        times++;
+        }
         function createUser(){
-            stamp = Date.now().toString();
-            var token = getToken(usercode, usrpswd, nonce, times.toString(), stamp);
-            axios({
-                method: 'put',
-                url: host+'/api/account/create?accessToken='+accessToken,
-                headers: {
-                    'Authorization':buildAuthContent(usercode,nonce,times,stamp,token)
-                },
-                contentType: 'application/json; charset=utf-8',
-                data:{
-                    usercode:'456573', username:'sdfgsdfg'
-                }
-            })
-            .then(function (response) {
-                    console.log(response);
-            });
-                 times++;
+        stamp = Date.now().toString();
+        var token = getToken(usercode, usrpswd, nonce, times.toString(), stamp);
+        axios({
+        method: 'put',
+        url: host+'/api/account/create?accessToken='+accessToken,
+        headers: {
+        'Authorization':buildAuthContent(usercode,nonce,times,stamp,token)
+        },
+        contentType: 'application/json; charset=utf-8',
+        data:{
+        usercode:'456573', username:'sdfgsdfg'
         }
-
-
+        })
+        .then(function (response) {
+        console.log(response);
+        });
+        times++;
+        }
         function makeSuper(){
-            stamp = Date.now().toString();
-            var token = getToken(usercode, usrpswd, nonce, times.toString(), stamp);
-            axios({
-                method: 'post',
-                url: host+'/api/account/makeSuper/4?accessToken='+accessToken,
-                headers: {
-                    'Authorization':buildAuthContent(usercode,nonce,times,stamp,token)
-                }
-            })
-            .then(function (response) {
-                    console.log(response);
-            });
-                 times++;
-        }   
+        stamp = Date.now().toString();
+        var token = getToken(usercode, usrpswd, nonce, times.toString(), stamp);
+        axios({
+        method: 'post',
+        url: host+'/api/account/makeSuper/4?accessToken='+accessToken,
+        headers: {
+        'Authorization':buildAuthContent(usercode,nonce,times,stamp,token)
+        }
+        })
+        .then(function (response) {
+        console.log(response);
+        });
+        times++;
+        }
         function removeSuper(){
-            stamp = Date.now().toString();
-            var token = getToken(usercode, usrpswd, nonce, times.toString(), stamp);
-            axios({
-                method: 'delete',
-                url: host+'/api/account/removeSuper/7?accessToken='+accessToken,
-                headers: {
-                    'Authorization':buildAuthContent(usercode,nonce,times,stamp,token)
-                }
-            })
-            .then(function (response) {
-                    console.log(response);
-            });
-                 times++;
-        }        
-
-
+        stamp = Date.now().toString();
+        var token = getToken(usercode, usrpswd, nonce, times.toString(), stamp);
+        axios({
+        method: 'delete',
+        url: host+'/api/account/removeSuper/7?accessToken='+accessToken,
+        headers: {
+        'Authorization':buildAuthContent(usercode,nonce,times,stamp,token)
+        }
+        })
+        .then(function (response) {
+        console.log(response);
+        });
+        times++;
+        }
         function changePSWD(){
-            stamp = Date.now().toString();
-            var token = getToken(usercode, usrpswd, nonce, times.toString(), stamp);
-            axios({
-                method: 'post',
-                url: host+'/api/account/changePSWD',
-                headers: {
-                    'Authorization':buildAuthContent(usercode,nonce,times,stamp,token)
-                },
-                contentType: 'application/json; charset=utf-8',
-                data:{
-                    password:'fe<5464>'
-                },
-
-            })
-            .then(function (response) {
-                   
-                    console.log(response);
-            });
-            times++;
+        stamp = Date.now().toString();
+        var token = getToken(usercode, usrpswd, nonce, times.toString(), stamp);
+        axios({
+        method: 'post',
+        url: host+'/api/account/changePSWD',
+        headers: {
+        'Authorization':buildAuthContent(usercode,nonce,times,stamp,token)
+        },
+        contentType: 'application/json; charset=utf-8',
+        data:{
+        password:'fe<5464>'
+        },
+        })
+        .then(function (response) {
+        
+        console.log(response);
+        });
+        times++;
         }
-//  host+'/api/query/detail/3?accessToken='+accessToken,
-// host+'/api/query/records/1+2+3?from=0&to=999999999&page=0&accessToken='+accessToken,
+        //  host+'/api/query/detail/3?accessToken='+accessToken,
+        // host+'/api/query/records/1+2+3?from=0&to=999999999&page=0&accessToken='+accessToken,
         function getList(){
-            stamp = Date.now().toString();
-            var token = getToken(usercode, usrpswd, nonce, times.toString(), stamp);
-            axios({
-                method: 'get',
-                url: host+'/api/query/records/1+2+3?from=0&to=1417968000000&accessToken='+accessToken,
-                headers: {
-                    'Authorization':buildAuthContent(usercode,nonce,times,stamp,token)
-                }
-            })
-            .then(function (response) {
-                   
-                    console.log(response);
-            });
-            times++;
+        stamp = Date.now().toString();
+        var token = getToken(usercode, usrpswd, nonce, times.toString(), stamp);
+        axios({
+        method: 'get',
+        url: host+'/api/query/records/1+2+3?from=0&to=1417968000000&accessToken='+accessToken,
+        headers: {
+        'Authorization':buildAuthContent(usercode,nonce,times,stamp,token)
         }
+        })
+        .then(function (response) {
+        
+        console.log(response);
+        });
+        times++;
+        }
+        function exportDetail(){
+        stamp = Date.now().toString();
+        var token = getToken(usercode, usrpswd, nonce, times.toString(), stamp);
+        axios({
+        method: 'get',
+        url: host+'/api/export/csv/1+2+3?from=0&to=1417968000000&accessToken='+accessToken,
+        headers: {
+        'Authorization':buildAuthContent(usercode,nonce,times,stamp,token)
+        }
+        })
+        .then(function (response) {
+        var blob = new Blob([response.data], {type: 'text/csv'}); // pass a useful mime type here
+        console.log(blob.type);
+        var url = URL.createObjectURL(blob, {type: 'text/csv'});
+        window.open(url);
+        console.log('ok');
 
-
+        // window.location.href=host+response.data.path;
+        });
+        times++;
+        }
         function newRecord(){
-            stamp = Date.now().toString();
-            var token = getToken(usercode, usrpswd, nonce, times.toString(), stamp);
-            axios({
-                method: 'put',
-                url: host+'/api/change/newRecord',
-                headers: {
-                    'Authorization':buildAuthContent(usercode,nonce,times,stamp,token)
-                },
-                contentType: 'application/json; charset=utf-8',
-                data:{
-                    goodcode:'124313354435',
-                    name:'测试',
-                    price:'1000',
-                    priceall:'100.00',
-                    num:'10',
-                    buyDate:Date.now(),
-                    invscode:'',
-                    invsprice:'',
-                    invsdate:'',
-                    link:'https://baidu.com',
-                    content:''
-                },
-
-            })
-            .then(function (response) {
-                   
-                    console.log(response);
-            });
-            times++;
+        stamp = Date.now().toString();
+        var token = getToken(usercode, usrpswd, nonce, times.toString(), stamp);
+        axios({
+        method: 'put',
+        url: host+'/api/change/newRecord',
+        headers: {
+        'Authorization':buildAuthContent(usercode,nonce,times,stamp,token)
+        },
+        contentType: 'application/json; charset=utf-8',
+        data:{
+        goodcode:'124313354435',
+        name:'测试',
+        price:'1000',
+        priceall:'100.00',
+        num:'10',
+        buyDate:Date.now(),
+        invscode:'',
+        invsprice:'',
+        invsdate:'',
+        link:'https://baidu.com',
+        content:''
+        },
+        })
+        .then(function (response) {
+        
+        console.log(response);
+        });
+        times++;
         }
-
-
-
         function updateRecord(){
-            stamp = Date.now().toString();
-            var token = getToken(usercode, usrpswd, nonce, times.toString(), stamp);
-            axios({
-                method: 'post',
-                url: host+'/api/change/updateRecord/3',
-                headers: {
-                    'Authorization':buildAuthContent(usercode,nonce,times,stamp,token)
-                },
-                contentType: 'application/json; charset=utf-8',
-                data:{
-                    price:'1000',
-                    priceall:'100.00',
-                    num:'10',
-                    invscode:'456456456',
-                    invsdate:'6465456',
-                    link:'https://baidu22.com',
-                    content:'<script>sffsf<\/script>'
-                },
-
-            })
-            .then(function (response) {
-                   
-                    console.log(response);
-            });
-            times++;
+        stamp = Date.now().toString();
+        var token = getToken(usercode, usrpswd, nonce, times.toString(), stamp);
+        axios({
+        method: 'post',
+        url: host+'/api/change/updateRecord/3',
+        headers: {
+        'Authorization':buildAuthContent(usercode,nonce,times,stamp,token)
+        },
+        contentType: 'application/json; charset=utf-8',
+        data:{
+        price:'1000',
+        priceall:'100.00',
+        num:'10',
+        invscode:'456456456',
+        invsdate:'6465456',
+        link:'https://baidu22.com',
+        content:'<script>sffsf<\/script>'
+        },
+        })
+        .then(function (response) {
+        
+        console.log(response);
+        });
+        times++;
         }
-
-    </script>
-</body>
-
+        </script>
+    </body>
 </html>
