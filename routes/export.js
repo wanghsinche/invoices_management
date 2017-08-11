@@ -4,7 +4,7 @@ const url = require('url');
 const accessMiddelware = require('../middleware/access');
 const fs = require('fs');
 const exec = require('child_process').execSync;
-            
+
 // all query need to check access right
 router.use(accessMiddelware);
 
@@ -25,20 +25,26 @@ router.get('/csv/:users', function(req, res) {
         } else {
             getDetailList(users, from, to).then(function(list) {
                 res.setHeader('Content-Type', 'application/octet-stream');
-                res.setHeader('Content-Disposition', 'attachment; filename='+[users.join('+'),from,to].join('_')+'.csv');
-                // let token = [users.join('_'),from,to,Date.now()].join('_');
-                // fs.writeFile(__dirname+'/'+'../public/static/'+token+'.csv',list.map(v=>[v.recid, v.userid, v.invoiceid, v.markid].join('\t')).join('\n'),function(err){
-                //     if(err){
-                //         res.status(500);
-                //         console.log(err);
-                //         return Promise.reject(err);
-                //     }
-                //     else{
-                //         res.setHeader('Content-Type', 'application/json');
-                //         res.send({msg:'export successfully', path:'/static/'+token+'.csv'});
-                //     }
-                // });
-                res.send(list.map(v=>[v.recid, v.userid, v.invoiceid, v.markid].join('\t')).join('\n'));
+                res.setHeader('Content-Disposition', 'attachment; filename=' + [users.join('+'), from, to].join('_') + '.csv');
+                let token = [users.join('_'), from, to, Date.now()].join('_');
+                let path = __dirname + '/' + '../public/static/' + token + '.csv';
+                fs.writeFile(path, list.map(v => [v.recid, v.userid, v.invoiceid, v.markid].join('\t')).join('\n'), function(err) {
+                    if (err) {
+                        res.status(500);
+                        console.log(err);
+                        return Promise.reject(err);
+                    } else {
+                        res.setHeader('Content-Type', 'application/json');
+                        res.send({
+                            msg: 'export successfully',
+                            path: '/static/' + token + '.csv'
+                        });
+                        setTimeout(function() {
+                            fs.unlinkSync(path);
+                        }, 60000);
+                    }
+                });
+                // res.send(list.map(v=>[v.recid, v.userid, v.invoiceid, v.markid].join('\t')).join('\n'));
             }).catch(function(err) {
                 console.log(err);
             });

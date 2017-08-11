@@ -169,13 +169,13 @@
         }
         })
         .then(function (response) {
-        var blob = new Blob([response.data], {type: 'text/csv'}); // pass a useful mime type here
-        console.log(blob.type);
-        var url = URL.createObjectURL(blob, {type: 'text/csv'});
-        window.open(url);
+        // var blob = new Blob([response.data], {type: 'text/csv'}); // pass a useful mime type here
+        // console.log(blob.type);
+        // var url = URL.createObjectURL(blob, {type: 'text/csv'});
+        // window.open(url);
         console.log('ok');
 
-        // window.location.href=host+response.data.path;
+        window.location.href=host+response.data.path;
         });
         times++;
         }
