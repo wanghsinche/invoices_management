@@ -51,7 +51,20 @@
         }).then(function(response){
         nonce = response.data.data.nonce;
         console.log(nonce);
-        
+        stamp = Date.now().toString();
+        var token = getToken(usercode, usrpswd, nonce, times.toString(), stamp);
+        return axios({
+        method: 'get',
+        url: host+'/api/account/getidentity',
+        headers: {
+        'Authorization':buildAuthContent(usercode,nonce,times++,stamp,token)
+        }
+        })
+        })
+        .then(function (response) {
+        console.log(response);
+        accessToken = response.data.accessToken;
+        console.log(accessToken);
         });
         }
         
