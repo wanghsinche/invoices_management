@@ -5,8 +5,8 @@
 * update [done]   
 * query list and detail [done]  
 * add users and change password  [done]
-* import and export exl [almost done]
-
+* import and export exl [done]
+* export docx [done]
 
 ```javascript
 digest = base64encode(hmac("johndoe", "secret", "GET+/users/johndoe/financialrecords+20apr201312:59:24+nonce"))

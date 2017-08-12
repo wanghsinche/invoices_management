@@ -101,7 +101,7 @@ function getAllDetail(database) {
             let goodP, invsP, recordP, userP, markP;
 
             userP = new Promise((resolve, reject) => {
-                database.all('SELECT code as userid, name FROM users WHERE rowid in (' + users.join(',') + ')', function(err, rows) {
+                database.all('SELECT rowid as userid, code, name FROM users WHERE rowid in (' + users.join(',') + ')', function(err, rows) {
                     if (err) {
                         reject(err);
                     } else {
@@ -119,7 +119,7 @@ function getAllDetail(database) {
                 });
             });
             invsP = new Promise((resolve, reject) => {
-                database.all('SELECT rowid as invsid, code, price, date FROM invoices WHERE rowid in (' + invscon + ')', function(err, rows) {
+                database.all('SELECT rowid as invsid, code, price, date, type FROM invoices WHERE rowid in (' + invscon + ')', function(err, rows) {
                     if (err) {
                         reject(err);
                     } else {
@@ -154,8 +154,8 @@ function getAllDetail(database) {
             return Promise.resolve(
                 recordls.map(v => {
                     return Object.assign({}, v, {
-                        name: goodmap['goodid' + v.goodid],
-                        code: invsmap['invsid' + v.invoiceid],
+                        good: goodmap['goodid' + v.goodid],
+                        invs: invsmap['invsid' + v.invoiceid],
                         user: usermap['userid' + v.userid],
                         mark: markmap['markid' + v.markid]
                     });

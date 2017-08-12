@@ -38,7 +38,7 @@ function getDetail(database) {
             });
 
             invsP = new Promise((resolve, reject) => {
-                database.get('SELECT price as invoicePrice, code, date as invoiceDate FROM invoices WHERE rowid = ' + result.invoiceid, function(err, row) {
+                database.get('SELECT price as invoicePrice, code, date as invoiceDate, type FROM invoices WHERE rowid = ' + result.invoiceid, function(err, row) {
                     if (err) {
                         reject('invsP', err);
                     } else {
@@ -102,10 +102,11 @@ function insertDetail(database) {
             });
         });
         invsP = new Promise(function(resolve, reject) {
-            database.run('INSERT INTO invoices (code, price, date) VALUES ($code, $price, $date)', {
+            database.run('INSERT INTO invoices (code, price, date, type) VALUES ($code, $price, $date)', {
                 $code: invs.code,
                 $price: invs.price,
-                $date: invs.date
+                $date: invs.date,
+                $type: invs.type
             }, function(err) {
                 if (err) {
                     console.log(err);

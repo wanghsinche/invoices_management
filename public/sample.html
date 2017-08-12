@@ -163,7 +163,7 @@
         var token = getToken(usercode, usrpswd, nonce, times.toString(), stamp);
         axios({
         method: 'get',
-        url: host+'/api/export/csv/1+2+3?from=0&to=1417968000000&accessToken='+accessToken,
+        url: host+'/api/export/docx/1?from=0&to=1437968000000&accessToken='+accessToken,
         headers: {
         'Authorization':buildAuthContent(usercode,nonce,times,stamp,token)
         }
@@ -199,6 +199,7 @@
         invscode:'',
         invsprice:'',
         invsdate:'',
+        type: '材料费',
         link:'https://baidu.com',
         content:''
         },

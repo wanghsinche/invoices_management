@@ -36,6 +36,7 @@ router.put('/newRecord', function(req, res) {
             invscode,
             invsprice,
             invsdate,
+            type,
             link,
             content
         } = req.body,
@@ -54,7 +55,8 @@ router.put('/newRecord', function(req, res) {
         invs: {
             code: invscode || null,
             price: Number(invsprice) || NaN,
-            date: Number(invsdate) || NaN
+            date: Number(invsdate) || NaN,
+            type: type || null
         },
         mark: {
             link: escapeHTML(link) || null,
@@ -83,6 +85,7 @@ router.post('/updateRecord/:recordid', function(req, res) {
             invscode,
             invsprice,
             invsdate,
+            type,
             link,
             content
         } = req.body,
@@ -96,7 +99,8 @@ router.post('/updateRecord/:recordid', function(req, res) {
         invs: {
             code: invscode || null,
             price: Number(invsprice) || NaN,
-            date: Number(invsdate) || NaN
+            date: Number(invsdate) || NaN,
+            type: type || null
         },
         mark: {
             link: escapeHTML(link) || null,

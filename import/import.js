@@ -3,16 +3,16 @@ const dburl = './database/real.db';
 let database = new sqlite3.Database(dburl);
 let csv = require('node-csv').createParser();
 let fs = require('fs');
-fs.writeFile('D:/mine/expressServer/public/static/1_2_3_0_1417968000000_1081191.csv','sdf');
+// fs.writeFile('D:/mine/expressServer/public/static/1_2_3_0_1417968000000_1081191.csv','sdf');
 
-// csv.parseFile('./import/record.csv', function(err, data) {
-//     // console.log(data);
-//     data.shift();
-//     insertAll(data);
+csv.parseFile('./import/record.csv', function(err, data) {
+    // console.log(data);
+    data.shift();
+    insertAll(data);
 
 
 
-// });
+});
 
 
 let peoplels = {
@@ -48,7 +48,12 @@ database.serialize(() => {
 
     let stmt = database.prepare('UPDATE marks SET content = $content WHERE rowid = $rowid');
     data.forEach((row, index)=>{
-            stmt.run(row[7]+row[8], index+1);
+            stmt.run(row[8], index+1);
+        });
+    stmt.finalize();
+    stmt = database.prepare('UPDATE invoices SET type = $type WHERE rowid = $rowid');
+    data.forEach((row, index)=>{
+            stmt.run(row[7], index+1);
         });
     stmt.finalize();
 });
