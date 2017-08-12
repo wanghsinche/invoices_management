@@ -1,0 +1,20 @@
+{
+    "version": "0.1",
+    "name":"express-server",
+    "main":"app.js",
+    "scripts":{
+        "start":"node app.js"
+    },
+    "dependencies": {
+        "express": "^4.15.2",
+        "cors":"^2.8.4",
+        "body-parser": "^1.17.2",
+        "sqlite3": "^3.1.8",
+        "crypto-js": "^3.1.9-1",
+        "escape-html": "^1.0.3",
+        "node-csv":"^0.1.2",
+        "moment": "^2.18.1",
+        "jszip": "~2.0.0",
+        "docxtemplater":"^3.1.5"
+    }
+}
