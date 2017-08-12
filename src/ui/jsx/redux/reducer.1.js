@@ -1,8 +1,10 @@
 //define reducer
 import { combineReducers } from 'redux';
 import {
-    SAVE_INFO,
-    CLEAR_INFO,
+    ADD_RECORD,
+    RM_RECORD,
+    SET_FILTER,
+    FilterLS,
     REFRESH_RECORDS,
     XHR_REQUEST,
     requestStatus,
@@ -15,46 +17,18 @@ import {
 } from './action';
 //reducer is a store that cant hold state, it is created to change states by previous state
 //store is a really store to hold state
-
-function rdsAsync(state = {
-    status: requestStatus.NORMAL,
-    msg: ''
-}, action) {
-    switch (action.type) {
-        case XHR_REQUEST:
-            return Object.assign({}, state, {
-                status: action.status,
-                msg: action.msg
-            });
-        default:
-            return state;
-    }
-}
-
-function rdsInfo(state = {}, action) {
-    switch (action.type) {
-        case SAVE_INFO:
-            return {
-                loged: true,
-                usercode: action.usercode,
-                info: action.info
-            };
-        case CLEAR_INFO:
-            return {
-                loged: false,
-                usercode: void(0),
-                info: void(0)
-            };
-        default:
-            return state;
-    }
-
-}
-
-
 function rdsRecords(state = [], action) {
     let tmp, { recid, goodid, usrid, invsid, markid, name } = action;
+
     switch (action.type) {
+        case ADD_RECORD:
+            tmp = state.slice();
+            tmp.push({
+                recid, goodid, usrid, invsid, markid, name
+            });
+            return tmp;
+        case RM_RECORD:
+            return state.filter((v) => v.recid !== v.recid);
         case REFRESH_RECORDS:
             tmp = action.records.map(function (v) {
                 return {
@@ -72,6 +46,29 @@ function rdsRecords(state = [], action) {
     }
 }
 
+function rdsFilter(state = FilterLS.SHOW_ALL, action) {
+    switch (action.type) {
+        case SET_FILTER:
+            return action.filter;
+        default:
+            return state;
+    }
+}
+
+function rdsAsync(state = {
+    status: requestStatus.NORMAL,
+    msg: ''
+}, action) {
+    switch (action.type) {
+        case XHR_REQUEST:
+            return Object.assign({}, state, {
+                status: action.status,
+                msg: action.msg
+            });
+        default:
+            return state;
+    }
+}
 
 function rdsPage(state = { show: true, current: 0, paging: PAGINGNUM }, action) {
     let { current, paging } = action, tmp;
@@ -110,7 +107,7 @@ function rdsCurrent(state = {
 
 //combine reducers
 const reducer = combineReducers({
-    rdsRecords, rdsPage, rdsCurrent, rdsAsync, rdsInfo
+    rdsRecords, rdsPage, rdsCurrent, rdsNetwork, rdsAccount
 });
 
 export default reducer;

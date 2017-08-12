@@ -37,6 +37,7 @@
     "axios": "^0.16.2",
     "json-loader": "^0.5.4",
     "moment":"^2.18.1",
-    "react-datepicker":"^0.48.0"
+    "react-datepicker":"^0.48.0",
+    "crypto-js": "^3.1.9-1"
   }
 }
