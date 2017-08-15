@@ -1,7 +1,8 @@
 // action types 
 import axios from 'axios';
 import CryptoJS from 'crypto-js';
-const hostname = 'http://mycloud';
+// const hostname = 'http://mycloud';
+const hostname = 'http://localhost:8000';
 let nonce = 0, times = 0, accessToken = '', usercode, usrpswd;
 
 export const XHR_REQUEST = 'XHR_REQUEST';
@@ -44,9 +45,9 @@ export function clearInfo() {
     };
 }
 
-export function login(usercode, usrpswd) {
-    usercode = usercode;
-    usrpswd = usrpswd;
+export function login(usercodeP, usrpswdP) {
+    usercode = usercodeP;
+    usrpswd = usrpswdP;
     return (dispatch) => {
         dispatch(requestAction(requestStatus.REQUEST));
         return axios({
@@ -69,7 +70,7 @@ export function login(usercode, usrpswd) {
             console.log('login success');
             dispatch(requestAction(requestStatus.SUCCESS));
             dispatch(saveInfo(usercode, response.data));
-        }).catch(function(err){
+        }).catch(function (err) {
             console.log(err);
             dispatch(requestAction(requestStatus.ERROR));
         });
@@ -78,19 +79,36 @@ export function login(usercode, usrpswd) {
 }
 
 export const REFRESH_RECORDS = 'REFRESH_RECORDS';
-
+export const ADD_RECORD = 'ADD_RECORD';
 export function refreshRecords(records) {
     return {
         type: REFRESH_RECORDS,
         records: records
     };
 }
-
-
-export function asyncAction() {
+export function addRecord(record) {
+    return {
+        type: ADD_RECORD,
+        record: record
+    };
+}
+export function refreshRecordsAction() {
     return function (dispatch) {
         dispatch(requestAction(requestStatus.REQUEST));
-        return axios.get(hostname + '/query/records/4?from=0&to=360000000').then(function (res) {
+        let stamp = Date.now().toString();
+        let token = getToken(usercode, usrpswd, nonce, times.toString(), stamp);
+        return axios({
+            method: 'get',
+            url: hostname + '/api/query/records/1',
+            params:{
+                from:0,
+                to:Date.now(),
+                accessToken:accessToken
+            },
+            headers: {
+                'Authorization': buildAuthContent(usercode, nonce, times++, stamp, token)
+            }
+        }).then(function (res) {
             dispatch(requestAction(requestStatus.SUCCESS));
             dispatch(refreshRecords(res.data));
         }).catch(function (err) {
@@ -120,27 +138,49 @@ export function pageAction(toPage) {
     };
 }
 
-
-
-
-//current
-export const SET_CURRENT = 'SET_CURRENT';
-
-export function setCurrentAction(record) {
-    return {
-        type: SET_CURRENT,
-        record: record
-    };
-}
-
-
-
 export function pageShowAction(show) {
     return {
         type: SHOW_PAGE,
         show: show
     };
 }
+
+
+//current
+export const SET_CURRENT = 'SET_CURRENT';
+
+export function setCurrentAction(detail) {
+    return {
+        type: SET_CURRENT,
+        detail: detail
+    };
+}
+
+export function getDetail(recid){
+    return function (dispatch) {
+        dispatch(requestAction(requestStatus.REQUEST));
+        let stamp = Date.now().toString();
+        let token = getToken(usercode, usrpswd, nonce, times.toString(), stamp);
+        return axios({
+            method: 'get',
+            url: hostname + '/api/query/detail/'+recid,
+            params:{
+                accessToken:accessToken
+            },
+            headers: {
+                'Authorization': buildAuthContent(usercode, nonce, times++, stamp, token)
+            }
+        }).then(function (res) {
+            dispatch(requestAction(requestStatus.SUCCESS));
+            dispatch(setCurrentAction(res.data));
+        }).catch(function (err) {
+            dispatch(requestAction(requestStatus.ERROR));
+        });
+    };
+}
+
+
+
 
 export function postAndAdd(data) {
     return (dispatch) => {
@@ -163,19 +203,6 @@ export function postAndAdd(data) {
 
         }).catch((err) => {
             console.log(err, 'err');
-            dispatch(requestAction(requestStatus.ERROR));
-        });
-    };
-}
-
-export function refreshListAction() {
-    return function (dispatch) {
-        dispatch(requestAction(requestStatus.REQUEST));
-        return axios.get('http://mytest.163.com/api/list').then(function (res) {
-            dispatch(requestAction(requestStatus.SUCCESS));
-            dispatch(refreshList(res.data));
-
-        }).catch(function (err) {
             dispatch(requestAction(requestStatus.ERROR));
         });
     };

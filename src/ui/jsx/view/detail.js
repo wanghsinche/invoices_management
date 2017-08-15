@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import { postAndAdd, refreshListAction, updateList } from '../redux/action';
+import { postAndAdd, getDetail } from '../redux/action';
 import { connect } from 'react-redux';
 import { Pane, Input, TextArea, Button, Toolbar, Actionbar, Icon } from "../photon/photon";
 import { EmptyContent } from './modal';
@@ -16,67 +16,56 @@ class Detail extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            User: '', name: '', num: '', recid: '',
-            Mark: '', link: '',
-            price: '', priceAll: '', buyDate: Date.now()/1000,
-            invsid: '', invoicePrice: '', invoiceDate: 0, code: '',
+            buyDate:0,
+            code: '',
+            content: '',
+            date:0,
+            goodid:'',
+            invoiceDate:0,
+            invoicePrice:'',
+            invoiceid:'',
+            link:'',
+            markid:'',
+            name:'',
+            num:'',
+            price:'',
+            priceall:'',
+            recid:'',
+            type:'',
+            userid:'',
+            username:'',
             canEdit: false
         };
     }
 
     componentDidMount() {
-        let fetchData = this.props.fetchData;
-        fetchData();
 
     }
 
     componentWillReceiveProps(nextProps) {
-        let good, user, mark, invs;
-        if (nextProps.record && nextProps.record.goodid) {
-            good = this.getGood(nextProps.record.goodid);
-            user = this.getUser(nextProps.record.usrid);
-            mark = this.getMark(nextProps.record.markid);
-            invs = this.getInvs(nextProps.record.invsid);
-            this.setState(Object.assign({}, good, {
-                recid: nextProps.record.recid,
-                User: user.name,
-                Mark: mark.content,
-                link: mark.link,
-                code: invs.code,
-                invoicePrice: invs.price,
-                invoiceDate: invs.createDate
-            }));
-        }
-    }
-    getinfo(id, fieldid, category) {
-        let res = this.props[category].find(function (v) {
-            return v[fieldid] == id;
+        this.setState({
+            buyDate:nextProps.buyDate||0,
+            code: nextProps.code||'',
+            content: nextProps.content||'',
+            date:nextProps.date||0,
+            goodid:nextProps.goodid||'',
+            invoiceDate:nextProps.invoiceDate||0,
+            invoicePrice:nextProps.invoicePrice||'',
+            invoiceid:nextProps.invoiceid||'',
+            link:nextProps.link||'',
+            markid:nextProps.markid||'',
+            name:nextProps.name||'',
+            num:nextProps.num||'',
+            price:nextProps.price||'',
+            priceall:nextProps.priceall||'',
+            recid:nextProps.recid||'',
+            type:nextProps.type||'',
+            userid:nextProps.userid||'',
+            username:nextProps.username
         });
-        return res || {};
+        
     }
-
-    getGood(id) {
-        return this.getinfo(id, 'id', 'goods');
-    }
-
-    getUser(id) {
-        return this.getinfo(id, 'id', 'users');
-    }
-
-    getMark(id) {
-        let res = this.getinfo(id, 'id', 'marks');
-        return Object.assign({ content: '' }, res);
-
-    }
-    getInvs(id) {
-        let res = this.getinfo(id, 'id', 'invs');
-        return Object.assign({
-            code: "",
-            price: "",
-            createDate: ""
-        }, res);
-
-    }
+    
 
     handleChange(obj) {
 
@@ -101,12 +90,32 @@ class Detail extends Component {
         }
     }
 
+    handleCancel(){
+        this.setState({
+            canEdit:false
+        });
+    }
+
     render() {
         let {
-            recid, User, name, num,
-            Mark, link,
-            price, priceAll, buyDate,
-            invoicePrice, invoiceDate, code,
+            buyDate,
+            code,
+            content,
+            date,
+            goodid,
+            invoiceDate,
+            invoicePrice,
+            invoiceid,
+            link,
+            markid,
+            name,
+            num,
+            price,
+            priceall,
+            recid,
+            type,
+            userid,
+            username,
             canEdit
         } = this.state;
         return (
@@ -121,27 +130,27 @@ class Detail extends Component {
                     <div className="col-2-12"><Input label="price" value={price} disabled={!canEdit} onChange={(e) => { this.handleChange({ price: e.target.value }); }} /></div>
                     <div className="col-2-12"><Input label="Number" value={num} disabled={!canEdit} onChange={(e) => { this.handleChange({ num: e.target.value }); }} /></div>
 
-                    <div className="col-4-12"><Input label="Mark" value={Mark} readOnly={!canEdit} onChange={(e) => { this.handleChange({ Mark: e.target.value }); }} /></div>
-                    <div className="col-4-12"><div className="form-group"><label>BuyDate</label><DatePicker disabled dateFormat="YYYY-MM-DD" selected={moment.unix(buyDate)} onChange={(date) => { this.handleChange({ buyDate: date.unix() }); }} /></div></div>
-                    <div className="col-2-12"><Input label="priceAll" value={priceAll} disabled={!canEdit} onChange={(e) => { this.handleChange({ priceAll: e.target.value }); }} /></div>
+                    <div className="col-4-12"><Input label="Mark" value={content} readOnly={!canEdit} onChange={(e) => { this.handleChange({ content: e.target.value }); }} /></div>
+                    <div className="col-4-12"><div className="form-group"><label>BuyDate</label><DatePicker disabled dateFormat="YYYY-MM-DD" selected={moment(buyDate)} onChange={(date) => { this.handleChange({ buyDate: date.valueOf() }); }} /></div></div>
+                    <div className="col-2-12"><Input label="priceAll" value={priceall} disabled={!canEdit} onChange={(e) => { this.handleChange({ priceall: e.target.value }); }} /></div>
 
-                    <div className="col-2-12"><Input label="User" value={User} disabled /></div>
+                    <div className="col-2-12"><Input label="User" value={username} disabled /></div>
 
                     <div className="col-4-12"><Input label="invoicecode" value={code} readOnly={!canEdit} onChange={(e) => { this.handleChange({ code: e.target.value }); }} /></div>
-                    <div className="col-4-12"><div className="form-group"><label>invoiceDate</label><DatePicker disabled={!canEdit} dateFormat="YYYY-MM-DD" selected={invoiceDate === 0 ? '' : moment.unix(invoiceDate)} onChange={(date) => { this.handleChange({ invoiceDate: date.unix() }); }} /></div></div>
+                    <div className="col-4-12"><div className="form-group"><label>invoiceDate</label><DatePicker disabled={!canEdit} dateFormat="YYYY-MM-DD" selected={invoiceDate === 0 ? '' : moment(invoiceDate)} onChange={(date) => { this.handleChange({ invoiceDate: date.valueOf() }); }} /></div></div>
                     <div className="col-2-12"><Input label="invoicePrice" value={invoicePrice} disabled={!canEdit} onChange={(e) => { this.handleChange({ invoicePrice: e.target.value }); }} /></div>
 
                     <div className="col-2-12"><div className="form-group"><label>Link</label>
                         {canEdit?
                             <input className="form-control" style={{ color: '#6db3fd' }} value={link} onChange={(e) => { this.handleChange({ link: e.target.value }); }} />
                             :
-                            <span className="form-control" style={{ color: '#6db3fd' }} data-src={link} onClick={() => { if(link){shell.openExternal(link);} }}>{link}</span>
+                            <span className="form-control" style={{ color: '#6db3fd',overflow:'hidden' }} data-src={link} onClick={() => { if(link){shell.openExternal(link);} }}>订单链接</span>
                         }
                     </div></div>
 
                     <div className="col-1-1">
                         <div className="toolbar-actions" style={{ 'textAlign': 'right' }} >
-                            {canEdit && <Button type="submit" ptStyle="btn-default btn-large" text="Cancel" />}
+                            {canEdit && <Button type="submit" ptStyle="btn-default btn-large" text="Cancel" onClick={this.handleCancel.bind(this)}/>}
                             <Button type="submit" ptStyle="btn-primary btn-large" text={canEdit ? 'OK' : 'Edit'} onClick={this.handleClick.bind(this)} />
                         </div>
                     </div>
@@ -155,23 +164,13 @@ class Detail extends Component {
 
 
 const mapStateToProps = (state) => {
-    return {
-        users: state.rdsList.users,
-        goods: state.rdsList.goods,
-        record: state.rdsCurrent,
-        marks: state.rdsList.marks,
-        invs: state.rdsList.invs
-    };
+    return state.rdsCurrent;
 };
 
 const mapDispatchToProps = (dispatch) => {
     return {
         postData: (data) => {
-            
             dispatch(postAndAdd(data));
-        },
-        fetchData: () => {
-            dispatch(refreshListAction());
         }
     };
 };

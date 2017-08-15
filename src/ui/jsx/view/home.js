@@ -7,7 +7,7 @@ class Home extends Component {
         constructor(props) {
                 super(props);
                 this.state = {
-                        usercode: '', userpswd: ''
+                        usercode: 'code0', userpswd: 'xxxxxx'
                 };
         }
         handleChange(obj) {

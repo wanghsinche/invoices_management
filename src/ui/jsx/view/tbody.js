@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import Record from './record';
-import { asyncAction } from "../redux/action";
+import { refreshRecordsAction } from "../redux/action";
 class Tbody extends Component {
     componentDidMount() {
         let { fetchData } = this.props;
@@ -11,11 +11,21 @@ class Tbody extends Component {
         let { records } = this.props, empty, renderContent;
         if (records.length > 0) {
             renderContent = records.map((v) => (
-                <Record key={v.recid} goodid={v.goodid} name={v.name} usrid={v.usrid} invsid={v.invsid} recid={v.recid} markid={v.markid}/>
+                <Record key={v.recid} name={v.name} user={v.user} recid={v.recid} code={v.code} priceall={v.priceall} date={v.date} />
             ));
         }
         else {
-            empty = (<tr><td>empty</td><td>empty</td><td>empty</td><td>empty</td></tr>);
+            empty = (
+                <tr>
+                    <th>empty</th>
+                    <th>empty</th>
+                    <th>empty</th>
+                    <th>empty</th>
+                    <th>empty</th>
+                    <th>empty</th>
+                    <th>empty</th>
+                </tr>
+            );
         }
         return (
             <tbody>{empty || renderContent}</tbody>
@@ -33,7 +43,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         fetchData: () => {
-            dispatch(asyncAction());
+            dispatch(refreshRecordsAction());
         }
     };
 };

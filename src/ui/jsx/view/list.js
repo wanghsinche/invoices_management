@@ -20,11 +20,13 @@ const App = ({}) => {
                 <table className="table-striped" >
                     <thead>
                         <tr>
-                            <th>done</th>
-                            <th>name</th>
-                            <th>usrid</th>
-                            <th>invsid</th>
-                            <th>recid</th>
+                            <th>发票状态</th>
+                            <th>编号</th>
+                            <th>名称</th>
+                            <th>总金额</th>
+                            <th>用户</th>
+                            <th>发票号码</th>
+                            <th>日期</th>
                         </tr>
                     </thead>
                     <Tbody />
