@@ -3,9 +3,9 @@ const newRecord = require('../model/index').insertDetail;
 const updateRecord = require('../model/index').updateDetail;
 const bodyParser = require('body-parser');
 const escapeHTML = require('escape-html');
+const sendMail = require('../utils/mail.js').init(global.linkRecv);
 
-
-router.use(function(req, res, next) {
+router.use(function (req, res, next) {
     res.setHeader('Content-Type', 'application/json');
     next();
 });
@@ -18,7 +18,7 @@ router.use(bodyParser.urlencoded({
 // parse application/json 
 router.use(bodyParser.json());
 
-router.put('/newRecord', function(req, res) {
+router.put('/newRecord', function (req, res) {
 
     // let {
     //     good,
@@ -28,17 +28,18 @@ router.put('/newRecord', function(req, res) {
     // } = detail;
     let detail, {
             name,
-            price,
-            priceall,
-            num,
-            goodcode,
-            buyDate,
-            invscode,
-            invsprice,
-            invsdate,
-            type,
-            link,
-            content
+        price,
+        priceall,
+        num,
+        goodcode,
+        buyDate,
+        invscode,
+        invsprice,
+        invsdate,
+        type,
+        link,
+        content,
+        mailFlag,
         } = req.body,
         userid = req.extraInfo.userid;
 
@@ -64,18 +65,21 @@ router.put('/newRecord', function(req, res) {
         },
         userid: userid
     };
-    newRecord(detail).then(function(msg) {
+    newRecord(detail).then(function (msg) {
+        if (mailFlag) {
+            sendMail(name, '订单系统', link, content, 0);
+        }
         res.send({
             lastid: msg
         });
-    }).catch(function(err) {
+    }).catch(function (err) {
         res.status(500).send(err);
     });
 
 
 });
 
-router.post('/updateRecord/:recordid', function(req, res) {
+router.post('/updateRecord/:recordid', function (req, res) {
     let detail,
         recordid = req.params.recordid,
         {
@@ -113,11 +117,11 @@ router.post('/updateRecord/:recordid', function(req, res) {
         res.status(400).send('params error');
     } else {
         console.log(detail);
-        updateRecord(detail).then(function() {
+        updateRecord(detail).then(function () {
             res.send({
                 msg: 'updateRecord success'
             });
-        }).catch(function(err) {
+        }).catch(function (err) {
             res.status(500).send(err);
         });
     }

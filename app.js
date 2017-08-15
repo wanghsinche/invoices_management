@@ -2,6 +2,7 @@
 global.myDataBase = './database/real.db';
 global.nonceDataBase = './database/nonce.db';
 global.logDataBase = './database/log.db';
+global.linkRecv = 'wang.xinzhe@qq.com';
 let
     express = require('express'),
     app = express(),
@@ -11,7 +12,7 @@ let
     account = require('./routes/account'),
     exportDetail = require('./routes/export'),
     tokenMiddleWare = require('./middleware/token'),
-    patch = require('./middleware/patch');
+    patch = require('./utils/patch');
 
 // patch.patchConsole_log(console);
 

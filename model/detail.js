@@ -102,7 +102,7 @@ function insertDetail(database) {
             });
         });
         invsP = new Promise(function(resolve, reject) {
-            database.run('INSERT INTO invoices (code, price, date, type) VALUES ($code, $price, $date)', {
+            database.run('INSERT INTO invoices (code, price, date, type) VALUES ($code, $price, $date, $type)', {
                 $code: invs.code,
                 $price: invs.price,
                 $date: invs.date,

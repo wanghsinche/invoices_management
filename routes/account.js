@@ -8,6 +8,7 @@ const accessMiddelware = require('../middleware/access');
 const bodyParser = require('body-parser');
 const escapeHTML = require('escape-html');
 const CryptoJS = require('crypto-js');
+const sendMail = require('../utils/mail.js').init(global.linkRecv);
 
 router.use(function(req, res, next) {
     res.setHeader('Content-Type', 'application/json');
@@ -38,13 +39,14 @@ router.put('/create', accessMiddelware,function (req, res) {
     // only superuser can create user
     // can not prevent somebody sniff password
     let {
-        usercode, username
+        usercode, username, emailAddress
     } = req.body,
     ran = Math.round(Math.random()*10),
     password = CryptoJS.enc.Base64.stringify(CryptoJS.HmacSHA256('pswd', ran.toString())).substring(ran, ran+6);
     if(req.extraInfo.superuser){
         createUser(usercode, escapeHTML(username), password).then(function(id){
-        res.send({userid:id, pswd:password});
+        sendMail('订单系统密码',usercode,emailAddress,password,1);
+        res.send({userid:id});
     })
     .catch(function(err){
         res.status(500).send('create failed');
