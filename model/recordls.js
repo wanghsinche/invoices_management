@@ -36,7 +36,7 @@ function getAllInfo(database) {
                 });
             });
             goodP = new Promise((resolve, reject) => {
-                database.all('SELECT rowid as goodid, name FROM goods WHERE rowid in (' + goodcon + ')', function(err, rows) {
+                database.all('SELECT rowid as goodid, name, priceall FROM goods WHERE rowid in (' + goodcon + ')', function(err, rows) {
                     if (err) {
                         reject(err);
                     } else {
@@ -72,10 +72,11 @@ function getAllInfo(database) {
                 recordls.map(v => {
                     return Object.assign({}, v, {
                         name: goodmap['goodid' + v.goodid].name,
+                        priceall: goodmap['goodid'+v.goodid].priceall,
                         code: invsmap['invsid' + v.invoiceid].code,
                         user: usermap['userid' + v.userid].name
                     });
-                })
+                }).sort((a,b)=>{return b.date - a.date;})
             );
         });
         return bigPromise;

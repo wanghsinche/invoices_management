@@ -6,6 +6,7 @@
         </title>
         <button type="submit" onclick="preAuthorize()">preAuthorize</button>
         <label><input type="input" id="detail" name="" value=""></label>
+        <button type="submit" onclick="getDetail()">getDetail</button>
         <button type="submit" onclick="getinfo()"> get info</button>
         <button type="submit" onclick="getList()"> get list</button>
         <button type="submit" onclick="newRecord()">put</button>
@@ -156,6 +157,22 @@
         }
         //  host+'/api/query/detail/3?accessToken='+accessToken,
         // host+'/api/query/records/1+2+3?from=0&to=999999999&page=0&accessToken='+accessToken,
+        function getDetail(){
+        stamp = Date.now().toString();
+        var token = getToken(usercode, usrpswd, nonce, times.toString(), stamp);
+        axios({
+        method: 'get',
+        url: host+'/api/query/detail/4?accessToken='+accessToken,
+        headers: {
+        'Authorization':buildAuthContent(usercode,nonce,times,stamp,token)
+        }
+        })
+        .then(function (response) {
+        
+        console.log(response);
+        });
+        times++;
+        }
         function getList(){
         stamp = Date.now().toString();
         var token = getToken(usercode, usrpswd, nonce, times.toString(), stamp);
