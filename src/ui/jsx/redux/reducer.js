@@ -5,6 +5,7 @@ import {
     CLEAR_INFO,
     REFRESH_RECORDS,
     ADD_RECORD,
+    UPDATE_RECORD,
     XHR_REQUEST,
     requestStatus,
     CHANGE_PAGE,
@@ -30,20 +31,24 @@ function rdsAsync(state = {
     }
 }
 
-function rdsInfo(state = {}, action) {
+function rdsInfo(state = {
+    loged: false,
+    usercode: '',
+    data: {}
+}, action) {
     switch (action.type) {
         case SAVE_INFO:
-            return {
+            return Object.assign({}, state, {
                 loged: true,
                 usercode: action.usercode,
-                info: action.info
-            };
+                data: action.data
+            });
         case CLEAR_INFO:
-            return {
+            return Object.assign({}, state, {
                 loged: false,
-                usercode: void(0),
-                info: void(0)
-            };
+                usercode: '',
+                data: {}
+            });
         default:
             return state;
     }
@@ -61,8 +66,20 @@ function rdsRecords(state = [], action) {
             tmp = state.slice();
             tmp.push(action.record);
             return tmp;
-            default:
+        case UPDATE_RECORD:
+            tmp = state.map(v => {
+                if (v.recid !== action.record.recid) {
+                    return v;
+                }
+                else {
+                    return Object.assign({}, v, action.record);
+                }
+            });
+            return tmp;
+        default:
             return state;
+
+
     }
 }
 

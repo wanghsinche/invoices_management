@@ -15,7 +15,7 @@ export const requestStatus = {
 
 
 
-function getToken(usercode, usrpswd, reqnonce, reqtimes, reqstamp) {
+function getToken(usercode="", usrpswd="", reqnonce="", reqtimes="", reqstamp="") {
     let hash = CryptoJS.HmacSHA256(usercode, usrpswd, reqnonce, reqtimes, reqstamp);
     let hashInBase64 = CryptoJS.enc.Base64.stringify(hash);
     console.log(hashInBase64);
@@ -31,11 +31,11 @@ export const SAVE_INFO = 'SAVE_INFO';
 export const CLEAR_INFO = 'CLEAR_INFO';
 export const LOG_IN = 'LOG_IN';
 
-export function saveInfo(usercode, info) {
+export function saveInfo(usercode, data) {
     return {
         type: SAVE_INFO,
-        usercode,
-        info
+        usercode: usercode,
+        data: data
     };
 }
 
@@ -71,8 +71,14 @@ export function login(usercodeP, usrpswdP) {
             dispatch(requestAction(requestStatus.SUCCESS));
             dispatch(saveInfo(usercode, response.data));
         }).catch(function (err) {
-            console.log(err);
-            dispatch(requestAction(requestStatus.ERROR));
+            console.log(err.response);
+            if(err.response.status == '401'){
+                alert('登陆失败，请检查账号密码');
+                dispatch(requestAction(requestStatus.NORMAL));
+            }
+            else{
+                dispatch(requestAction(requestStatus.ERROR));
+            }
         });
     };
 
@@ -80,6 +86,7 @@ export function login(usercodeP, usrpswdP) {
 
 export const REFRESH_RECORDS = 'REFRESH_RECORDS';
 export const ADD_RECORD = 'ADD_RECORD';
+export const UPDATE_RECORD = 'UPDATE_RECORD';
 export function refreshRecords(records) {
     return {
         type: REFRESH_RECORDS,
@@ -92,6 +99,12 @@ export function addRecord(record) {
         record: record
     };
 }
+export function updateRecord(record){
+    return {
+        type: UPDATE_RECORD,
+        record: record
+    };
+}
 export function refreshRecordsAction() {
     return function (dispatch) {
         dispatch(requestAction(requestStatus.REQUEST));
@@ -100,10 +113,10 @@ export function refreshRecordsAction() {
         return axios({
             method: 'get',
             url: hostname + '/api/query/records/1',
-            params:{
-                from:0,
-                to:Date.now(),
-                accessToken:accessToken
+            params: {
+                from: 0,
+                to: Date.now(),
+                accessToken: accessToken
             },
             headers: {
                 'Authorization': buildAuthContent(usercode, nonce, times++, stamp, token)
@@ -116,7 +129,73 @@ export function refreshRecordsAction() {
         });
     };
 }
+export function postAndAdd(recid, data) {
+    return (dispatch) => {
+        dispatch(requestAction(requestStatus.REQUEST));
+        console.log(data);
+        let stamp = Date.now().toString();
+        let token = getToken(usercode, usrpswd, nonce, times.toString(), stamp);
+        return axios({
+            method: 'post',
+            url: hostname + '/api/change/updateRecord/' + recid,
+            params: {
+                accessToken: accessToken
+            },
+            headers: {
+                'Authorization': buildAuthContent(usercode, nonce, times++, stamp, token)
+            },
+            data: data
+        }).then((res) => {
+            if (parseInt(res.data.code, 10) === 1) {
+                console.log(res.data.msg);
+                dispatch(requestAction(requestStatus.SUCCESS));
+                dispatch(updateRecord({code:data.invscode, priceall:data.priceall, recid:recid }));
+                alert('success');
+            }
+            else {
+                dispatch(requestAction(requestStatus.ERROR));
+                console.log(res.data.msg);
+            }
 
+        }).catch((err) => {
+            console.log(err, 'err');
+            dispatch(requestAction(requestStatus.ERROR));
+        });
+    };
+}
+export function putNewRecord(data){
+    return (dispatch) => {
+        dispatch(requestAction(requestStatus.REQUEST));
+        console.log(data);
+        let stamp = Date.now().toString();
+        let token = getToken(usercode, usrpswd, nonce, times.toString(), stamp);
+        return axios({
+            method: 'put',
+            url: hostname + '/api/change/newRecord',
+            params: {
+                accessToken: accessToken
+            },
+            headers: {
+                'Authorization': buildAuthContent(usercode, nonce, times++, stamp, token)
+            },
+            data: data
+        }).then((res) => {
+            if (parseInt(res.data.code, 10) === 1) {
+                console.log(res.data.msg);
+                dispatch(requestAction(requestStatus.SUCCESS));
+                alert('添加成功');
+            }
+            else {
+                dispatch(requestAction(requestStatus.ERROR));
+                console.log(res.data.msg);
+            }
+
+        }).catch((err) => {
+            console.log(err, 'err');
+            dispatch(requestAction(requestStatus.ERROR));
+        });
+    };    
+}
 export function requestAction(status, msg) {
     return {
         type: XHR_REQUEST,
@@ -156,16 +235,16 @@ export function setCurrentAction(detail) {
     };
 }
 
-export function getDetail(recid){
+export function getDetail(recid) {
     return function (dispatch) {
         dispatch(requestAction(requestStatus.REQUEST));
         let stamp = Date.now().toString();
         let token = getToken(usercode, usrpswd, nonce, times.toString(), stamp);
         return axios({
             method: 'get',
-            url: hostname + '/api/query/detail/'+recid,
-            params:{
-                accessToken:accessToken
+            url: hostname + '/api/query/detail/' + recid,
+            params: {
+                accessToken: accessToken
             },
             headers: {
                 'Authorization': buildAuthContent(usercode, nonce, times++, stamp, token)
@@ -182,28 +261,3 @@ export function getDetail(recid){
 
 
 
-export function postAndAdd(data) {
-    return (dispatch) => {
-        dispatch(requestAction(requestStatus.REQUEST));
-        console.log(data);
-        return axios.post('http://mytest.163.com/postrecord', data).then((res) => {
-            if (parseInt(res.data.code, 10) === 1) {
-                console.log(res.statusText);
-                dispatch(requestAction(requestStatus.SUCCESS));
-                dispatch(updateList(res.data.good, res.data.mark, res.data.invs));
-                if (res.data.record) {
-                    dispatch(addRecord(res.data.record));
-                }
-                alert('success');
-            }
-            else {
-                dispatch(requestAction(requestStatus.ERROR));
-                console.log(res.statusText);
-            }
-
-        }).catch((err) => {
-            console.log(err, 'err');
-            dispatch(requestAction(requestStatus.ERROR));
-        });
-    };
-}

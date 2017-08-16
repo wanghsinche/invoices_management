@@ -287,6 +287,9 @@
 }
 
 /*my custom css*/
+*{
+	-webkit-user-select: text;
+}
 .form-control, label {
     font-size: 12px;
 }

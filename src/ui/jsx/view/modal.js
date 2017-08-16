@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { Icon } from "../photon/photon";
-import { requestStatus } from '../redux/action';
+import { requestStatus, requestAction } from '../redux/action';
 
 const itStyle = {
     position: "fixed",
@@ -47,9 +47,11 @@ const EmptyContent = ({ text }) => (
 );
 
 
-const Rawerr = ({ err }) => (
-    <div style={{position: "fixed",top: "40%",left: "45%", "fontSize": "20px"}} hidden={!err}>
-        <Icon glyph="signal"  withText={true} style={{ "fontSize": "50px","zIndex": 99, verticalAlign: 'middle',color:'#ff4455',animation: "2s rotate linear infinite" }} />&nbsp;network error
+const Rawerr = ({ err,setNormal }) => (
+    <div style={{position: "absolute","fontSize": "20px", width:"100%", height:"100%", backgroundColor: "#3c3c3c", opacity: "0.9"}} hidden={!err} onClick={setNormal.bind(this)}>
+        <div style={{position:"absolute", top:"50%",left:"50%",margin:"-25px 0 0 -25px" ,color:'#ff4455'}}>
+        <Icon glyph="signal"  withText={true} style={{ "fontSize": "50px","zIndex": 99,color:'#ff4455'}} />&nbsp;network error
+        </div>
     </div>
 );
 
@@ -61,7 +63,9 @@ const ErrorModal = connect(
     },
     (dispatch) => {
         return {
-
+            setNormal(){
+                dispatch(requestAction(requestStatus.NORMAL));
+            }
         };
     }
 )(Rawerr);
