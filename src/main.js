@@ -42,12 +42,15 @@ app.on('ready', function () {
 
 ipcMain.on('asynchronous-download', (event, path, url) => {
   let writeStream = fs.createWriteStream(path);
-  require('http').get(url, function (data) {
-    writeStream.pipe(data);
   writeStream.on('end', function() {
     event.sender.send('asynchronous-reply', 'ok');
-  });
-    
+  }
+  writeStream.on('open', function() {
+    require('http').get(url, function (data) {
+      data.pipe(writeStream);
+    }.on('error',function(){
+      event.sender.send('asynchronous-reply', 'fail');
+    })
   });
 
 });
