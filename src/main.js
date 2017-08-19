@@ -3,7 +3,7 @@
 const electron = require('electron');
 const app = electron.app;  // Module to control application life.
 const BrowserWindow = electron.BrowserWindow;  // Module to create native browser window.
-
+const ipcMain = electron.ipcMain;
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 var mainWindow = null;
@@ -21,7 +21,7 @@ app.on('window-all-closed', function () {
 app.on('ready', function () {
   // Create the browser window.
   mainWindow = new BrowserWindow({
-    width: 1024+500, height: 800+100, 'accept-first-mouse': true,
+    width: 1024 + 500, height: 800 + 100, 'accept-first-mouse': true,
     'title-bar-style': 'hidden'
   });
 
@@ -38,4 +38,16 @@ app.on('ready', function () {
     // when you should delete the corresponding element.
     mainWindow = null;
   });
+});
+
+ipcMain.on('asynchronous-download', (event, path, url) => {
+  let writeStream = fs.createWriteStream(path);
+  require('http').get(url, function (data) {
+    writeStream.pipe(data);
+  writeStream.on('end', function() {
+    event.sender.send('asynchronous-reply', 'ok');
+  });
+    
+  });
+
 });

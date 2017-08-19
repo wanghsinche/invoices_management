@@ -15,9 +15,31 @@ import {Loading, ErrorModal} from './jsx/view/modal';
 import Header from './jsx/view/header';
 import {
     HashRouter as Router,
-    Route,
+    Route, Redirect,
     Link, hashHistory
 } from 'react-router-dom';
+import { connect } from 'react-redux';
+
+
+
+
+const PrivateRoute = ({ component: Component, ...rest }) => (
+  <Route {...rest} render={props => {
+    return (
+    store.getState().rdsInfo.loged ? (
+      <Component {...props}/>
+    ) : (
+      <Redirect to={{
+        pathname: '/Home',
+        state: { from: props.location }
+      }}/>
+    )
+  )
+  }}/>
+)
+
+
+
 
 render((
     <Provider store={store}>
@@ -28,9 +50,9 @@ render((
                     <PaneGroup>
                         <Route path='/:place' component={Sidebar}/>
                         <Route path="/Home" component={Home} />
-                        <Route path="/About" component={About} />
-                        <Route path="/Post" component={Post} />
-                        <Route path="/List" component={List} />
+                        <PrivateRoute path="/About" component={About} />
+                        <PrivateRoute path="/Post" component={Post} />
+                        <PrivateRoute path="/List" component={List} />
                     </PaneGroup>
                 </Content>
                 <Toolbar ptType="footer">

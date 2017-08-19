@@ -1,6 +1,7 @@
 // action types 
 import axios from 'axios';
 import CryptoJS from 'crypto-js';
+import {remote, ipcRenderer} from 'electron';
 // const hostname = 'http://mycloud';
 const hostname = 'http://localhost:8000';
 let nonce = 0, times = 0, accessToken = '', usercode, usrpswd;
@@ -72,7 +73,7 @@ export function login(usercodeP, usrpswdP) {
             dispatch(saveInfo(usercode, response.data));
         }).catch(function (err) {
             console.log(err.response);
-            if(err.response.status == '401'){
+            if(err.response.status == '401' ||err.response.status == '403' ){
                 alert('登陆失败，请检查账号密码');
                 dispatch(requestAction(requestStatus.NORMAL));
             }
@@ -258,6 +259,57 @@ export function getDetail(recid) {
     };
 }
 
+// password
+export function changePswd(password) {
+    return function (dispatch) {
+        dispatch(requestAction(requestStatus.REQUEST));
+        let stamp = Date.now().toString();
+        let token = getToken(usercode, usrpswd, nonce, times.toString(), stamp);
+        return axios({
+            method: 'post',
+            url: hostname + '/api/account/changePSWD',
+            contentType: 'application/json; charset=utf-8',
+            data: {
+                password: password
+            },
+            headers: {
+                'Authorization': buildAuthContent(usercode, nonce, times++, stamp, token)
+            }
+        }).then(function (res) {
+            dispatch(requestAction(requestStatus.SUCCESS));
+            usrpswd = password;
+            alert("密码修改成功");
+        }).catch(function (err) {
+            dispatch(requestAction(requestStatus.ERROR));
+        });
+    };
+}
 
-
-
+// export
+export function exportFile(type, from, to, users) {
+    return function (dispatch) {
+        dispatch(requestAction(requestStatus.REQUEST));
+        let stamp = Date.now().toString();
+        let token = getToken(usercode, usrpswd, nonce, times.toString(), stamp);
+        let url = type === 'csv'? hostname + '/api/export/'+type+'/' + [users].join('+'):hostname + '/api/export/docx/';
+        return axios({
+            method: 'get',
+            url: url,
+            params: {
+                from: from,
+                to: to,
+                accessToken: accessToken
+            },
+            headers: {
+                'Authorization': buildAuthContent(usercode, nonce, times++, stamp, token)
+            }
+        }).then(function (res) {
+            dispatch(requestAction(requestStatus.SUCCESS));
+            remote.dialog.showSaveDialog({title:'导出数据',}, function (name) {
+                ipcRenderer.send('asynchronous-download', name, hostname + res.data.path);
+            });
+        }).catch(function (err) {
+            dispatch(requestAction(requestStatus.ERROR));
+        });
+    };
+}

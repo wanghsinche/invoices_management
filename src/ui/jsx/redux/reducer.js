@@ -40,14 +40,18 @@ function rdsInfo(state = {
         case SAVE_INFO:
             return Object.assign({}, state, {
                 loged: true,
+                role: action.data.role,
                 usercode: action.usercode,
-                data: action.data
+                data: action.data,
+                accessList: action.data.accessList
             });
         case CLEAR_INFO:
             return Object.assign({}, state, {
                 loged: false,
+                role: '',
                 usercode: '',
-                data: {}
+                data: {},
+                accessList: []
             });
         default:
             return state;

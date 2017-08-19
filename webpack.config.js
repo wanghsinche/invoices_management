@@ -26,13 +26,13 @@ module.exports = {
                 include: [
                     SRC_PATH,
                 ],
-
+                 exclude: /node_modules/,
                 // Only run `.js` and `.jsx` files through Babel
                 test: /\.js|\.jsx?$/,
 
                 // Options to configure babel with
                 query: {
-                    presets: ['es2015', 'react'],
+                    presets: ['es2015', 'react', 'stage-2'],
                 }
             },
             { test: /\.json$/, loader: 'json-loader' },

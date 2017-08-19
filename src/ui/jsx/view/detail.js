@@ -142,9 +142,9 @@ class Detail extends Component {
         } = this.state;
         return (
             <div style={{ borderTop: '1px solid #dddbdd' }}>
-                <h5 style={{ margin: '10px 0 0 20px', 'fontWeight': '600', 'fontSize': '16px' }}><Icon glyph="credit-card" />&nbsp;Detail:</h5>
+                <h5 style={{ margin: '10px 0 0 20px', 'fontWeight': '600', 'fontSize': '16px' }}><Icon glyph="credit-card" />&nbsp;订单详情</h5>
                 <div className="grid grid-pad" hidden={recid !== ''}>
-                    <EmptyContent text="Please click an item" />
+                    <EmptyContent text="选择订单查看详情" />
                 </div>
                 <div className="grid grid-pad" hidden={recid === ''}>
                     <div className="col-4-12"><Input label="订单号" disabled={!canEdit}  value={goodcode} readOnly /></div>
@@ -173,7 +173,7 @@ class Detail extends Component {
                     <div className="col-2-12"><Input label="发票金额" value={invoicePrice} disabled={!canEdit} onChange={(e) => { this.handleChange({ invoicePrice: e.target.value }); }} /></div>
                     <div className="col-2-12"><div className="form-group"><label>发票上交日期</label><DatePicker disabled={!canEdit} dateFormat="YYYY-MM-DD" selected={invoiceDate === 0 ? '' : moment(invoiceDate)} onChange={(date) => { this.handleChange({ invoiceDate: date.valueOf() }); }} /></div></div>
                     <div className="col-1-1">
-                        <div className="toolbar-actions" style={{ 'textAlign': 'right' }} >
+                        <div className="form-actions" >
                             {canEdit && <Button type="submit" ptStyle="btn-default btn-large" text="取消" onClick={this.handleCancel.bind(this)} />}
                             <Button type="submit" ptStyle="btn-primary btn-large" text={canEdit ? '提交' : '修改'} onClick={this.handleClick.bind(this)} />
                         </div>

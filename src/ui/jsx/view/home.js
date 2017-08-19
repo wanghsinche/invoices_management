@@ -51,19 +51,29 @@ class Home extends Component {
                         username = this.props.username;
                 return this.props.loged ?
                         (<Pane className="padded-more" >
-                                <div className="grid grid-pad" style={{ 'width': '50%' }}>
+                                <div className="grid grid-pad">
                                         <div className="col-1-1"><h1>vortex订单系统</h1></div>
                                         <div className="col-1-1"><p>welcome! {username}</p></div>
-                                        <div className="col-1-1"><Button type="submit" ptStyle="btn-primary btn-large" text="logout" onClick={this.logout.bind(this)} /></div>
+                                        <div className="col-1-1">
+                                                <div className="col-1-3"><Button type="submit" ptStyle="btn-primary btn-large" text="注销" onClick={this.logout.bind(this)} /></div>
+                                        </div>
                                 </div>
                         </Pane>) : (
                                 <Pane className="padded-more" >
-                                        <div className="grid grid-pad" style={{ 'width': '50%' }}>
+                                        <div className="grid grid-pad">
                                                 <div className="col-1-1"><h1>vortex订单系统</h1></div>
-                                                <div className="col-1-1"><Input label="登陆账号" value={usercode} onChange={(e) => { this.handleChange({ usercode: e.target.value }); }} /></div>
-                                                <div className="col-1-1"><Input label="密码" type="password" value={userpswd} onChange={(e) => { this.handleChange({ userpswd: e.target.value }); }} /></div>
-                                                <div className="col-1-2"><Button type="submit" ptStyle="btn-primary btn-large" text="login" onClick={this.handleClick.bind(this)} /></div>
-                                                <div className="col-1-2"><CheckBox label="记住登陆" checked={remember} onChange={(e) => { this.handleChange({ remember: e.target.checked }); }} /></div>
+                                                <div className="col-1-1">
+                                                        <div className="col-1-2"><Input label="登陆账号" value={usercode} onChange={(e) => { this.handleChange({ usercode: e.target.value }); }} /></div>
+                                                </div>
+                                                <div className="col-1-1">
+                                                        <div className="col-1-2"><Input label="密码" type="password" value={userpswd} onChange={(e) => { this.handleChange({ userpswd: e.target.value }); }} /></div>
+                                                </div>
+                                                <div className="col-1-1">
+                                                        
+                                                </div>
+                                                <div className="col-1-1"><CheckBox label="记住密码" checked={remember} onChange={(e) => { this.handleChange({ remember: e.target.checked }); }} /></div>
+                                                <div className="col-1-1"><Button type="submit" ptStyle="btn-primary btn-large" text="登陆" onClick={this.handleClick.bind(this)} /></div>
+                                                
                                         </div>
                                 </Pane>
                         );
