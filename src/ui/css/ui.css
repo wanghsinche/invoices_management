@@ -318,6 +318,18 @@
     box-shadow: 3px 3px 0 #6db3fd, -3px -3px 0 #6db3fd, -3px 3px 0 #6db3fd, 3px -3px 0 #6db3fd;
 }
 
+select{
+	/* -webkit-appearance: none; */
+	border: none;
+	background: transparent;
+	margin: 0 0 0 5px;
+}
+select:focus{
+	background: transparent;
+	border: none;
+	outline: none;
+}
+
 @keyframes rotate{
   from{
     transform: rotateZ(360deg);

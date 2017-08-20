@@ -1,7 +1,7 @@
 // action types 
 import axios from 'axios';
 import CryptoJS from 'crypto-js';
-import {remote, ipcRenderer} from 'electron';
+import { remote, ipcRenderer } from 'electron';
 // const hostname = 'http://mycloud';
 const hostname = 'http://localhost:8000';
 let nonce = 0, times = 0, accessToken = '', usercode, usrpswd;
@@ -16,7 +16,7 @@ export const requestStatus = {
 
 
 
-function getToken(usercode="", usrpswd="", reqnonce="", reqtimes="", reqstamp="") {
+function getToken(usercode = "", usrpswd = "", reqnonce = "", reqtimes = "", reqstamp = "") {
     let hash = CryptoJS.HmacSHA256(usercode, usrpswd, reqnonce, reqtimes, reqstamp);
     let hashInBase64 = CryptoJS.enc.Base64.stringify(hash);
     console.log(hashInBase64);
@@ -73,17 +73,49 @@ export function login(usercodeP, usrpswdP) {
             dispatch(saveInfo(usercode, response.data));
         }).catch(function (err) {
             console.log(err.response);
-            if(err.response.status == '401' ||err.response.status == '403' ){
+            if (err.response.status == '401' || err.response.status == '403') {
                 alert('登陆失败，请检查账号密码');
                 dispatch(requestAction(requestStatus.NORMAL));
             }
-            else{
+            else {
                 dispatch(requestAction(requestStatus.ERROR));
             }
         });
     };
-
 }
+
+export function refreshState() {
+    return (dispatch) => {
+        dispatch(requestAction(requestStatus.REQUEST));
+        let stamp = Date.now().toString();
+        let token = getToken(usercode, usrpswd, nonce, times.toString(), stamp);
+        axios({
+            method: 'get',
+            url: hostname + '/api/account/getidentity',
+            headers: {
+                'Authorization': buildAuthContent(usercode, nonce, times++, stamp, token)
+            }
+        })
+        .then(function (response) {
+            accessToken = response.data.accessToken;
+            console.log('login success');
+            dispatch(requestAction(requestStatus.SUCCESS));
+            dispatch(saveInfo(usercode, response.data));
+        }).catch(function (err) {
+            console.log(err.response);
+            if (err.response.status == '401' || err.response.status == '403') {
+                alert('刷新失败，请检查账号密码');
+                dispatch(requestAction(requestStatus.NORMAL));
+            }
+            else {
+                dispatch(requestAction(requestStatus.ERROR));
+            }
+        });
+    };
+}
+
+
+
 
 export const REFRESH_RECORDS = 'REFRESH_RECORDS';
 export const ADD_RECORD = 'ADD_RECORD';
@@ -100,23 +132,23 @@ export function addRecord(record) {
         record: record
     };
 }
-export function updateRecord(record){
+export function updateRecord(record) {
     return {
         type: UPDATE_RECORD,
         record: record
     };
 }
-export function refreshRecordsAction() {
+export function refreshRecordsAction(users, from, to) {
     return function (dispatch) {
         dispatch(requestAction(requestStatus.REQUEST));
         let stamp = Date.now().toString();
         let token = getToken(usercode, usrpswd, nonce, times.toString(), stamp);
         return axios({
             method: 'get',
-            url: hostname + '/api/query/records/1',
+            url: hostname + '/api/query/records/' + users.join('+'),
             params: {
-                from: 0,
-                to: Date.now(),
+                from: from,
+                to: to,
                 accessToken: accessToken
             },
             headers: {
@@ -150,7 +182,7 @@ export function postAndAdd(recid, data) {
             if (parseInt(res.data.code, 10) === 1) {
                 console.log(res.data.msg);
                 dispatch(requestAction(requestStatus.SUCCESS));
-                dispatch(updateRecord({code:data.invscode, priceall:data.priceall, recid:recid }));
+                dispatch(updateRecord({ code: data.invscode, priceall: data.priceall, recid: recid }));
                 alert('success');
             }
             else {
@@ -159,12 +191,19 @@ export function postAndAdd(recid, data) {
             }
 
         }).catch((err) => {
-            console.log(err, 'err');
-            dispatch(requestAction(requestStatus.ERROR));
+            if(err.response.status == '500' || err.response.status == '401' || err.response.status == '403')
+            {
+                alert(err.response.data);
+                dispatch(requestAction(requestStatus.NORMAL));
+            }
+            else{
+                dispatch(requestAction(requestStatus.ERROR));
+            }
+            
         });
     };
 }
-export function putNewRecord(data){
+export function putNewRecord(data) {
     return (dispatch) => {
         dispatch(requestAction(requestStatus.REQUEST));
         console.log(data);
@@ -195,7 +234,7 @@ export function putNewRecord(data){
             console.log(err, 'err');
             dispatch(requestAction(requestStatus.ERROR));
         });
-    };    
+    };
 }
 export function requestAction(status, msg) {
     return {
@@ -291,7 +330,7 @@ export function exportFile(type, from, to, users) {
         dispatch(requestAction(requestStatus.REQUEST));
         let stamp = Date.now().toString();
         let token = getToken(usercode, usrpswd, nonce, times.toString(), stamp);
-        let url = type === 'csv'? hostname + '/api/export/'+type+'/' + [users].join('+'):hostname + '/api/export/docx/';
+        let url = type === 'csv' ? hostname + '/api/export/' + type + '/' + [users].join('+') : hostname + '/api/export/docx/';
         return axios({
             method: 'get',
             url: url,
@@ -305,11 +344,70 @@ export function exportFile(type, from, to, users) {
             }
         }).then(function (res) {
             dispatch(requestAction(requestStatus.SUCCESS));
-            remote.dialog.showSaveDialog({title:'导出数据',}, function (name) {
-                ipcRenderer.send('asynchronous-download', name, hostname + res.data.path);
-            });
+            ipcRenderer.send('asynchronous-download', hostname + res.data.path);
         }).catch(function (err) {
             dispatch(requestAction(requestStatus.ERROR));
+        });
+    };
+}
+
+// new user
+export function createUser(code, name, email) {
+    return function (dispatch) {
+        dispatch(requestAction(requestStatus.REQUEST));
+        let stamp = Date.now().toString();
+        let token = getToken(usercode, usrpswd, nonce, times.toString(), stamp);
+
+        return axios({
+            method: 'put',
+            url: hostname + '/api/account/create',
+            params: {
+
+                accessToken: accessToken
+            },
+            data: {
+                usercode: code,
+                username: name,
+                emailAddress: email,
+            },
+            contentType: 'application/json; charset=utf-8',
+            headers: {
+                'Authorization': buildAuthContent(usercode, nonce, times++, stamp, token)
+            }
+        }).then(function (res) {
+            dispatch(requestAction(requestStatus.SUCCESS));
+            alert('创建成功，密码已发至用户邮箱');
+        }).catch(function (err) {
+            dispatch(requestAction(requestStatus.ERROR));
+        });
+    };
+}
+
+
+// changeUser
+export function changeUser(userid, superuser){
+    return function (dispatch) {
+        dispatch(requestAction(requestStatus.REQUEST));
+        let stamp = Date.now().toString();
+        let token = getToken(usercode, usrpswd, nonce, times.toString(), stamp);
+        let url = hostname + '/api/account/'+(superuser?'makeSuper/':'removeSuper/')+userid;
+        return axios({
+            method: superuser?'post':'delete',
+            url: url,
+            params: {
+                accessToken: accessToken
+            },
+            contentType: 'application/json; charset=utf-8',
+            headers: {
+                'Authorization': buildAuthContent(usercode, nonce, times++, stamp, token)
+            }
+        }).then(function (res) {
+            dispatch(requestAction(requestStatus.SUCCESS));
+            dispatch(refreshState());
+            alert('修改权限成功，列表刷新');
+        }).catch(function (err) {
+            dispatch(requestAction(requestStatus.ERROR));
+            console.log(err);
         });
     };
 }
