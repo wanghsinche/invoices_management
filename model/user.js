@@ -27,8 +27,9 @@ function getPSWD(database) {
 function getAccessls(database) {
     return (userid, nonce) => {
         console.log('get user list');
+        var superls;
         var bigPromise = new Promise((resolve, reject) => {
-            database.get('SELECT rowid as userid, name FROM users WHERE rowid = ' + userid, (err, row) => {
+            database.get('SELECT rowid as userid, name, code FROM users WHERE rowid = ' + userid, (err, row) => {
                 if (err) {
                     reject(err);
                 } else {
@@ -42,11 +43,12 @@ function getAccessls(database) {
         }).then(function (people) {
             return new Promise((resolve, reject) => {
                 console.log(people);
-                database.get('SELECT userid FROM superusers WHERE userid = ' + people.userid, (err, row) => {
+                database.all('SELECT userid FROM superusers', (err, rows) => {
                     if (err) {
                         reject(err);
                     } else {
-                        if (!row) {
+                        superls = rows;
+                        if (!superls.find(v=>v === people.userid)) {
                             resolve({
                                 'role': 'normaluser',
                                 'info': people,
@@ -65,7 +67,7 @@ function getAccessls(database) {
         }).then(function (msg) {
             if (msg.role === 'superuser') {
                 return new Promise((resolve, reject) => {
-                    database.all('SELECT rowid as userid, name FROM users', (err, rows) => {
+                    database.all('SELECT rowid as userid, name, code FROM users', (err, rows) => {
                         if (err) {
                             reject(err);
                         } else {
@@ -73,6 +75,14 @@ function getAccessls(database) {
                                 reject(err);
                             } else {
                                 msg.accessList = rows;
+                                msg.accessList.forEach(v=>{
+                                    if(superls.find(su=>su === v.userid)){
+                                        v.role = 'superuser';
+                                    }
+                                    else{
+                                        v.role = 'normaluser';
+                                    }
+                                });
                                 resolve(msg);
                             }
                         }
@@ -80,21 +90,26 @@ function getAccessls(database) {
 
                 });
             } else {
-                return new Promise((resolve, reject) => {
-                    database.get('SELECT rowid as userid, name FROM users WHERE rowid = ' + msg.info.userid, (err, row) => {
-                        if (err) {
-                            reject(err);
-                        } else {
-                            if (!row) {
-                                reject(err);
-                            } else {
-                                msg.accessList = [row];
-                                resolve(msg);
-                            }
-                        }
-                    });
+                var row = {userid: msg.info.userid, name: msg.info.name, code: msg.info.code};
+                row.role = 'normaluser';
+                msg.accessList = [row];
+                return Promise.resolve(msg);
+                // return new Promise((resolve, reject) => {
+                //     database.get('SELECT rowid as userid, name, code FROM users WHERE rowid = ' + msg.info.userid, (err, row) => {
+                //         if (err) {
+                //             reject(err);
+                //         } else {
+                //             if (!row) {
+                //                 reject(err);
+                //             } else {
+                //                 row.role = 'normaluser';
+                //                 msg.accessList = [row];
+                //                 resolve(msg);
+                //             }
+                //         }
+                //     });
 
-                });
+                // });
             }
         });
         return bigPromise;

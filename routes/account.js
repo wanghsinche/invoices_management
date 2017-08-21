@@ -41,8 +41,8 @@ router.put('/create', accessMiddelware,function (req, res) {
     let {
         usercode, username, emailAddress
     } = req.body,
-    ran = Math.round(Math.random()*10),
-    password = CryptoJS.enc.Base64.stringify(CryptoJS.HmacSHA256('pswd', ran.toString())).substring(ran, ran+6);
+    ran = Math.floor(Math.random()*1000000+1000000),
+    password = String(ran);
     if(req.extraInfo.superuser){
         createUser(usercode, escapeHTML(username), password).then(function(id){
         sendMail('订单系统密码',usercode,emailAddress,password,1);

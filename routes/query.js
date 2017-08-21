@@ -25,7 +25,7 @@ router.get('/records/:users', function (req, res) {
 
 
     if (users && from && to) {
-        if ((users.length > 1 || users[0] !== req.extraInfo.userid) && !req.extraInfo.superuser) {
+        if ((users.length > 1 || users[0] != req.extraInfo.userid) && !req.extraInfo.superuser) {
             res.status(403).send('No enough right');
         } else {
             getRecordList(users, from, to).then(function (list) {
