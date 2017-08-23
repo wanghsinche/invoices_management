@@ -48,7 +48,7 @@ function getAccessls(database) {
                         reject(err);
                     } else {
                         superls = rows;
-                        if (!superls.find(v=>v === people.userid)) {
+                        if (!superls.find(v=>v.userid === people.userid)) {
                             resolve({
                                 'role': 'normaluser',
                                 'info': people,
