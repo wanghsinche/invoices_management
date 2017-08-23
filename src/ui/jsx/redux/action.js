@@ -2,8 +2,7 @@
 import axios from 'axios';
 import CryptoJS from 'crypto-js';
 import { remote, ipcRenderer } from 'electron';
-// const hostname = 'http://mycloud';
-const hostname = 'http://localhost:8000';
+// const global.hostname = 'http://mycloud';
 let nonce = 0, times = 0, accessToken = '', usercode, usrpswd;
 
 export const XHR_REQUEST = 'XHR_REQUEST';
@@ -53,7 +52,7 @@ export function login(usercodeP, usrpswdP) {
         dispatch(requestAction(requestStatus.REQUEST));
         return axios({
             method: 'get',
-            url: hostname + '/api/query/getnonce',
+            url: global.hostname + '/api/query/getnonce',
         }).then(function (response) {
             nonce = response.data.data.nonce;
             let stamp = Date.now().toString();
@@ -61,7 +60,7 @@ export function login(usercodeP, usrpswdP) {
             console.log('pre authorize success');
             return axios({
                 method: 'get',
-                url: hostname + '/api/account/getidentity',
+                url: global.hostname + '/api/account/getidentity',
                 headers: {
                     'Authorization': buildAuthContent(usercode, nonce, times++, stamp, token)
                 }
@@ -91,7 +90,7 @@ export function refreshState() {
         let token = getToken(usercode, usrpswd, nonce, times.toString(), stamp);
         axios({
             method: 'get',
-            url: hostname + '/api/account/getidentity',
+            url: global.hostname + '/api/account/getidentity',
             headers: {
                 'Authorization': buildAuthContent(usercode, nonce, times++, stamp, token)
             }
@@ -145,7 +144,7 @@ export function refreshRecordsAction(users, from, to) {
         let token = getToken(usercode, usrpswd, nonce, times.toString(), stamp);
         return axios({
             method: 'get',
-            url: hostname + '/api/query/records/' + users.join('+'),
+            url: global.hostname + '/api/query/records/' + users.join('+'),
             params: {
                 from: from,
                 to: to,
@@ -170,7 +169,7 @@ export function postAndAdd(recid, data) {
         let token = getToken(usercode, usrpswd, nonce, times.toString(), stamp);
         return axios({
             method: 'post',
-            url: hostname + '/api/change/updateRecord/' + recid,
+            url: global.hostname + '/api/change/updateRecord/' + recid,
             params: {
                 accessToken: accessToken
             },
@@ -211,7 +210,7 @@ export function putNewRecord(data) {
         let token = getToken(usercode, usrpswd, nonce, times.toString(), stamp);
         return axios({
             method: 'put',
-            url: hostname + '/api/change/newRecord',
+            url: global.hostname + '/api/change/newRecord',
             params: {
                 accessToken: accessToken
             },
@@ -282,7 +281,7 @@ export function getDetail(recid) {
         let token = getToken(usercode, usrpswd, nonce, times.toString(), stamp);
         return axios({
             method: 'get',
-            url: hostname + '/api/query/detail/' + recid,
+            url: global.hostname + '/api/query/detail/' + recid,
             params: {
                 accessToken: accessToken
             },
@@ -306,7 +305,7 @@ export function changePswd(password) {
         let token = getToken(usercode, usrpswd, nonce, times.toString(), stamp);
         return axios({
             method: 'post',
-            url: hostname + '/api/account/changePSWD',
+            url: global.hostname + '/api/account/changePSWD',
             contentType: 'application/json; charset=utf-8',
             data: {
                 password: password
@@ -330,7 +329,7 @@ export function exportFile(type, from, to, users) {
         dispatch(requestAction(requestStatus.REQUEST));
         let stamp = Date.now().toString();
         let token = getToken(usercode, usrpswd, nonce, times.toString(), stamp);
-        let url = type === 'csv' ? hostname + '/api/export/' + type + '/' + [users].join('+') : hostname + '/api/export/docx/';
+        let url = type === 'csv' ? global.hostname + '/api/export/' + type + '/' + [users].join('+') : global.hostname + '/api/export/docx/';
         return axios({
             method: 'get',
             url: url,
@@ -344,7 +343,7 @@ export function exportFile(type, from, to, users) {
             }
         }).then(function (res) {
             dispatch(requestAction(requestStatus.SUCCESS));
-            ipcRenderer.send('asynchronous-download', hostname + res.data.path);
+            ipcRenderer.send('asynchronous-download', global.hostname + res.data.path);
         }).catch(function (err) {
             dispatch(requestAction(requestStatus.ERROR));
         });
@@ -360,7 +359,7 @@ export function createUser(code, name, email) {
 
         return axios({
             method: 'put',
-            url: hostname + '/api/account/create',
+            url: global.hostname + '/api/account/create',
             params: {
 
                 accessToken: accessToken
@@ -390,7 +389,7 @@ export function changeUser(userid, superuser){
         dispatch(requestAction(requestStatus.REQUEST));
         let stamp = Date.now().toString();
         let token = getToken(usercode, usrpswd, nonce, times.toString(), stamp);
-        let url = hostname + '/api/account/'+(superuser?'makeSuper/':'removeSuper/')+userid;
+        let url = global.hostname + '/api/account/'+(superuser?'makeSuper/':'removeSuper/')+userid;
         return axios({
             method: superuser?'post':'delete',
             url: url,

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>setting</title>
+    <style>
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        * {
+            font-size: 12px;
+        }
+
+        h1 {
+            margin: 10px 10px 50px;
+            font-weight: 500;
+            overflow: hidden;
+        }
+
+        input {
+            padding: 3px 8px;
+            line-height: 1.4;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            outline: 0;
+        }
+
+        button {
+            display: inline-block;
+            padding: 3px 8px;
+            margin-bottom: 0;
+            line-height: 1.4;
+            white-space: nowrap;
+            background-image: none;
+            border: 1px solid transparent;
+            border-radius: 4px;
+            box-shadow: 0 1px 1px rgba(0, 0, 0, .06);
+        }
+
+        .content {
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>设置：</h1>
+    <div class="content">
+        <label for="textcon">服务器地址设置：</label>
+        <input type="text" id="textcon">
+        <button id="btn">apply</button>
+    </div>
+    <script>
+        const ipc = require('electron').ipcRenderer;
+        const remote = require('electron').remote;
+        let hostname = localStorage.getItem('hostname') || 'http://localhost:8000';
+        document.getElementById('textcon').value = hostname;
+        document.getElementById('btn').addEventListener('click', function () {
+            var addr = document.getElementById('textcon').value;
+            localStorage.setItem('hostname', addr);
+            ipc.send('update-hostname');
+            remote.getCurrentWindow().close();
+        });
+    </script>
+</body>
+
+</html>

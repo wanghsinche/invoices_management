@@ -50,7 +50,7 @@ module.exports = {
         }),
         new CopyWebpackPlugin([
             { from: path.resolve(SRC_PATH, 'main.js'), to: 'main.js' },
-            { from: path.resolve(SRC_PATH, 'backend'), to: 'backend' },
+            { from: path.resolve(SRC_PATH, 'ui/setting.html'), to: 'setting.html' },
             { from: path.resolve(SRC_PATH, 'ui/index.html'), to: 'index.html' },
             { from: path.resolve(SRC_PATH, 'package.json'), to: 'package.json' }
         ])

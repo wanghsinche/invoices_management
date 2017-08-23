@@ -5,7 +5,7 @@ import { createStore } from 'redux';
 import { Provider } from 'react-redux';
 import store from './jsx/redux/store';
 import List from './jsx/view/list';
-import About from './jsx/view/about';
+import Adm from './jsx/view/adm';
 import Home from './jsx/view/home';
 import { Window, Toolbar, Content,Actionbar, Button,PaneGroup,Pane  } from "./jsx/photon/photon";
 import AddBtn from './jsx/view/addbtn';
@@ -19,9 +19,17 @@ import {
     Link, hashHistory
 } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { ipcRenderer } from 'electron';
+global.hostname = localStorage.getItem('hostname')||'http://localhost:8000';
 
+ipcRenderer.on('edit-host',function(){
+    let modal = window.open('./setting.html', 'modal');
+});
 
-
+ipcRenderer.on('update-hostname',function(){
+    global.hostname = localStorage.getItem('hostname');  
+    console.log(global.hostname);  
+});
 
 const PrivateRoute = ({ component: Component, ...rest }) => (
   <Route {...rest} render={props => {
@@ -50,7 +58,7 @@ render((
                     <PaneGroup>
                         <Route path='/:place' component={Sidebar}/>
                         <Route path="/Home" component={Home} />
-                        <PrivateRoute path="/About" component={About} />
+                        <PrivateRoute path="/Adm" component={Adm} />
                         <PrivateRoute path="/Post" component={Post} />
                         <PrivateRoute path="/List" component={List} />
                     </PaneGroup>

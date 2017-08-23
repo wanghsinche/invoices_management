@@ -24,7 +24,7 @@ class Sidebar extends React.PureComponent {
             <span className="icon icon-plus-circled"></span>
             Post
           </NavLink>
-          <NavLink className="nav-group-item" to="/About" >
+          <NavLink className="nav-group-item" to="/Adm" >
             <span className="icon icon-info-circled"></span>
             Admin
           </NavLink>
