@@ -61,12 +61,13 @@ app.on('ready', function () {
       nativeWindowOpen: true
     }
   });
-  mainWindow.setMenu(menu);
+  mainWindow.setMenu(null);
+  // mainWindow.setMenu(menu);
   // and load the index.html of the app.
   mainWindow.loadURL('file://' + __dirname + '/index.html?#Home');
 
   // Open the DevTools.
-  // mainWindow.webContents.openDevTools();
+  mainWindow.webContents.openDevTools();
 
   // Emitted when the window is closed.
   mainWindow.on('closed', function () {
@@ -101,15 +102,19 @@ ipcMain.on('update-hostname', (event) => {
   mainWindow.webContents.send('update-hostname');
 });
 
-
+ipcMain.on('open-setting', (event) => {
+  openSetting();
+});
 
 function openSetting() {
     settingWindow = new BrowserWindow({
       modal: true,
       parent: mainWindow,
+      frame: false,
+      resizable: false,
       show: false,
-      width: 500,
-      height: 200,
+      width: 300,
+      height: 300,
       x: 500,
       y: 250
     });

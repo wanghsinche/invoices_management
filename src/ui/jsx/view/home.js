@@ -50,17 +50,17 @@ class Home extends Component {
                 } = this.state,
                         username = this.props.username;
                 return this.props.loged ?
-                        (<Pane className="padded-more" >
-                                <div className="grid grid-pad">
+                        (<div className="pane padded-more home" style={{backgroundImage:'url(./img/bg.png)'}}>
+                                <div className="grid grid-pad " >
                                         <div className="col-1-1"><h1>vortex订单系统</h1></div>
                                         <div className="col-1-1"><p>welcome! {username}</p></div>
                                         <div className="col-1-1">
                                                 <div className="col-1-3"><Button type="submit" ptStyle="btn-primary btn-large" text="注销" onClick={this.logout.bind(this)} /></div>
                                         </div>
                                 </div>
-                        </Pane>) : (
-                                <Pane className="padded-more" >
-                                        <div className="grid grid-pad">
+                        </div>) : (
+                                <div className="pane padded-more home"  style={{backgroundImage:'url(./img/bg.png)'}}>
+                                        <div className="grid grid-pad ">
                                                 <div className="col-1-1"><h1>vortex订单系统</h1></div>
                                                 <div className="col-1-1">
                                                         <div className="col-1-2"><Input label="登陆账号" value={usercode} onChange={(e) => { this.handleChange({ usercode: e.target.value }); }} /></div>
@@ -75,7 +75,7 @@ class Home extends Component {
                                                 <div className="col-1-1"><Button type="submit" ptStyle="btn-primary btn-large" text="登陆" onClick={this.handleClick.bind(this)} /></div>
                                                 
                                         </div>
-                                </Pane>
+                                </div>
                         );
         }
 }

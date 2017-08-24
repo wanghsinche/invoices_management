@@ -293,7 +293,11 @@
 .form-control, label {
     font-size: 12px;
 }
-
+.home{
+	background-repeat: no-repeat;
+	background-position: right bottom;
+	background-size:240px 150px;
+}
 .react-datepicker__input-container{
 	border: none;
 	width: 100%;

@@ -11,7 +11,8 @@ module.exports = {
 
     devtool: 'source-map',
     entry: {
-        index: './src/ui/index'
+        index: './src/ui/index',
+        setting: './src/ui/setting'
     },
     output: {
         path: APP_PATH,
@@ -49,6 +50,7 @@ module.exports = {
             logLevel: 0
         }),
         new CopyWebpackPlugin([
+            { from: path.resolve(SRC_PATH, 'ui/img/'), to: 'img/' },
             { from: path.resolve(SRC_PATH, 'main.js'), to: 'main.js' },
             { from: path.resolve(SRC_PATH, 'ui/setting.html'), to: 'setting.html' },
             { from: path.resolve(SRC_PATH, 'ui/index.html'), to: 'index.html' },

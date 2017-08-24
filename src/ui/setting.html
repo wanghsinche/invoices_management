@@ -3,73 +3,39 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>setting</title>
-    <style>
-        html,
-        body {
-            width: 100%;
-            height: 100%;
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
-        }
-
-        * {
-            font-size: 12px;
-        }
-
-        h1 {
-            margin: 10px 10px 50px;
-            font-weight: 500;
-            overflow: hidden;
-        }
-
-        input {
-            padding: 3px 8px;
-            line-height: 1.4;
-            background-color: #fff;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            outline: 0;
-        }
-
-        button {
-            display: inline-block;
-            padding: 3px 8px;
-            margin-bottom: 0;
-            line-height: 1.4;
-            white-space: nowrap;
-            background-image: none;
-            border: 1px solid transparent;
-            border-radius: 4px;
-            box-shadow: 0 1px 1px rgba(0, 0, 0, .06);
-        }
-
-        .content {
-            text-align: center;
-        }
-    </style>
+    <title>vortex</title>
 </head>
 
 <body>
-    <h1>设置：</h1>
-    <div class="content">
-        <label for="textcon">服务器地址设置：</label>
-        <input type="text" id="textcon">
-        <button id="btn">apply</button>
+    <div class="window">
+        <header class="toolbar toolbar-header" style="-webkit-app-region: drag">
+            <h1 class="title" style="font-size:16pt;">设置：</h1>
+        </header>
+        <div class="window-content">
+            <form action="" class="padded" style="background:url('./img/settingbg.png') no-repeat right bottom; background-size:50% auto;">
+                <div class="form-group">
+                    <label>服务器地址设置：</label>
+                    <input type="url" class="form-control" placeholder="url" id="textcon">
+                </div>
+            </form>
+        </div>
+
+        <footer class="toolbar toolbar-footer">
+            <div class="toolbar-actions">
+                <button class="btn btn-default " id="cancel">
+                                Cancel
+                              </button>
+
+                <button class="btn btn-primary pull-right" id="save">
+                                Save
+                              </button>
+            </div>
+        </footer>
     </div>
-    <script>
-        const ipc = require('electron').ipcRenderer;
-        const remote = require('electron').remote;
-        let hostname = localStorage.getItem('hostname');
-        document.getElementById('textcon').value = hostname;
-        document.getElementById('btn').addEventListener('click', function () {
-            var addr = document.getElementById('textcon').value;
-            localStorage.setItem('hostname', addr);
-            ipc.send('update-hostname');
-            remote.getCurrentWindow().close();
-        });
-    </script>
+
+
+
+    <script src="./setting.js"></script>
 </body>
 
 </html>

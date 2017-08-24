@@ -14,19 +14,19 @@ class Sidebar extends React.PureComponent {
           <h5 className="nav-group-title">Nav</h5>
           <NavLink className="nav-group-item" to="/Home" >
             <span className="icon icon-home"></span>
-            Home
+            首页
           </NavLink>
           <NavLink className="nav-group-item" to="/List" >
             <span className="icon icon-doc-text-inv"></span>
-            List
+            订单列表
           </NavLink>
           <NavLink className="nav-group-item" to="/Post" >
             <span className="icon icon-plus-circled"></span>
-            Post
+            新增订单
           </NavLink>
           <NavLink className="nav-group-item" to="/Adm" >
             <span className="icon icon-info-circled"></span>
-            Admin
+            功能面板
           </NavLink>
         </nav>      
       </Pane>
