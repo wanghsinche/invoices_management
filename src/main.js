@@ -5,9 +5,10 @@ const app = electron.app;  // Module to control application life.
 const BrowserWindow = electron.BrowserWindow;  // Module to create native browser window.
 const ipcMain = electron.ipcMain;
 const dialog = electron.dialog;
+const Menu = electron.Menu;
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
-var mainWindow = null;
+var mainWindow = null, settingWindow = null;
 // Quit when all windows are closed.
 app.on('window-all-closed', function () {
   // On OS X it is common for applications and their menu bar
@@ -16,6 +17,38 @@ app.on('window-all-closed', function () {
     app.quit();
   }
 });
+let menu;
+const template = [
+  {
+    label: 'Setting',
+    submenu: [
+      {role: 'reload'},
+      {role: 'forcereload'},
+      {role: 'toggledevtools'},
+      {type: 'separator'},
+      {
+        label: 'edit server address',
+        click () { openSetting(); }
+      }
+    ]
+  },
+  {
+    role: 'help',
+    submenu: [
+      {
+        label: 'About Author',
+        click () { require('electron').shell.openExternal('https://github.com/wanghsinche/') }
+      }
+    ]
+  }
+];
+
+if (process.platform !== 'darwin') {
+  menu = Menu.buildFromTemplate(template);
+  // Menu.setApplicationMenu(menu);
+}
+
+
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
@@ -23,9 +56,12 @@ app.on('ready', function () {
   // Create the browser window.
   mainWindow = new BrowserWindow({
     width: 1024 + 500, height: 800 + 100, 'accept-first-mouse': true,
-    'title-bar-style': 'hidden'
+    'title-bar-style': 'hidden',
+    webPreferences: {
+      nativeWindowOpen: true
+    }
   });
-
+  mainWindow.setMenu(menu);
   // and load the index.html of the app.
   mainWindow.loadURL('file://' + __dirname + '/index.html?#Home');
 
@@ -39,7 +75,30 @@ app.on('ready', function () {
     // when you should delete the corresponding element.
     mainWindow = null;
   });
+
+  mainWindow.webContents.on('new-window', (event, url, frameName, disposition, options, additionalFeatures) => {
+    if (frameName === 'modal') {
+      // open window as modal
+      event.preventDefault()
+      Object.assign(options, {
+        modal: true,
+        parent: mainWindow,
+        width: 500,
+        height: 200,
+        x: 500,
+        y: 250
+      })
+      event.newGuest = new BrowserWindow(options);
+      event.newGuest.setMenu(null);
+      event.newGuest.on('close', function(){
+        event.newGuest = null;
+      });
+    }
+  });
+
+
 });
+
 
 ipcMain.on('asynchronous-download', (event, url) => {
 
@@ -56,7 +115,15 @@ ipcMain.on('asynchronous-download', (event, url) => {
       });
     });
   });
-
-
-
 });
+
+
+ipcMain.on('update-hostname', (event) => {
+  mainWindow.webContents.send('update-hostname');
+});
+
+
+
+function openSetting(){
+  mainWindow.webContents.send('edit-host');
+}
