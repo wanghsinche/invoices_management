@@ -62,8 +62,12 @@ class About extends Component {
 
         }
         userChange(userid, e){
-
-                this.props.handleChangeUser(userid, e.target.checked);
+                if(this.props.role === 'superuser'){
+                        this.props.handleChangeUser(userid, e.target.checked);
+                }
+                else{
+                        alert('普通用户无法修改权限');
+                }
         }
         render() {
                 let { password, passwordAgain, from, to, newcode, newemail, newname } = this.state, accessList = this.props.accessList;
@@ -99,7 +103,7 @@ class About extends Component {
                                         </div>
 
                                         <div className="col-8-12">
-                                                <h5 style={{}}><Icon glyph="credit-card" />&nbsp;用户管理</h5>
+                                                <h5 style={{}}><Icon glyph="credit-card" />&nbsp;用户管理{this.props.role === 'superuser'?'':'（非管理员只能看到自己）'}</h5>
                                                 <div style={{ overflow: 'auto', height: '300px', border: '1px solid #c3c3c3', margin: '0 0 10px 0' }}>
                                                         <table className="table-striped" >
                                                                 <thead>
