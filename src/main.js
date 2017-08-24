@@ -22,13 +22,13 @@ const template = [
   {
     label: 'Setting',
     submenu: [
-      {role: 'reload'},
-      {role: 'forcereload'},
-      {role: 'toggledevtools'},
-      {type: 'separator'},
+      { role: 'reload' },
+      { role: 'forcereload' },
+      { role: 'toggledevtools' },
+      { type: 'separator' },
       {
         label: 'edit server address',
-        click () { openSetting(); }
+        click() { openSetting(); }
       }
     ]
   },
@@ -37,7 +37,7 @@ const template = [
     submenu: [
       {
         label: 'About Author',
-        click () { require('electron').shell.openExternal('https://github.com/wanghsinche/') }
+        click() { require('electron').shell.openExternal('https://github.com/wanghsinche/'); }
       }
     ]
   }
@@ -76,27 +76,6 @@ app.on('ready', function () {
     mainWindow = null;
   });
 
-  mainWindow.webContents.on('new-window', (event, url, frameName, disposition, options, additionalFeatures) => {
-    if (frameName === 'modal') {
-      // open window as modal
-      event.preventDefault()
-      Object.assign(options, {
-        modal: true,
-        parent: mainWindow,
-        width: 500,
-        height: 200,
-        x: 500,
-        y: 250
-      })
-      event.newGuest = new BrowserWindow(options);
-      event.newGuest.setMenu(null);
-      event.newGuest.on('close', function(){
-        event.newGuest = null;
-      });
-    }
-  });
-
-
 });
 
 
@@ -124,6 +103,22 @@ ipcMain.on('update-hostname', (event) => {
 
 
 
-function openSetting(){
-  mainWindow.webContents.send('edit-host');
+function openSetting() {
+    settingWindow = new BrowserWindow({
+      modal: true,
+      parent: mainWindow,
+      show: false,
+      width: 500,
+      height: 200,
+      x: 500,
+      y: 250
+    });
+    settingWindow.setMenu(null);
+    settingWindow.loadURL('file://' + __dirname + '/setting.html');
+    settingWindow.once('ready-to-show', () => {
+      settingWindow.show();
+    });
+    settingWindow.on('close', function () {
+      settingWindow = null;
+    });
 }

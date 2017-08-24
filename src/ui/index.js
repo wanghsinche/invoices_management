@@ -20,11 +20,11 @@ import {
 } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { ipcRenderer } from 'electron';
-global.hostname = localStorage.getItem('hostname')||'http://localhost:8000';
-
-ipcRenderer.on('edit-host',function(){
-    let modal = window.open('./setting.html', 'modal');
-});
+global.hostname = localStorage.getItem('hostname');
+if(!global.hostname){
+    global.hostname = 'http://localhost:8000';
+    localStorage.setItem('hostname', global.hostname);
+}
 
 ipcRenderer.on('update-hostname',function(){
     global.hostname = localStorage.getItem('hostname');  

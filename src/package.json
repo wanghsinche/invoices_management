@@ -1,13 +1,13 @@
 {
-  "name": "trading-app",
+  "name": "vortex_orders",
   "version": "0.1.0",
-  "description": "Demo of trading",
+  "description": "vortex_orders app",
   "main": "main.js",
   "scripts": {
     "start": "electron ."
   },
   "keywords": [
-    "trading"
+    "orders"
   ],
   "author": "wanghsinche",
   "license": "MIT",

@@ -61,7 +61,7 @@
     <script>
         const ipc = require('electron').ipcRenderer;
         const remote = require('electron').remote;
-        let hostname = localStorage.getItem('hostname') || 'http://localhost:8000';
+        let hostname = localStorage.getItem('hostname');
         document.getElementById('textcon').value = hostname;
         document.getElementById('btn').addEventListener('click', function () {
             var addr = document.getElementById('textcon').value;
