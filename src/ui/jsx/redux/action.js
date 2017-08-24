@@ -13,7 +13,7 @@ export const requestStatus = {
     NORMAL: 'NORMAL'
 };
 
-
+axios.defaults.timeout = 3000;
 
 function getToken(usercode = "", usrpswd = "", reqnonce = "", reqtimes = "", reqstamp = "") {
     let hash = CryptoJS.HmacSHA256(usercode, usrpswd, reqnonce, reqtimes, reqstamp);

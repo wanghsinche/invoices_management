@@ -22,7 +22,7 @@ import { connect } from 'react-redux';
 import { ipcRenderer } from 'electron';
 global.hostname = localStorage.getItem('hostname');
 if(!global.hostname){
-    global.hostname = 'http://localhost:8000';
+    global.hostname = 'http://123.206.194.97';
     localStorage.setItem('hostname', global.hostname);
 }
 
