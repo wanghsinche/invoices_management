@@ -72,7 +72,7 @@ export function login(usercodeP, usrpswdP) {
             dispatch(saveInfo(usercode, response.data));
         }).catch(function (err) {
             console.log(err.response);
-            if (err.response.status == '401' || err.response.status == '403') {
+            if (err.response && (err.response.status == '401' || err.response.status == '403')) {
                 alert('登陆失败，请检查账号密码');
                 dispatch(requestAction(requestStatus.NORMAL));
             }

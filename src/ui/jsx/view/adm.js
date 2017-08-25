@@ -89,8 +89,8 @@ class About extends Component {
                                                         <label>截至日期</label><DatePicker dateFormat="YYYY-MM-DD" selected={moment(to)} onChange={(date) => { this.setState({ to: date.valueOf() }); }} />
                                                 </div>
                                                 <div className="form-actions">
-                                                        <Button type="submit" ptStyle="btn-primary btn-large" text="入库单导出" onClick={() => { this.csvExport(); }} />
-                                                        {this.props.role === 'superuser' && <Button type="submit" ptStyle="btn-primary btn-large" text="汇总单导出" onClick={() => { this.docxExport(); }} />}
+                                                        <Button type="submit" ptStyle="btn-primary btn-large" text="入库单导出" onClick={() => { this.docxExport(); }} />
+                                                        {this.props.role === 'superuser' && <Button type="submit" ptStyle="btn-primary btn-large" text="汇总单导出" onClick={() => { this.csvExport(); }} />}
                                                 </div>
 
                                         </div>
