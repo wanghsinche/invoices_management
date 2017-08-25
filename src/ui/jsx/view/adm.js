@@ -104,7 +104,7 @@ class About extends Component {
 
                                         <div className="col-8-12">
                                                 <h5 style={{}}><Icon glyph="credit-card" />&nbsp;用户管理{this.props.role === 'superuser'?'':'（非管理员只能看到自己）'}</h5>
-                                                <div style={{ overflow: 'auto', height: '300px', border: '1px solid #c3c3c3', margin: '0 0 10px 0' }}>
+                                                <div style={{ overflow: 'auto', height: '200px', border: '1px solid #c3c3c3', margin: '0 0 10px 0' }}>
                                                         <table className="table-striped" >
                                                                 <thead>
                                                                         <tr>

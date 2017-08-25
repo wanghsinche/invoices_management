@@ -29,7 +29,7 @@ class App extends Component {
         return (
             <div className="pane" style={{ overflow: 'hidden' }}>
 
-                <div style={{ overflow: 'auto', height: '400px' }}>
+                <div style={{ overflow: 'auto', height: '300px' }}>
                     <table className="table-striped" >
                         <thead>
                             <tr>
