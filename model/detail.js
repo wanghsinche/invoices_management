@@ -83,72 +83,93 @@ function insertDetail(database) {
             mark,
             userid,
         } = detail;
-        goodP = new Promise(function(resolve, reject) {
-            database.run('INSERT INTO goods (name, price, priceall, num, buyDate, code) VALUES ($name, $price, $priceall, $num, $buyDate, $code)', {
-                $name: good.name,
-                $price: good.price,
-                $priceall: good.priceall,
-                $num: good.num,
-                $buyDate: good.buyDate,
+        return new Promise(function(resolve, reject){
+            database.get('SELECT rowid FROM goods WHERE code = $code',{
                 $code: good.code
-            }, function(err) {
-                if (err) {
-                    console.log(err);
+            }, function(err, row){
+                if(err){
                     reject(err);
-                } else {
-                    console.log('insert rowid is ' + this.lastID);
-                    resolve(this.lastID);
+                }
+                else{
+                    if(row){
+                        reject({code:-1,msg:'good code has already existed'});
+                    }
+                    else{
+                        resolve();
+                    }
                 }
             });
-        });
-        invsP = new Promise(function(resolve, reject) {
-            database.run('INSERT INTO invoices (code, price, date, type) VALUES ($code, $price, $date, $type)', {
-                $code: invs.code,
-                $price: invs.price,
-                $date: invs.date,
-                $type: invs.type
-            }, function(err) {
-                if (err) {
-                    console.log(err);
-                    reject(err);
-                } else {
-                    console.log('insert rowid is ' + this.lastID);
-                    resolve(this.lastID);
-                }
+        })
+        .then(function(){
+            goodP = new Promise(function(resolve, reject) {
+                database.run('INSERT INTO goods (name, price, priceall, num, buyDate, code) VALUES ($name, $price, $priceall, $num, $buyDate, $code)', {
+                    $name: good.name,
+                    $price: good.price,
+                    $priceall: good.priceall,
+                    $num: good.num,
+                    $buyDate: good.buyDate,
+                    $code: good.code
+                }, function(err) {
+                    if (err) {
+                        console.log(err);
+                        reject(err);
+                    } else {
+                        console.log('insert rowid is ' + this.lastID);
+                        resolve(this.lastID);
+                    }
+                });
             });
-        });
-        markP = new Promise(function(resolve, reject) {
-            database.run('INSERT INTO marks (link, content) VALUES ($link, $content)', {
-                $link: mark.link,
-                $content: mark.content
-            }, function(err) {
-                if (err) {
-                    console.log(err);
-                    reject(err);
-                } else {
-                    console.log('insert rowid is ' + this.lastID);
-                    resolve(this.lastID);
-                }
+            invsP = new Promise(function(resolve, reject) {
+                database.run('INSERT INTO invoices (code, price, date, type) VALUES ($code, $price, $date, $type)', {
+                    $code: invs.code,
+                    $price: invs.price,
+                    $date: invs.date,
+                    $type: invs.type
+                }, function(err) {
+                    if (err) {
+                        console.log(err);
+                        reject(err);
+                    } else {
+                        console.log('insert rowid is ' + this.lastID);
+                        resolve(this.lastID);
+                    }
+                });
             });
+            markP = new Promise(function(resolve, reject) {
+                database.run('INSERT INTO marks (link, content) VALUES ($link, $content)', {
+                    $link: mark.link,
+                    $content: mark.content
+                }, function(err) {
+                    if (err) {
+                        console.log(err);
+                        reject(err);
+                    } else {
+                        console.log('insert rowid is ' + this.lastID);
+                        resolve(this.lastID);
+                    }
+                });
+            });
+            return Promise.all([goodP, invsP, markP]).then(([goodid, invsid, markid]) => new Promise(function(resolve, reject) {
+                database.run('INSERT INTO records (goodid, userid, invoiceid, markid, date) VALUES ($goodid, $userid, $invoiceid, $markid, $date)', {
+                    $goodid: goodid,
+                    $userid: userid,
+                    $invoiceid: invsid,
+                    $markid: markid,
+                    $date: Date.now()
+                }, function(err) {
+                    if (err) {
+                        console.log(err);
+                        reject(err);
+                    } else {
+                        console.log('insert rowid is ' + this.lastID);
+                        resolve(this.lastID);
+                    }
+                });
+            }));
         });
+        
 
-        return Promise.all([goodP, invsP, markP]).then(([goodid, invsid, markid]) => new Promise(function(resolve, reject) {
-            database.run('INSERT INTO records (goodid, userid, invoiceid, markid, date) VALUES ($goodid, $userid, $invoiceid, $markid, $date)', {
-                $goodid: goodid,
-                $userid: userid,
-                $invoiceid: invsid,
-                $markid: markid,
-                $date: Date.now()
-            }, function(err) {
-                if (err) {
-                    console.log(err);
-                    reject(err);
-                } else {
-                    console.log('insert rowid is ' + this.lastID);
-                    resolve(this.lastID);
-                }
-            });
-        }));
+        
 
 
     };

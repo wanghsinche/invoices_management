@@ -74,7 +74,13 @@ router.put('/newRecord', function (req, res) {
             lastid: msg
         });
     }).catch(function (err) {
-        res.status(500).send(err);
+        if(err.code){
+            res.status(400).send(err);
+        }
+        else{
+            res.status(500).send(err);    
+        }
+        
     });
 
 
