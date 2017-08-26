@@ -92,10 +92,10 @@ class Post extends Component {
                     <div className="col-1-2"><Input label="名称" value={name} onChange={(e) => { this.handleChange({ name: e.target.value }); }} /></div>
                     <div className="col-1-2"><Input label="单价" value={price} onChange={(e) => { this.handleChange({ price: e.target.value }); }} /></div>
                     <div className="col-1-2"><Input label="数量" value={num} onChange={(e) => { this.handleChange({ num: e.target.value }); }} /></div>
-                    <div className="col-1-2"><div className="form-group"><label>购买日期</label><DatePicker dateFormat="YYYY-MM-DD" selected={moment(buyDate)} onChange={(date) => { console.log(date.valueof()); this.handleChange({ buyDate: date.valueOf() }); }} /></div></div>
+                    <div className="col-1-2"><div className="form-group"><label>购买日期</label><DatePicker dateFormat="YYYY-MM-DD" selected={moment(buyDate)} onChange={(date) => { console.log(date.valueOf()); this.handleChange({ buyDate: date.valueOf() }); }} /></div></div>
                     <div className="col-1-2"><Input label="总金额" value={priceall} onChange={(e) => { this.handleChange({ priceall: e.target.value }); }} /></div>
                     <div className="col-1-2"><Input label="发票号码" value={invscode} onChange={(e) => { this.handleChange({ invscode: e.target.value }); }} /></div>
-                    <div className="col-1-2"><div className="form-group"><label>发票上交日期</label><DatePicker dateFormat="YYYY-MM-DD" selected={''} onChange={(date) => { console.log(date.valueof()); this.handleChange({ invsdate: date.valueOf() }); }} /></div></div>
+                    <div className="col-1-2"><div className="form-group"><label>发票上交日期</label><DatePicker dateFormat="YYYY-MM-DD" selected={invsdate && moment(invsdate)} onChange={(date) => { console.log(date.valueOf()); this.handleChange({ invsdate: date.valueOf() }); }} /></div></div>
                     <div className="col-1-2"><Input label="发票金额" value={invsprice} onChange={(e) => { this.handleChange({ invsprice: e.target.value }); }} /></div>
                     <div className="col-5-12"><Input label="Link" value={link} onChange={(e) => { this.handleChange({ link: e.target.value }); }} /></div>
                     <div className="col-1-12"><div className="form-group"><label></label><CheckBox label="提醒老师付款" checked={mailFlag} onChange={(e) => { this.handleChange({ mailFlag: e.target.checked }); }} /></div></div>
