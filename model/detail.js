@@ -92,7 +92,7 @@ function insertDetail(database) {
                 }
                 else{
                     if(row){
-                        reject({code:-1,msg:'good code has already existed'});
+                        reject({code:-1,msg:'订单号已经存在,不要重复提交'});
                     }
                     else{
                         resolve();
