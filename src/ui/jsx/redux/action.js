@@ -158,6 +158,7 @@ export function refreshRecordsAction(users, from, to) {
             dispatch(refreshRecords(res.data));
         }).catch(function (err) {
             dispatch(requestAction(requestStatus.ERROR));
+            alert(err.response);
         });
     };
 }
@@ -186,11 +187,12 @@ export function postAndAdd(recid, data) {
             }
             else {
                 dispatch(requestAction(requestStatus.ERROR));
+                alert(res.data);
                 console.log(res.data.msg);
             }
 
         }).catch((err) => {
-            if(err.response.status == '500' || err.response.status == '401' || err.response.status == '403')
+            if(err.response.status == '500' || /40/.test(err.response.status))
             {
                 alert(err.response.data);
                 dispatch(requestAction(requestStatus.NORMAL));
@@ -225,12 +227,14 @@ export function putNewRecord(data) {
                 alert('添加成功');
             }
             else {
+                alert(res);
                 dispatch(requestAction(requestStatus.ERROR));
-                console.log(res.data.msg);
+                console.log(res.msg);
             }
 
         }).catch((err) => {
-            console.log(err, 'err');
+            console.log(err.response, 'err');
+            alert(err.response.data&&err.response.data.msg);
             dispatch(requestAction(requestStatus.ERROR));
         });
     };
@@ -293,6 +297,7 @@ export function getDetail(recid) {
             dispatch(setCurrentAction(res.data));
         }).catch(function (err) {
             dispatch(requestAction(requestStatus.ERROR));
+            alert(err.response);
         });
     };
 }
