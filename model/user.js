@@ -76,7 +76,7 @@ function getAccessls(database) {
                             } else {
                                 msg.accessList = rows;
                                 msg.accessList.forEach(v=>{
-                                    if(superls.find(su=>su === v.userid)){
+                                    if(superls.find(su=>su.userid === v.userid)){
                                         v.role = 'superuser';
                                     }
                                     else{
