@@ -111,7 +111,7 @@ function getAllDetail(database) {
                 });
             });
             goodP = new Promise((resolve, reject) => {
-                database.all('SELECT rowid as goodid, name, price, priceall, num, buyDate, code FROM goods WHERE rowid in (' + goodcon + ')', function(err, rows) {
+                database.all('SELECT rowid as goodid, name, price, priceall, num, buyDate, code as goodcode FROM goods WHERE rowid in (' + goodcon + ')', function(err, rows) {
                     if (err) {
                         reject(err);
                     } else {
