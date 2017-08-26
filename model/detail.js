@@ -28,7 +28,7 @@ function getDetail(database) {
             });
 
             goodP = new Promise((resolve, reject) => {
-                database.get('SELECT code, name, num, price, priceall, buyDate FROM goods WHERE rowid = ' + result.goodid, function(err, row) {
+                database.get('SELECT code as goodcode, name, num, price, priceall, buyDate FROM goods WHERE rowid = ' + result.goodid, function(err, row) {
                     if (err) {
                         reject('goodP', err);
                     } else {
