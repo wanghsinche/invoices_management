@@ -70,6 +70,7 @@ router.put('/newRecord', function (req, res) {
             sendMail(name, '订单系统', link, content, 0);
         }
         res.send({
+            code: 1,
             lastid: msg
         });
     }).catch(function (err) {
