@@ -2,7 +2,7 @@
 global.myDataBase = './database/real.db';
 global.nonceDataBase = './database/nonce.db';
 global.logDataBase = './database/log.db';
-global.linkRecv = 'vortexdoctor@zju.edu.cn';//'wang.xinzhe@qq.com';
+global.linkRecv = 'vortexdoctor@zju.edu.cn';//'wang.xinzhe@qq.com'; test
 let
     express = require('express'),
     app = express(),
