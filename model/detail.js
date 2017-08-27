@@ -190,7 +190,7 @@ function changeDetail(database) {
         } = detail;
 
         let bigPromise = new Promise(function(resolve, reject) {
-            database.get('SELECT goodid, invoiceid, markid, userid FROM records WHERE rowid = ' + recordid, function(err, row) {
+            database.get('SELECT goodid, invoiceid, markid, userid FROM records WHERE rowid = $rowid', {$rowid:recordid}, function(err, row) {
                 if (err) {
                     reject(err);
                 } else {
@@ -211,7 +211,7 @@ function changeDetail(database) {
                         values = [], param = {};
 
                     columns.forEach(function(k) {
-                        if (!!good[k]) {
+                        if (typeof good[k] !== 'undefined') {
                             values.push(k.concat('=$', k));
                             param['$'+k] = good[k];
                         }
@@ -233,7 +233,7 @@ function changeDetail(database) {
                         values = [], param = {};
 
                     columns.forEach(function(k) {
-                        if (!!invs[k]) {
+                        if (typeof invs[k] !== 'undefined') {
                             values.push(k.concat('=$', k));
                             param['$'+k] = invs[k];
                         }
@@ -254,7 +254,7 @@ function changeDetail(database) {
                         values = [], param = {};
 
                     columns.forEach(function(k) {
-                        if (!!mark[k]) {
+                        if (typeof mark[k] !== 'undefined') {
                             values.push(k.concat('=$', k));
                             param['$'+k] = mark[k];
                         }

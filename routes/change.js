@@ -126,6 +126,7 @@ router.post('/updateRecord/:recordid', function (req, res) {
         console.log(detail);
         updateRecord(detail).then(function () {
             res.send({
+                code:1,
                 msg: 'updateRecord success'
             });
         }).catch(function (err) {
