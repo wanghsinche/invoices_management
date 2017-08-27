@@ -23,7 +23,12 @@ class About extends Component {
         }
         componentDidMount() {
                 ipcRenderer.on('asynchronous-reply', (event, arg) => {
-                        alert('保存成功');
+                        if(arg === 'ok'){
+                                alert('保存成功');
+                        }
+                        else{
+                                alert('未保存');
+                        }
                 });
         }
         passwordChange() {

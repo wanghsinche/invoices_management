@@ -27,17 +27,17 @@ function handleSquirrelEvent() {
   const updateDotExe = path.resolve(path.join(rootAtomFolder, 'Update.exe'));
   const exeName = path.basename(process.execPath);
 
-  const spawn = function(command, args) {
+  const spawn = function (command, args) {
     let spawnedProcess, error;
 
     try {
-      spawnedProcess = ChildProcess.spawn(command, args, {detached: true});
-    } catch (error) {}
+      spawnedProcess = ChildProcess.spawn(command, args, { detached: true });
+    } catch (error) { }
 
     return spawnedProcess;
   };
 
-  const spawnUpdate = function(args) {
+  const spawnUpdate = function (args) {
     return spawn(updateDotExe, args);
   };
 
@@ -151,17 +151,23 @@ app.on('ready', function () {
 ipcMain.on('asynchronous-download', (event, url) => {
 
   dialog.showSaveDialog({ title: '导出数据', defaultPath: url.split('/').pop() }, function (path) {
-    let writeStream = require('fs').createWriteStream(path);
-    writeStream.on('close', function () {
-      event.sender.send('asynchronous-reply', 'ok');
-    });
-    writeStream.on('open', function () {
-      require('http').get(url, function (data) {
-        data.pipe(writeStream);
-      }).on('error', function () {
-        event.sender.send('asynchronous-reply', 'fail');
+    if (!!path) {
+      let writeStream = require('fs').createWriteStream(path);
+      writeStream.on('close', function () {
+        event.sender.send('asynchronous-reply', 'ok');
       });
-    });
+      writeStream.on('open', function () {
+        require('http').get(url, function (data) {
+          data.pipe(writeStream);
+        }).on('error', function () {
+          event.sender.send('asynchronous-reply', 'fail');
+        });
+      });
+    }
+    else{
+      event.sender.send('asynchronous-reply', 'fail');
+    }
+
   });
 });
 
@@ -175,25 +181,25 @@ ipcMain.on('open-setting', (event) => {
 });
 
 function openSetting() {
-    settingWindow = new BrowserWindow({
-      modal: true,
-      parent: mainWindow,
-      frame: false,
-      resizable: false,
-      show: false,
-      width: 300,
-      height: 300,
-      x: 500,
-      y: 250
-    });
-    settingWindow.setMenu(null);
-    settingWindow.loadURL('file://' + __dirname + '/setting.html');
-    settingWindow.once('ready-to-show', () => {
-      settingWindow.show();
-    });
-    settingWindow.on('close', function () {
-      settingWindow = null;
-    });
+  settingWindow = new BrowserWindow({
+    modal: true,
+    parent: mainWindow,
+    frame: false,
+    resizable: false,
+    show: false,
+    width: 300,
+    height: 300,
+    x: 500,
+    y: 250
+  });
+  settingWindow.setMenu(null);
+  settingWindow.loadURL('file://' + __dirname + '/setting.html');
+  settingWindow.once('ready-to-show', () => {
+    settingWindow.show();
+  });
+  settingWindow.on('close', function () {
+    settingWindow = null;
+  });
 }
 
 
