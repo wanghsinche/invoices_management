@@ -22,7 +22,8 @@ class Post extends Component {
             type: '',
             link: '',
             content: '',
-            mailFlag: true
+            mailFlag: true,
+            lastpost: 0
         };
     }
     handleChange(obj) {
@@ -32,7 +33,10 @@ class Post extends Component {
 
     handleClick() {
         var data = Object.assign({}, this.state);
-        if (!data.goodcode || !data.name || !data.priceall||!data.price || !data.num || !data.link) {
+        if(Date.now() - data.lastpost < 10000 ){
+            alert('提交过于频繁，请稍后再试');
+        }
+        else if (!data.goodcode || !data.name || !data.priceall||!data.price || !data.num || !data.link) {
             alert('必填字段不完整，订单号，商品名称，单价，总价，数量，链接均为必填。');
             
         }
@@ -43,6 +47,9 @@ class Post extends Component {
         else {
             if (confirm('sure?')) {
                 this.props.postData(data);
+                this.setState({
+                    lastpost: Date.now()
+                });
             }
         }
 

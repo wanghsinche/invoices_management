@@ -158,7 +158,7 @@ export function refreshRecordsAction(users, from, to) {
             dispatch(refreshRecords(res.data));
         }).catch(function (err) {
             dispatch(requestAction(requestStatus.ERROR));
-            alert(err.response);
+            alert(err.response.msg);
         });
     };
 }
@@ -187,14 +187,14 @@ export function postAndAdd(recid, data) {
             }
             else {
                 dispatch(requestAction(requestStatus.ERROR));
-                alert(res.data);
+                alert('1'+res.data);
                 console.log(res.data.msg);
             }
 
         }).catch((err) => {
             if(err.response.status == '500' || /40/.test(err.response.status))
             {
-                alert(err.response.data);
+                alert('2'+err.response.data);
                 dispatch(requestAction(requestStatus.NORMAL));
             }
             else{
