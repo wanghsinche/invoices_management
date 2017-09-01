@@ -5,7 +5,7 @@ const bodyParser = require('body-parser');
 const escapeHTML = require('escape-html');
 const sendMail = require('../utils/mail.js').init(global.linkRecv);
 
-router.use(function (req, res, next) {
+router.use(function(req, res, next) {
     res.setHeader('Content-Type', 'application/json');
     next();
 });
@@ -18,7 +18,7 @@ router.use(bodyParser.urlencoded({
 // parse application/json 
 router.use(bodyParser.json());
 
-router.put('/newRecord', function (req, res) {
+router.put('/newRecord', function(req, res) {
 
     // let {
     //     good,
@@ -28,18 +28,18 @@ router.put('/newRecord', function (req, res) {
     // } = detail;
     let detail, {
             name,
-        price,
-        priceall,
-        num,
-        goodcode,
-        buyDate,
-        invscode,
-        invsprice,
-        invsdate,
-        type,
-        link,
-        content,
-        mailFlag,
+            price,
+            priceall,
+            num,
+            goodcode,
+            buyDate,
+            invscode,
+            invsprice,
+            invsdate,
+            type,
+            link,
+            content,
+            mailFlag,
         } = req.body,
         userid = req.extraInfo.userid;
 
@@ -65,28 +65,46 @@ router.put('/newRecord', function (req, res) {
         },
         userid: userid
     };
-    newRecord(detail).then(function (msg) {
-        if (mailFlag) {
-            sendMail(name, '订单系统', link, content, 0);
-        }
-        res.send({
-            code: 1,
-            lastid: msg
+    if (!!detail.good.code) {
+        res.status(400).send({
+            msg: '订单号填写错误'
         });
-    }).catch(function (err) {
-        if(err.code){
-            res.status(400).send(err);
-        }
-        else{
-            res.status(500).send(err);    
-        }
-        
-    });
+    } else if (!!detail.good.name) {
+        res.status(400).send({
+            msg: '货物名称填写错误'
+        });
+    } else if (!!detail.good.priceall) {
+        res.status(400).send({
+            msg: '总价填写错误，必须为数字'
+        });
+    } else if (!!detail.good.num) {
+        res.status(400).send({
+            msg: '货物数量必须为数字'
+        });
+    } else {
+        newRecord(detail).then(function(msg) {
+            if (mailFlag) {
+                sendMail(name, '订单系统', link, content, 0);
+            }
+            res.send({
+                code: 1,
+                lastid: msg
+            });
+        }).catch(function(err) {
+            if (err.code) {
+                res.status(400).send(err);
+            } else {
+                res.status(500).send(err);
+            }
+
+        });
+    }
+
 
 
 });
 
-router.post('/updateRecord/:recordid', function (req, res) {
+router.post('/updateRecord/:recordid', function(req, res) {
     let detail,
         recordid = req.params.recordid,
         {
@@ -124,14 +142,24 @@ router.post('/updateRecord/:recordid', function (req, res) {
         res.status(400).send('params error');
     } else {
         console.log(detail);
-        updateRecord(detail).then(function () {
-            res.send({
-                code:1,
-                msg: 'updateRecord success'
+        if (!!detail.good.priceall) {
+            res.status(400).send({
+                msg: '总价填写错误，必须为数字'
             });
-        }).catch(function (err) {
-            res.status(500).send(err);
-        });
+        } else if (!!detail.good.num) {
+            res.status(400).send({
+                msg: '货物数量必须为数字'
+            });
+        } else {
+            updateRecord(detail).then(function() {
+                res.send({
+                    code: 1,
+                    msg: 'updateRecord success'
+                });
+            }).catch(function(err) {
+                res.status(500).send(err);
+            });
+        }
     }
 
 });
