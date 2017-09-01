@@ -65,21 +65,34 @@ router.put('/newRecord', function(req, res) {
         },
         userid: userid
     };
-    if (!!detail.good.code) {
+    console.log(detail);
+    if (!detail.good.code) {
         res.status(400).send({
             msg: '订单号填写错误'
         });
-    } else if (!!detail.good.name) {
+    } else if (!detail.good.name) {
         res.status(400).send({
             msg: '货物名称填写错误'
         });
-    } else if (!!detail.good.priceall) {
+    } else if (!detail.good.buyDate) {
+        res.status(400).send({
+            msg: '购买日期填写错误，请用日期选择框填写'
+        });
+    } else if (!detail.good.price) {
+        res.status(400).send({
+            msg: '单价填写错误，必须为数字'
+        });
+    } else if (!detail.good.priceall) {
         res.status(400).send({
             msg: '总价填写错误，必须为数字'
         });
-    } else if (!!detail.good.num) {
+    } else if (!detail.good.num) {
         res.status(400).send({
             msg: '货物数量必须为数字'
+        });
+    } else if (!detail.mark.link) {
+        res.status(400).send({
+            msg: '订单链接必填'
         });
     } else {
         newRecord(detail).then(function(msg) {
@@ -142,13 +155,21 @@ router.post('/updateRecord/:recordid', function(req, res) {
         res.status(400).send('params error');
     } else {
         console.log(detail);
-        if (!!detail.good.priceall) {
+        if (!detail.good.price) {
+            res.status(400).send({
+                msg: '单价填写错误，必须为数字'
+            });
+        } else if (!detail.good.priceall) {
             res.status(400).send({
                 msg: '总价填写错误，必须为数字'
             });
-        } else if (!!detail.good.num) {
+        } else if (!detail.good.num) {
             res.status(400).send({
                 msg: '货物数量必须为数字'
+            });
+        } else if (!detail.mark.link) {
+            res.status(400).send({
+                msg: '订单链接必填'
             });
         } else {
             updateRecord(detail).then(function() {
