@@ -151,6 +151,7 @@ router.post('/updateRecord/:recordid', function(req, res) {
         userid: userid,
         recordid: recordid
     };
+    // 发票可以只填写某些项的问题暂时未解决
     if (!recordid) {
         res.status(400).send('params error');
     } else {
