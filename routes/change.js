@@ -151,15 +151,7 @@ router.post('/updateRecord/:recordid', function(req, res) {
         userid: userid,
         recordid: recordid
     };
-    console.log(detail.invs);
-    if(detail.invs.code !== null || !isNaN(detail.invs.price) || !isNaN(detail.invs.date)){
-        if(detail.invs.code !== null || isNaN(detail.invs.price) || isNaN(detail.invs.date)){
-           res.status(400).send(
-                '登记发票时，发票代码，发票上交时间，发票价格必须填写'
-            );
-           return false;
-        }
-    }
+    // 发票可以只填写某些项的问题暂时未解决
     if (!recordid) {
         res.status(400).send('params error');
     } else {
