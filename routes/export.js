@@ -24,7 +24,7 @@ router.get('/csv/:users', function(req, res) {
             getDetailList(users, from, to).then(function(list) {
                 let token = ['csv_', from, to, Date.now()].join('_');
                 let path = pathMD.resolve(__dirname, '..', 'public/static', token + '.csv');
-                let result = list.map(v => [moment(v.date).format('YYYY/MM/DD'), v.good.code, v.good.priceall, v.invs.price, v.user.name, v.invs.code ? v.invs.code : '未上交', moment(v.invs.date).format('YYYY/MM/DD'), v.invs.type, v.mark.content].join('\t'));
+                let result = list.map(v => [moment(v.date).format('YYYY/MM/DD'), v.good.goodcode, v.good.priceall, v.invs.price, v.user.name, v.invs.code ? v.invs.code : '未上交', moment(v.invs.date).format('YYYY/MM/DD'), v.invs.type, v.mark.content].join('\t'));
                 result.unshift(['订单日期', '订单编号', '金额', '发票金额', '买家', '发票状态', '发票时间', '分类', '备注'].join('\t'));
                 fs.writeFile(path, result.join('\n'), function(err) {
                     if (err) {
@@ -75,7 +75,7 @@ router.get('/docx/', function(req, res) {
                     'dd': today.date(),
                     'list': list.map((v) => {
                         return {
-                            code: v.good.code,
+                            code: v.good.goodcode,
                             name: v.good.name,
                             num: v.good.num || 0,
                             price: v.good.price,
