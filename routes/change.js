@@ -151,26 +151,35 @@ router.post('/updateRecord/:recordid', function(req, res) {
         userid: userid,
         recordid: recordid
     };
+    console.log(detail.invs);
+    if(detail.invs.code !== null || !isNaN(detail.invs.price) || !isNaN(detail.invs.date)){
+        if(detail.invs.code !== null || isNaN(detail.invs.price) || isNaN(detail.invs.date)){
+           res.status(400).send(
+                '登记发票时，发票代码，发票上交时间，发票价格必须填写'
+            );
+           return false;
+        }
+    }
     if (!recordid) {
         res.status(400).send('params error');
     } else {
         console.log(detail);
         if (!detail.good.price) {
-            res.status(400).send({
-                msg: '单价填写错误，必须为数字'
-            });
+            res.status(400).send(
+                '单价填写错误，必须为数字'
+            );
         } else if (!detail.good.priceall) {
-            res.status(400).send({
-                msg: '总价填写错误，必须为数字'
-            });
+            res.status(400).send(
+                '总价填写错误，必须为数字'
+            );
         } else if (!detail.good.num) {
-            res.status(400).send({
-                msg: '货物数量必须为数字'
-            });
+            res.status(400).send(
+                '货物数量必须为数字'
+            );
         } else if (!detail.mark.link) {
-            res.status(400).send({
-                msg: '订单链接必填'
-            });
+            res.status(400).send(
+                '订单链接必填'
+            );
         } else {
             updateRecord(detail).then(function() {
                 res.send({
