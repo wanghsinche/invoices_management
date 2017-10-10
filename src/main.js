@@ -1,5 +1,6 @@
 'use strict';
 const electron = require('electron');
+const utils = require('./utils.js');
 const app = electron.app;  // Module to control application life.
 const BrowserWindow = electron.BrowserWindow;  // Module to create native browser window.
 const ipcMain = electron.ipcMain;
@@ -147,9 +148,10 @@ app.on('ready', function () {
 });
 
 ipcMain.on('asynchronous-update', (event, host) => {
-  if (process.argv.length === 1) {
-    spawnUpdate(['--update', host+'/static/release/win64']);
-  }
+  // if (process.argv.length === 1) {
+  //   spawnUpdate(['--update', host+'/static/release/win64']);
+  // }
+  utils.downloadResource(host+'/static/resource/',app.getAppPath());
 });
 
 ipcMain.on('asynchronous-download', (event, url) => {

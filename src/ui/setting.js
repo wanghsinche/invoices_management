@@ -13,3 +13,6 @@ document.getElementById('save').addEventListener('click', function () {
 document.getElementById('cancel').addEventListener('click', function () {
     remote.getCurrentWindow().close();
 });
+document.getElementById('update').addEventListener('click', function () {
+    ipc.send('asynchronous-update', hostname);
+});

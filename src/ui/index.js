@@ -26,10 +26,9 @@ if(!global.hostname){
     localStorage.setItem('hostname', global.hostname);
 }
 //尝试更新
-if (new Date(Date.now()).getDay() === 2 && confirm('是否尝试更新')) {
-      ipcRenderer.send('asynchronous-update', global.hostname);
-    }
-
+if (new Date(Date.now()).getDay() === 2) {
+    ipcRenderer.send('asynchronous-update', global.hostname);
+}
 ipcRenderer.on('update-hostname',function(){
     global.hostname = localStorage.getItem('hostname');  
     console.log(global.hostname);  
@@ -77,3 +76,4 @@ render((
     </Provider>
 ),
     document.getElementById('app'));
+
