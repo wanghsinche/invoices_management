@@ -52,13 +52,13 @@ function getAccessls(database) {
                             resolve({
                                 'role': 'normaluser',
                                 'info': people,
-                                'accessToken': CryptoJS.enc.Base64.stringify(CryptoJS.HmacSHA256('normaltoken', people.userid.toString(), nonce.toString()))
+                                'accessToken': CryptoJS.enc.Base64.stringify(CryptoJS.HmacSHA256([people.userid, nonce].join(''), 'normaltoken'))
                             });
                         } else {
                             resolve({
                                 'role': 'superuser',
                                 'info': people,
-                                'accessToken': CryptoJS.enc.Base64.stringify(CryptoJS.HmacSHA256('supertoken', people.userid.toString(), nonce.toString()))
+                                'accessToken': CryptoJS.enc.Base64.stringify(CryptoJS.HmacSHA256([people.userid, nonce].join(''), 'supertoken'))
                             });
                         }
                     }

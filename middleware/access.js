@@ -3,7 +3,7 @@ const CryptoJS = require('crypto-js');
 const url = require('url');
 
 function checkSuperUser(token, userid, nonce) {
-    var trueToken = CryptoJS.enc.Base64.stringify(CryptoJS.HmacSHA256('supertoken', userid.toString(), nonce.toString()));
+    var trueToken = CryptoJS.enc.Base64.stringify(CryptoJS.HmacSHA256([userid,nonce].join(''),'supertoken'));
     return token === trueToken;
 }
 

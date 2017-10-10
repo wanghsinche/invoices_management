@@ -31,7 +31,7 @@ function simpleCheckNonce(nonce){
 
 function checkToken(usercode, usrpswd, reqnonce, reqtimes, reqstamp, token) {
     console.log(usercode, usrpswd, reqnonce, reqtimes, reqstamp, token);
-    let hash = CryptoJS.HmacSHA256(usercode, usrpswd, reqnonce, reqtimes, reqstamp);
+    let hash = CryptoJS.HmacSHA256([usercode, reqnonce, reqtimes, reqstamp].join(''), usrpswd);
     let hashInBase64 = CryptoJS.enc.Base64.stringify(hash);
     console.log(hashInBase64);
     console.log(token, token === hashInBase64);
