@@ -13,35 +13,34 @@ if (handleSquirrelEvent()) {
   // squirrel event handled and app will exit in 1000ms, so don't do anything else
   app.quit();
 }
+const ChildProcess = require('child_process');
+const path = require('path');
 
+const appFolder = path.resolve(process.execPath, '..');
+const rootAtomFolder = path.resolve(appFolder, '..');
+const updateDotExe = path.resolve(path.join(rootAtomFolder, 'Update.exe'));
+const exeName = path.basename(process.execPath);
+
+const spawn = function (command, args) {
+  let spawnedProcess;
+
+  try {
+    spawnedProcess = ChildProcess.spawn(command, args, { detached: true });
+  } catch (error) { }
+
+  return spawnedProcess;
+};
+const spawnUpdate = function (args) {
+  return spawn(updateDotExe, args);
+};
 function handleSquirrelEvent() {
+
+  const squirrelEvent = process.argv[1];
   if (process.argv.length === 1) {
     return false;
   }
 
-  const ChildProcess = require('child_process');
-  const path = require('path');
 
-  const appFolder = path.resolve(process.execPath, '..');
-  const rootAtomFolder = path.resolve(appFolder, '..');
-  const updateDotExe = path.resolve(path.join(rootAtomFolder, 'Update.exe'));
-  const exeName = path.basename(process.execPath);
-
-  const spawn = function (command, args) {
-    let spawnedProcess, error;
-
-    try {
-      spawnedProcess = ChildProcess.spawn(command, args, { detached: true });
-    } catch (error) { }
-
-    return spawnedProcess;
-  };
-
-  const spawnUpdate = function (args) {
-    return spawn(updateDotExe, args);
-  };
-
-  const squirrelEvent = process.argv[1];
   switch (squirrelEvent) {
     case '--squirrel-install':
     case '--squirrel-updated':
@@ -74,7 +73,7 @@ function handleSquirrelEvent() {
       app.quit();
       return true;
   }
-};
+}
 
 var mainWindow = null, settingWindow = null;
 // Quit when all windows are closed.
@@ -147,6 +146,11 @@ app.on('ready', function () {
 
 });
 
+ipcMain.on('asynchronous-update', (event, host) => {
+  if (process.argv.length === 1) {
+    spawnUpdate(['--update', host+'/static/release/win64']);
+  }
+});
 
 ipcMain.on('asynchronous-download', (event, url) => {
 

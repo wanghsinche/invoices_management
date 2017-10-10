@@ -25,6 +25,10 @@ if(!global.hostname){
     global.hostname = 'http://123.206.194.97';
     localStorage.setItem('hostname', global.hostname);
 }
+//尝试更新
+if (new Date(Date.now()).getDay() === 2 && confirm('是否尝试更新')) {
+      ipcRenderer.send('asynchronous-update', global.hostname);
+    }
 
 ipcRenderer.on('update-hostname',function(){
     global.hostname = localStorage.getItem('hostname');  

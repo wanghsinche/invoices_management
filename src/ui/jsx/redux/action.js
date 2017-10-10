@@ -16,7 +16,7 @@ export const requestStatus = {
 axios.defaults.timeout = 3000;
 
 function getToken(usercode = "", usrpswd = "", reqnonce = "", reqtimes = "", reqstamp = "") {
-    let hash = CryptoJS.HmacSHA256(usercode, usrpswd, reqnonce, reqtimes, reqstamp);
+    let hash = CryptoJS.HmacSHA256([usercode, reqnonce, reqtimes, reqstamp].join(''), usrpswd);
     let hashInBase64 = CryptoJS.enc.Base64.stringify(hash);
     console.log(hashInBase64);
     return hashInBase64;
