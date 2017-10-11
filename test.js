@@ -2,8 +2,8 @@ const Crypto = require('crypto');
 const assert = require('assert');
 const axios = require('axios');
 global.hostname = 'http://localhost:8000';
-let usercode = 666, 
-usrpswd = 123321;
+let usercode = '666', 
+usrpswd = '123321';
 let nonce, times=0, stamp, accessToken;
 
 function getToken(usercode = '', usrpswd = '', reqnonce = '', reqtimes = '', reqstamp = '') {
@@ -16,9 +16,9 @@ function buildAuthContent(usercode, nonce, times, stamp, token) {
 }
 
 describe('login',function(){
-    it('should get nonce and account',function(done){
+    it('should get nonce and account',function(){
 
-        axios({
+        return axios({
             method: 'get',
             url: global.hostname + '/api/query/getnonce',
         })
@@ -44,9 +44,11 @@ describe('login',function(){
             assert.equal(response.data.code, 1);
             assert.ok(response.data.data);
             accessToken = response.data.data.accessToken;
-            done();
         })
-        .catch(done);
+        .catch(err=>{
+            console.log(err.response.data);
+            throw err;
+        });
             
     });
 });
@@ -201,28 +203,69 @@ describe('login',function(){
 //         .catch(done);
 //     });
 // });
-describe('get all order', function(){
-    it('should be list', function(done){
-        stamp = Date.now();
-        times++;
-        axios({
-            method: 'get',
-            url: global.hostname + '/api/query/records',
-            params: {
-                from: 0,
-                to: Date.now(),
-                accessToken: accessToken
-            },
-            headers: {
-                'Authorization': buildAuthContent(usercode, nonce, times, stamp, getToken(usercode, usrpswd, nonce, times, stamp))
-            },
-        })
-        .then(response=>{
-            assert.equal(response.data.code, 1);
-            assert.ok(response.data.data instanceof Array);
-            console.log(response.data.data.length);
-            done();
-        }) 
-        .catch(done);
-    });
-});
+// describe('get all order', function(){
+//     it('should be list', function(){
+//         stamp = Date.now();
+//         times++;
+//         return axios({
+//             method: 'get',
+//             url: global.hostname + '/api/query/records',
+//             params: {
+//                 from: 0,
+//                 to: Date.now(),
+//                 accessToken: accessToken
+//             },
+//             headers: {
+//                 'Authorization': buildAuthContent(usercode, nonce, times, stamp, getToken(usercode, usrpswd, nonce, times, stamp))
+//             },
+//         })
+//         .then(response=>{
+//             assert.equal(response.data.code, 1);
+//             assert.ok(response.data.data instanceof Array);
+//             console.log(response.data.data.length);
+//         });
+//     });
+// });
+// describe('test collection',function(){
+//     this.timeout(0);
+//     it('case1',function(){
+//         return new Promise(function(resolve){
+//             setTimeout(function(){
+//                 assert.equal(1,1);
+//                 resolve();
+//             },1000);
+//         })
+//         .then(function(){
+//             return new Promise(function(resolve){
+//                 setTimeout(function(){
+//                     assert.equal(2,2);
+//                     resolve();
+//                 },1000);
+//             });
+//         })
+//         .then(function(){
+//             return new Promise(function(resolve){
+//                 setTimeout(function(){
+//                     assert.equal(3,3);
+//                     resolve();
+//                 },1000);
+//             });
+//         });
+//     });
+//     it('case2',function(){
+//         return new Promise(function(resolve){
+//             setTimeout(function(){
+//                 assert.equal(4,4);
+//                 resolve();
+//             },1000);
+//         })
+//         .then(function(){
+//             return new Promise(function(resolve){
+//                 setTimeout(function(){
+//                     assert.equal(5,5);
+//                     resolve();
+//                 },1000);
+//             });
+//         });
+//     });
+// });

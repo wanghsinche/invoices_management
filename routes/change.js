@@ -161,13 +161,17 @@ router.post('/updateRecord/:recordid', function(req, res) {
     };
     // 发票可以只填写某些项的问题暂时未解决
     if (!recordid) {
-        res.status(400).send('params error');
+        res.status(400).send({
+                code: -4,
+                msg: '参数错误'
+            });
     } else {
         console.log(detail);
         if (!detail.good.price) {
-            res.status(400).send(
-                
-            );
+            res.status(400).send({
+                code: -4,
+                msg: '单价填写错误，必须为数字'
+            });
         } else if (!detail.good.priceall) {
             res.status(400).send({
                 code: -4,
@@ -190,11 +194,19 @@ router.post('/updateRecord/:recordid', function(req, res) {
                     msg: 'updateRecord success'
                 });
             }).catch(function(err) {
-                res.status(500).send({
-                    code:-1,
-                    msg:'update order error',
-                    data:err
-                });
+                if(typeof err === 'string'){
+                    res.status(500).send({
+                        code:-1,
+                        msg:err
+                    });
+                }
+                else{
+                    res.status(500).send({
+                        code:-1,
+                        msg:'update order error',
+                        data:err
+                    });
+                }
                 console.log(err);
             });
         }

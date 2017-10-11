@@ -1,0 +1,17 @@
+{
+  "name": "vortex_orders",
+  "version": "0.1.0",
+  "description": "vortex_orders app",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "keywords": [
+    "orders"
+  ],
+  "author": "wanghsinche",
+  "license": "MIT",
+  "dependencies": {
+    
+  }
+}

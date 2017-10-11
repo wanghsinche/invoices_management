@@ -203,7 +203,7 @@ function changeDetail(database) {
             });
         }).then(function(recordinfo) {
             if (recordinfo.userid !== userid) {
-                return Promise.reject('forbid to change other user');
+                return Promise.reject('无法修改他人订单');
             } else {
 
                 goodP = new Promise(function(resolve, reject) {

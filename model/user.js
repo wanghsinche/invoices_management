@@ -9,7 +9,7 @@ function getPSWD(database) {
                     reject(err);
                 } else {
                     if (!row) {
-                        reject(err);
+                        reject(-2);
                     } else {
                         resolve(row && {
                             userid: row.rowid,
@@ -34,7 +34,7 @@ function getAccessls(database) {
                     reject(err);
                 } else {
                     if (!row) {
-                        reject(err);
+                        reject(-2);
                     } else {
                         resolve(row);
                     }
@@ -109,7 +109,7 @@ function getUserid(database) {
                     reject(err);
                 } else {
                     if (!row) {
-                        reject(err);
+                        reject(-2);
                     } else {
                         resolve(row && row.userid);
                     }
@@ -132,7 +132,7 @@ function getUseridByCodeAndName(database){
                     reject(err);
                 } else {
                     if (!row) {
-                        reject(err);
+                        reject(-2);
                     } else {
                         resolve(row && row.userid);
                     }

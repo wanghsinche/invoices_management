@@ -1,6 +1,14 @@
 {
 	"version":"1.0.0",
 	"list":[
-		"package.json","2.txt"
+		"index.html",
+        "index.js",
+        "index.map",
+        "main.js",
+        "package.json",
+        "setting.js",
+        "setting.map",
+        "setting.html",
+        "utils.js"
 	]
 }
