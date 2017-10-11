@@ -11,7 +11,8 @@ import {
     CHANGE_PAGE,
     PAGINGNUM,
     SHOW_PAGE,
-    SET_CURRENT
+    SET_CURRENT,
+    REFRESH_CURRENT
 } from './action';
 //reducer is a store that cant hold state, it is created to change states by previous state
 //store is a really store to hold state
@@ -111,6 +112,8 @@ function rdsCurrent(state = {}, action) {
     switch (type) {
         case SET_CURRENT:
             return Object.assign({}, state, detail);
+        case REFRESH_CURRENT:
+            return Object.assign({}, state, {stamp: Date.now()});
         default:
             return state;
     }

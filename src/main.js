@@ -14,28 +14,28 @@ if (handleSquirrelEvent()) {
   // squirrel event handled and app will exit in 1000ms, so don't do anything else
   app.quit();
 }
-const ChildProcess = require('child_process');
-const path = require('path');
 
-const appFolder = path.resolve(process.execPath, '..');
-const rootAtomFolder = path.resolve(appFolder, '..');
-const updateDotExe = path.resolve(path.join(rootAtomFolder, 'Update.exe'));
-const exeName = path.basename(process.execPath);
-
-const spawn = function (command, args) {
-  let spawnedProcess;
-
-  try {
-    spawnedProcess = ChildProcess.spawn(command, args, { detached: true });
-  } catch (error) { }
-
-  return spawnedProcess;
-};
-const spawnUpdate = function (args) {
-  return spawn(updateDotExe, args);
-};
 function handleSquirrelEvent() {
+  const ChildProcess = require('child_process');
+  const path = require('path');
 
+  const appFolder = path.resolve(process.execPath, '..');
+  const rootAtomFolder = path.resolve(appFolder, '..');
+  const updateDotExe = path.resolve(path.join(rootAtomFolder, 'Update.exe'));
+  const exeName = path.basename(process.execPath);
+
+  const spawn = function (command, args) {
+    let spawnedProcess;
+
+    try {
+      spawnedProcess = ChildProcess.spawn(command, args, { detached: true });
+    } catch (error) { }
+
+    return spawnedProcess;
+  };
+  const spawnUpdate = function (args) {
+    return spawn(updateDotExe, args);
+  };
   const squirrelEvent = process.argv[1];
   if (process.argv.length === 1) {
     return false;

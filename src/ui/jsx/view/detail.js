@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
-import { postAndAdd, getDetail } from '../redux/action';
+import { postAndAdd, getDetail, refreshCurrentAction } from '../redux/action';
 import { connect } from 'react-redux';
-import { Pane, Input, TextArea, Button, Toolbar, Actionbar, Icon } from "../photon/photon";
+import { Pane, Input, TextArea, Button, Toolbar, Actionbar, Icon } from '../photon/photon';
 import { EmptyContent } from './modal';
 import DatePicker from 'react-datepicker';
 import moment from 'moment';
@@ -37,6 +37,7 @@ class Detail extends Component {
             username: '',
             canEdit: false
         };
+        this.backup = {};
     }
 
     componentDidMount() {
@@ -65,7 +66,7 @@ class Detail extends Component {
             userid: nextProps.userid || '',
             username: nextProps.username
         });
-
+        
     }
 
 
@@ -112,9 +113,10 @@ class Detail extends Component {
     }
 
     handleCancel() {
-        this.setState({
-            canEdit: false
-        });
+        this.setState(
+            {canEdit: false}
+        );
+        this.props.refreshData();
     }
 
     render() {
@@ -195,6 +197,9 @@ const mapDispatchToProps = (dispatch) => {
     return {
         postData: (recid, data) => {
             dispatch(postAndAdd(recid, data));
+        },
+        refreshData:()=>{
+            dispatch(refreshCurrentAction());
         }
     };
 };

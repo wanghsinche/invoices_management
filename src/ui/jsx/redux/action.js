@@ -66,18 +66,19 @@ export function login(usercodeP, usrpswdP) {
                 }
             });
         }).then(function (response) {
-            accessToken = response.data.accessToken;
+            accessToken = response.data.data.accessToken;
             console.log('login success');
             dispatch(requestAction(requestStatus.SUCCESS));
-            dispatch(saveInfo(usercode, response.data));
+            dispatch(saveInfo(usercode, response.data.data));
         }).catch(function (err) {
             console.log(err.response);
-            if (err.response && (err.response.status == '401' || err.response.status == '403')) {
+            if (err.response.status == '401') {
                 alert('登陆失败，请检查账号密码');
                 dispatch(requestAction(requestStatus.NORMAL));
             }
             else {
                 dispatch(requestAction(requestStatus.ERROR));
+                alert(err.response.data.msg);
             }
         });
     };
@@ -96,18 +97,19 @@ export function refreshState() {
             }
         })
         .then(function (response) {
-            accessToken = response.data.accessToken;
+            accessToken = response.data.data.accessToken;
             console.log('login success');
             dispatch(requestAction(requestStatus.SUCCESS));
-            dispatch(saveInfo(usercode, response.data));
+            dispatch(saveInfo(usercode, response.data.data));
         }).catch(function (err) {
             console.log(err.response);
-            if (err.response.status == '401' || err.response.status == '403') {
+            if (err.response.status == '401') {
                 alert('刷新失败，请检查账号密码');
                 dispatch(requestAction(requestStatus.NORMAL));
             }
             else {
                 dispatch(requestAction(requestStatus.ERROR));
+                alert(err.response.data.msg);
             }
         });
     };
@@ -155,10 +157,10 @@ export function refreshRecordsAction(users, from, to) {
             }
         }).then(function (res) {
             dispatch(requestAction(requestStatus.SUCCESS));
-            dispatch(refreshRecords(res.data));
+            dispatch(refreshRecords(res.data.data));
         }).catch(function (err) {
             dispatch(requestAction(requestStatus.ERROR));
-            alert(err.response.data.msg);
+            alert(err.response.data.data.msg);
         });
     };
 }
@@ -179,28 +181,28 @@ export function postAndAdd(recid, data) {
             },
             data: data
         }).then((res) => {
-            if (parseInt(res.data.code, 10) === 1) {
-                console.log(res.data.msg);
+            if (Number(res.data.code) === 1) {
                 dispatch(requestAction(requestStatus.SUCCESS));
                 dispatch(updateRecord({ code: data.invscode, priceall: data.priceall, recid: recid }));
                 alert('success');
             }
             else {
                 dispatch(requestAction(requestStatus.ERROR));
-                alert('1'+res.data.msg);
-                console.log(res.data.msg);
+                dispatch(refreshCurrentAction());
+                alert(res.data.msg);
             }
 
         }).catch((err) => {
-            if(err.response.status == '500' || /40/.test(err.response.status))
+            if(/40/.test(err.response.status))
             {
-                alert('2'+err.response.data.msg);
+                alert(err.response.data.msg);
                 dispatch(requestAction(requestStatus.NORMAL));
             }
             else{
                 dispatch(requestAction(requestStatus.ERROR));
+                alert(err.response.data.msg);
             }
-            
+            dispatch(refreshCurrentAction());
         });
     };
 }
@@ -221,21 +223,25 @@ export function putNewRecord(data) {
             },
             data: data
         }).then((res) => {
-            if (parseInt(res.data.code, 10) === 1) {
-                console.log(res.data.msg);
+            if (Number(res.data.code) === 1) {
                 dispatch(requestAction(requestStatus.SUCCESS));
                 alert('添加成功');
             }
             else {
-                alert(res);
                 dispatch(requestAction(requestStatus.ERROR));
-                console.log(res.msg);
+                alert(res.data.msg);
             }
 
         }).catch((err) => {
-            console.log(err.response, 'err');
-            alert(err.response.data&&err.response.data.msg);
-            dispatch(requestAction(requestStatus.ERROR));
+            if(/40/.test(err.response.status))
+            {
+                alert(err.response.data.msg);
+                dispatch(requestAction(requestStatus.NORMAL));
+            }
+            else{
+                dispatch(requestAction(requestStatus.ERROR));
+                alert(err.response.data.msg);
+            }
         });
     };
 }
@@ -270,14 +276,20 @@ export function pageShowAction(show) {
 
 //current
 export const SET_CURRENT = 'SET_CURRENT';
-
+export const REFRESH_CURRENT = 'REFRESH_CURRENT';
 export function setCurrentAction(detail) {
+    // 加上stamp是保证 detail.js 中的componentWillReceiveProps能够每次都更新，这样可以刷新掉修改过的state
     return {
         type: SET_CURRENT,
-        detail: detail
+        detail: Object.assign({},detail,{stamp: Date.now()})
     };
 }
-
+export function refreshCurrentAction() {
+    // 加上stamp是保证 detail.js 中的componentWillReceiveProps能够每次都更新，这样可以刷新掉修改过的state
+    return {
+        type: REFRESH_CURRENT
+    };
+}
 export function getDetail(recid) {
     return function (dispatch) {
         dispatch(requestAction(requestStatus.REQUEST));
@@ -294,10 +306,10 @@ export function getDetail(recid) {
             }
         }).then(function (res) {
             dispatch(requestAction(requestStatus.SUCCESS));
-            dispatch(setCurrentAction(res.data));
+            dispatch(setCurrentAction(res.data.data));
         }).catch(function (err) {
+            alert(err.response.msg);
             dispatch(requestAction(requestStatus.ERROR));
-            alert(err.response);
         });
     };
 }
@@ -321,9 +333,17 @@ export function changePswd(password) {
         }).then(function (res) {
             dispatch(requestAction(requestStatus.SUCCESS));
             usrpswd = password;
-            alert("密码修改成功");
+            alert('密码修改成功');
         }).catch(function (err) {
-            dispatch(requestAction(requestStatus.ERROR));
+            if(/40/.test(err.response.status))
+            {
+                alert(err.response.data.msg);
+                dispatch(requestAction(requestStatus.NORMAL));
+            }
+            else{
+                dispatch(requestAction(requestStatus.ERROR));
+                alert(err.response.data.msg);
+            }
         });
     };
 }
@@ -382,7 +402,15 @@ export function createUser(code, name, email) {
             dispatch(requestAction(requestStatus.SUCCESS));
             alert('创建成功，密码已发至用户邮箱');
         }).catch(function (err) {
-            dispatch(requestAction(requestStatus.ERROR));
+            if(/40/.test(err.response.status))
+            {
+                alert(err.response.data.msg);
+                dispatch(requestAction(requestStatus.NORMAL));
+            }
+            else{
+                dispatch(requestAction(requestStatus.ERROR));
+                alert(err.response.data.msg);
+            }
         });
     };
 }
@@ -401,7 +429,6 @@ export function changeUser(userid, superuser){
             params: {
                 accessToken: accessToken
             },
-            contentType: 'application/json; charset=utf-8',
             headers: {
                 'Authorization': buildAuthContent(usercode, nonce, times++, stamp, token)
             }
@@ -410,8 +437,15 @@ export function changeUser(userid, superuser){
             dispatch(refreshState());
             alert('修改权限成功，列表刷新');
         }).catch(function (err) {
-            dispatch(requestAction(requestStatus.ERROR));
-            console.log(err);
+            if(/40/.test(err.response.status))
+            {
+                alert(err.response.data.msg);
+                dispatch(requestAction(requestStatus.NORMAL));
+            }
+            else{
+                dispatch(requestAction(requestStatus.ERROR));
+                alert(err.response.data.msg);
+            }
         });
     };
 }
