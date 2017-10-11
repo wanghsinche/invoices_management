@@ -1,4 +1,4 @@
-const CryptoJS = require('crypto-js');
+const Crypto = require('crypto');
 
 function getPSWD(database) {
     return (usercode) => {
@@ -52,13 +52,13 @@ function getAccessls(database) {
                             resolve({
                                 'role': 'normaluser',
                                 'info': people,
-                                'accessToken': CryptoJS.enc.Base64.stringify(CryptoJS.HmacSHA256([people.userid, nonce].join(''), 'normaltoken'))
+                                'accessToken': Crypto.createHmac('sha256', 'normaltoken').update([people.userid, nonce].join('')).digest('base64')
                             });
                         } else {
                             resolve({
                                 'role': 'superuser',
                                 'info': people,
-                                'accessToken': CryptoJS.enc.Base64.stringify(CryptoJS.HmacSHA256([people.userid, nonce].join(''), 'supertoken'))
+                                'accessToken': Crypto.createHmac('sha256', 'supertoken').update([people.userid, nonce].join('')).digest('base64')
                             });
                         }
                     }
@@ -94,22 +94,6 @@ function getAccessls(database) {
                 row.role = 'normaluser';
                 msg.accessList = [row];
                 return Promise.resolve(msg);
-                // return new Promise((resolve, reject) => {
-                //     database.get('SELECT rowid as userid, name, code FROM users WHERE rowid = ' + msg.info.userid, (err, row) => {
-                //         if (err) {
-                //             reject(err);
-                //         } else {
-                //             if (!row) {
-                //                 reject(err);
-                //             } else {
-                //                 row.role = 'normaluser';
-                //                 msg.accessList = [row];
-                //                 resolve(msg);
-                //             }
-                //         }
-                //     });
-
-                // });
             }
         });
         return bigPromise;
@@ -121,6 +105,29 @@ function getUserid(database) {
         console.log('getPSWD read data base');
         var bigPromise = new Promise((resolve, reject) => {
             database.get('SELECT rowid as userid FROM users WHERE code = ?',  usercode, (err, row) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    if (!row) {
+                        reject(err);
+                    } else {
+                        resolve(row && row.userid);
+                    }
+
+                }
+            });
+        });
+        return bigPromise;
+    };
+}
+
+function getUseridByCodeAndName(database){
+    return (usercode, username) => {
+        console.log('getPSWD read data base');
+        var bigPromise = new Promise((resolve, reject) => {
+            database.get('SELECT rowid AS userid FROM users WHERE code = $usercode AND name = $username',  
+                {$usercode: usercode, $username: username}, 
+                (err, row) => {
                 if (err) {
                     reject(err);
                 } else {
@@ -221,6 +228,7 @@ function removeSuper(database) {
 module.exports.getPSWD = getPSWD;
 module.exports.getAccessls = getAccessls;
 module.exports.getUserid = getUserid;
+module.exports.getUseridByCodeAndName = getUseridByCodeAndName;
 module.exports.createUser = createUser;
 module.exports.changePSWD = changePSWD;
 module.exports.makeSuper = makeSuper;

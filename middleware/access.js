@@ -1,9 +1,9 @@
 // relay on token middelware
-const CryptoJS = require('crypto-js');
+const Crypto = require('crypto');
 const url = require('url');
 
 function checkSuperUser(token, userid, nonce) {
-    var trueToken = CryptoJS.enc.Base64.stringify(CryptoJS.HmacSHA256([userid,nonce].join(''),'supertoken'));
+    var trueToken = Crypto.createHmac('sha256', 'supertoken').update([userid,nonce].join('')).digest('base64');
     return token === trueToken;
 }
 

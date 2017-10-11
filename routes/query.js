@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const getRecordList = require('../model/index').getAllInfo;
+const getAllUsersList = require('../model/index').getAllUsersList;
 const getDetail = require('../model/index').getDetail;
 const url = require('url');
 const accessMiddelware = require('../middleware/access');
@@ -26,20 +27,74 @@ router.get('/records/:users', function (req, res) {
 
     if (users && from && to) {
         if ((users.length > 1 || users[0] != req.extraInfo.userid) && !req.extraInfo.superuser) {
-            res.status(403).send('No enough right');
+            res.status(403).send({
+                code:-3,
+                msg:'need super user'
+            });
         } else {
             getRecordList(users, from, to).then(function (list) {
-                res.send(list);
+                res.send({
+                    code:1,
+                    msg:'get records successfully',
+                    data: list
+                });
             }).catch(function (err) {
+                res.status(500).send({
+                    code:-1,
+                    msg:'server error at query.js //records/:users',
+                    data:err
+                });
                 console.log(err);
             });
         }
     } else {
-        res.end('error');
+        res.status(400).send({
+            code: -4,
+            msg: '请求格式错误'
+        });
     }
 
 });
 
+router.get('/records', function (req, res) {
+
+    let {
+            from,
+            to
+        } = url.parse(req.url, true).query;
+
+
+
+    if (from && to) {
+        if (!req.extraInfo.superuser) {
+            res.status(403).send({
+                code:-3,
+                msg:'need super user'
+            });
+        } else {
+            getAllUsersList(from, to).then(function (list) {
+                res.send({
+                    code:1,
+                    msg:'get records successfully',
+                    data: list
+                });
+            }).catch(function (err) {
+                res.status(500).send({
+                    code:-1,
+                    msg:'server error at query.js //records/',
+                    data:err
+                });
+                console.log(err);
+            });
+        }
+    } else {
+        res.status(400).send({
+            code: -4,
+            msg: '请求格式错误'
+        });
+    }
+
+});
 
 router.get('/detail/:recordid', function (req, res) {
 
@@ -48,18 +103,32 @@ router.get('/detail/:recordid', function (req, res) {
     if (recordid) {
         getDetail(recordid).then(function (detail) {
             if (detail.userid === req.extraInfo.userid || req.extraInfo.superuser) {
-                res.send(detail);
+                res.send({
+                    code:1,
+                    msg:'get detail successfully',
+                    data: detail
+                });
             }
             else {
-                res.status(403).send('no enough right');
+                res.status(403).send({
+                    code:-3,
+                    msg:'need super user'
+                });
             }
 
         }).catch(function(err){
             console.log(err);
-            res.status(500).send(err);
+            res.status(500).send({
+                code:-1,
+                msg:'server error at query.js detail/:recordid',
+                data:err
+            });
         });
     } else {
-        res.status(400).end('Bad request');
+        res.status(400).send({
+            code: -4,
+            msg: '请求格式错误'
+        });
     }
 
 });

@@ -167,7 +167,82 @@ function getAllDetail(database) {
     };
 }
 
+function getAllUsersList(database) {
+    return (from, to) => {
+        console.log('read data base');
+        var bigPromise = new Promise((resolve, reject) => {
+            database.all('SELECT rowid as recid, goodid, userid, invoiceid, markid, date FROM records WHERE date < $to AND date >= $from',
+                {$to: to, $from: from},
+                (err, rows) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(rows);
+                    }
+                });
+        }).then(result => {
+            let goodcon = result.map(v => v.goodid).join(','),
+                invscon = result.map(v => v.invoiceid).join(',');
 
+            let goodP, invsP, recordP, userP;
+
+            userP = new Promise((resolve, reject) => {
+                database.all('SELECT rowid as userid, name FROM users', function(err, rows) {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(rows);
+                    }
+                });
+            });
+            goodP = new Promise((resolve, reject) => {
+                database.all('SELECT rowid as goodid, name, priceall FROM goods WHERE rowid in (' + goodcon + ')', function(err, rows) {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(rows);
+                    }
+                });
+            });
+            invsP = new Promise((resolve, reject) => {
+                database.all('SELECT rowid as invsid, code FROM invoices WHERE rowid in (' + invscon + ')', function(err, rows) {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(rows);
+                    }
+                });
+            });
+
+
+            recordP = Promise.resolve(result);
+
+            return Promise.all([recordP, goodP, invsP, userP]);
+        }).then(([recordls, goodls, invsls, userP]) => {
+            //list to map
+            var goodmap = {},
+                invsmap = {},
+                usermap = {};
+            array2Map(goodls, goodmap, 'goodid');
+            array2Map(invsls, invsmap, 'invsid');
+            array2Map(userP, usermap, 'userid');
+
+            // attention recordls has been change since element is object
+            return Promise.resolve(
+                recordls.map(v => {
+                    return Object.assign({}, v, {
+                        name: goodmap['goodid' + v.goodid].name,
+                        priceall: goodmap['goodid'+v.goodid].priceall,
+                        code: invsmap['invsid' + v.invoiceid].code,
+                        user: usermap['userid' + v.userid].name
+                    });
+                }).sort((a,b)=>{return b.date - a.date;})
+            );
+        });
+        return bigPromise;
+    };
+}
 
 module.exports.getAllInfo = getAllInfo;
 module.exports.getAllDetail = getAllDetail;
+module.exports.getAllUsersList = getAllUsersList;

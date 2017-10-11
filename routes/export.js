@@ -19,7 +19,10 @@ router.get('/csv/:users', function(req, res) {
         } = url.parse(req.url, true).query;
     if (users && from && to) {
         if ((users.length > 1 || users[0] !== req.extraInfo.userid) && !req.extraInfo.superuser) {
-            res.status(403).send('No enough right');
+            res.status(403).send({
+                code:-3,
+                msg:'need super user'
+            });
         } else {
             getDetailList(users, from, to).then(function(list) {
                 let token = ['csv_', from, to, Date.now()].join('_');
@@ -28,14 +31,12 @@ router.get('/csv/:users', function(req, res) {
                 result.unshift(['订单日期', '订单编号', '金额', '发票金额', '买家', '发票状态', '发票时间', '分类', '备注'].join('\t'));
                 fs.writeFile(path, result.join('\n'), function(err) {
                     if (err) {
-                        res.status(500);
-                        console.log(err);
                         return Promise.reject(err);
                     } else {
-                        res.setHeader('Content-Type', 'application/json');
                         res.send({
+                            code: 1,
                             msg: 'export successfully',
-                            path: '/static/' + token + '.csv'
+                            data:{path: '/static/' + token + '.csv'}
                         });
                         setTimeout(function() {
                             fs.unlinkSync(path);
@@ -43,11 +44,19 @@ router.get('/csv/:users', function(req, res) {
                     }
                 });
             }).catch(function(err) {
+                res.status(500).send({
+                    code:-1,
+                    msg:'server error at export.js //csv/:users',
+                    data:err
+                });
                 console.log(err);
             });
         }
     } else {
-        res.end('error');
+        res.status(400).send({
+            code: -4,
+            msg: '请求格式错误'
+        });
     }
 
 });
@@ -98,14 +107,12 @@ router.get('/docx/', function(req, res) {
                 // buf is a nodejs buffer, you can either write it to a file or do anything else with it.
                 fs.writeFile(dest, buf, function(err) {
                     if (err) {
-                        res.status(500);
-                        console.log(err);
                         return Promise.reject(err);
                     } else {
-                        res.setHeader('Content-Type', 'application/json');
                         res.send({
+                            code: 1,
                             msg: 'export successfully',
-                            path: '/static/' + token + '.docx'
+                            data:{path: '/static/' + token + '.docx'}
                         });
                         setTimeout(function() {
                             fs.unlinkSync(dest);
@@ -113,10 +120,18 @@ router.get('/docx/', function(req, res) {
                     }
                 });
             }).catch(function(err) {
+                res.status(500).send({
+                    code:-1,
+                    msg:'server error at export.js //docx/',
+                    data:err
+                });
                 console.log(err);
             });
     } else {
-        res.end('error');
+        res.status(400).send({
+            code: -4,
+            msg: '请求格式错误'
+        });
     }
 
 });

@@ -12,12 +12,14 @@ function closeDataBase(){
 
 module.exports.getAllInfo = recordls.getAllInfo(database);
 module.exports.getAllDetail = recordls.getAllDetail(database);
+module.exports.getAllUsersList = recordls.getAllUsersList(database);
 module.exports.getDetail = detail.getDetail(database);
 module.exports.insertDetail = detail.insertDetail(database);
 module.exports.updateDetail = detail.changeDetail(database);
 module.exports.getPSWD = user.getPSWD(database);
 module.exports.getAccess = user.getAccessls(database);
 module.exports.getUserid = user.getUserid(database);
+module.exports.getUseridByCodeAndName = user.getUseridByCodeAndName(database);
 module.exports.createUser = user.createUser(database);
 module.exports.changePassword = user.changePSWD(database);
 module.exports.makeSuper = user.makeSuper(database);

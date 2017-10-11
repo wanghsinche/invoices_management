@@ -7,6 +7,17 @@
 * add users and change password  [done]
 * import and export exl [done]
 * export docx [done]
+* MD5存密码  
+* 统一消息提醒和回应格式  [done]  
+* 密码重置功能 [done]  
+* 获取所有人的接口 [done]  
+## code  
+* 0 need login 200  
+* -1 error    
+* -2 login fail 401   
+* -3 no enough right 403   
+* -4 格式错误  400   
+* 1 ok 
 
 ```javascript
 digest = base64encode(hmac("johndoe", "secret", "GET+/users/johndoe/financialrecords+20apr201312:59:24+nonce"))

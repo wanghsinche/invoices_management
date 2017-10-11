@@ -10,3 +10,9 @@ module.exports.patchConsole_log=function(target){
     next.apply(this, arguments);
   };
 };
+module.exports.logToDb=function(){
+  logdb.run('INSERT INTO console VALUES ($time, $log)',{
+        $time: Date.now(),
+        $log: Array.prototype.join.call(arguments,';')
+    });
+};
