@@ -7,7 +7,8 @@ class Tbody extends Component {
         let { fetchData } = this.props;
         let users, from, to = Date.now();
         if (userid === 'all') {
-            users = this.props.accessList.map(v=>v.userid);
+            users = 'all';
+            // users = this.props.accessList.map(v=>v.userid);
         }
         else {
             users = [userid];

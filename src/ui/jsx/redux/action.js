@@ -140,13 +140,14 @@ export function updateRecord(record) {
     };
 }
 export function refreshRecordsAction(users, from, to) {
+    var url = users === 'all'? global.hostname + '/api/query/records':global.hostname + '/api/query/records/' + users.join('+');
     return function (dispatch) {
         dispatch(requestAction(requestStatus.REQUEST));
         let stamp = Date.now().toString();
         let token = getToken(usercode, usrpswd, nonce, times.toString(), stamp);
         return axios({
             method: 'get',
-            url: global.hostname + '/api/query/records/' + users.join('+'),
+            url: url,
             params: {
                 from: from,
                 to: to,

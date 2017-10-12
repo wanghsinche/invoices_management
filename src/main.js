@@ -147,11 +147,11 @@ app.on('ready', function () {
 
 });
 
-ipcMain.on('asynchronous-update', (event, host) => {
+ipcMain.on('asynchronous-update', (event, host, slience) => {
   // if (process.argv.length === 1) {
   //   spawnUpdate(['--update', host+'/static/release/win64']);
   // }
-  utils.downloadResource(host+'/static/resource/',app.getAppPath());
+  utils.downloadResource(host+'/static/resource/',app.getAppPath(), slience);
 });
 
 ipcMain.on('asynchronous-download', (event, url) => {
