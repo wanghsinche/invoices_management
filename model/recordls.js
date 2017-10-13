@@ -71,7 +71,7 @@ function getAllInfo(database) {
             return Promise.resolve(
                 recordls.map(v => {
                     return Object.assign({}, v, {
-                        name: goodmap['goodid' + v.goodid].name,
+                        name: goodmap['goodid' + v.goodid].name.slice(0,40),
                         priceall: goodmap['goodid'+v.goodid].priceall,
                         code: invsmap['invsid' + v.invoiceid].code,
                         user: usermap['userid' + v.userid].name
@@ -231,7 +231,7 @@ function getAllUsersList(database) {
             return Promise.resolve(
                 recordls.map(v => {
                     return Object.assign({}, v, {
-                        name: goodmap['goodid' + v.goodid].name,
+                        name: goodmap['goodid' + v.goodid].name.slice(0,40),
                         priceall: goodmap['goodid'+v.goodid].priceall,
                         code: invsmap['invsid' + v.invoiceid].code,
                         user: usermap['userid' + v.userid].name
