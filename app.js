@@ -1,7 +1,7 @@
 // global.myDataBase = './database/formal.db';
-global.myDataBase = './database/real.db';
-global.nonceDataBase = './database/nonce.db';
-global.logDataBase = './database/log.db';
+global.myDataBase = '/data/database/my_invs_server/real.db';//'./database/real.db';
+global.nonceDataBase = '/data/database/my_invs_server/nonce.db';//'./database/nonce.db';
+global.logDataBase = '/data/database/my_invs_server/log.db';//'./database/log.db';
 global.linkRecv = 'vortexdoctor@zju.edu.cn';//'wang.xinzhe@qq.com'; test
 let
     express = require('express'),
