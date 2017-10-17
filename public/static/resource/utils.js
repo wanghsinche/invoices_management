@@ -21,7 +21,7 @@ function downloadFile(url, dest){
 }
 
 
-module.exports.downloadResource=function(url, appPath){
+module.exports.downloadResource=function(url, appPath, slience){
     // get resource map
     http.get(url+'files.json',function(res){
         res.setEncoding('utf8');
@@ -61,7 +61,7 @@ module.exports.downloadResource=function(url, appPath){
                             dialog.showMessageBox({
                                 type:'info',
                                 title:'升级',
-                                message:'成功升级到'+remote,
+                                message:'成功升级到'+remote+'，请重新启动程序',
                                 buttons:['ok']
                             });
                         })
@@ -80,12 +80,14 @@ module.exports.downloadResource=function(url, appPath){
                 
             }
             else{
-                dialog.showMessageBox({
-                    type:'info',
-                    title:'升级',
-                    message:'当前版本'+curr+'已经是最新',
-                    buttons:['ok']
-                });
+                if(!slience){
+                    dialog.showMessageBox({
+                        type:'info',
+                        title:'升级',
+                        message:'当前版本'+curr+'已经是最新',
+                        buttons:['ok']
+                    });
+                }
             }
           } catch (e) {
             console.error(e.message);

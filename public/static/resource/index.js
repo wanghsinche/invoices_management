@@ -133,8 +133,8 @@
 	    localStorage.setItem('hostname', global.hostname);
 	}
 	//尝试更新
-	if (new Date(Date.now()).getDay() === 2) {
-	    _electron.ipcRenderer.send('asynchronous-update', global.hostname);
+	if (new Date().getDay() === 2) {
+	    _electron.ipcRenderer.send('asynchronous-update', global.hostname, true);
 	}
 	_electron.ipcRenderer.on('update-hostname', function () {
 	    global.hostname = localStorage.getItem('hostname');
@@ -24302,13 +24302,14 @@
 	    };
 	}
 	function refreshRecordsAction(users, from, to) {
+	    var url = users === 'all' ? global.hostname + '/api/query/records' : global.hostname + '/api/query/records/' + users.join('+');
 	    return function (dispatch) {
 	        dispatch(requestAction(requestStatus.REQUEST));
 	        var stamp = Date.now().toString();
 	        var token = getToken(usercode, usrpswd, nonce, times.toString(), stamp);
 	        return (0, _axios2.default)({
 	            method: 'get',
-	            url: global.hostname + '/api/query/records/' + users.join('+'),
+	            url: url,
 	            params: {
 	                from: from,
 	                to: to,
@@ -24518,7 +24519,7 @@
 	            }
 	        }).then(function (res) {
 	            dispatch(requestAction(requestStatus.SUCCESS));
-	            _electron.ipcRenderer.send('asynchronous-download', global.hostname + res.data.path);
+	            _electron.ipcRenderer.send('asynchronous-download', global.hostname + res.data.data.path);
 	        }).catch(function (err) {
 	            dispatch(requestAction(requestStatus.ERROR));
 	        });
@@ -39034,9 +39035,8 @@
 	                from = void 0,
 	                to = Date.now();
 	            if (userid === 'all') {
-	                users = this.props.accessList.map(function (v) {
-	                    return v.userid;
-	                });
+	                users = 'all';
+	                // users = this.props.accessList.map(v=>v.userid);
 	            } else {
 	                users = [userid];
 	            }
