@@ -369,7 +369,7 @@ export function exportFile(type, from, to, users) {
             }
         }).then(function (res) {
             dispatch(requestAction(requestStatus.SUCCESS));
-            ipcRenderer.send('asynchronous-download', global.hostname + res.data.path);
+            ipcRenderer.send('asynchronous-download', global.hostname + res.data.data.path);
         }).catch(function (err) {
             dispatch(requestAction(requestStatus.ERROR));
         });
