@@ -3,7 +3,7 @@
     "name":"express-server",
     "main":"app.js",
     "scripts":{
-        "start":"node app.js",
+        "start":"node app.js >> nodelog.log",
         "test":"mocha test.js"
     },
     "dependencies": {
