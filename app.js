@@ -15,6 +15,10 @@ let
     patch = require('./utils/patch');
 
 // patch.patchConsole_log(console);
+setTimeout(function logtime(){
+    console.log((new Date()).toLocaleDateString());
+    setTimeout(logtime, 1000*3600*24);
+}, 1000*3600*24);
 
 app.use(cors());
 
