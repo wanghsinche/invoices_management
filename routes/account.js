@@ -61,11 +61,21 @@ router.put('/create', accessMiddelware,function (req, res) {
             });
         })
         .catch(function(err){
-            res.status(500).send({
-                code:-1,
-                msg:'server error at account.js /create',
-                data:err
-            });
+            if(err === -1){
+                console.log('用户已经存在');
+                res.send({
+                    code:-1,
+                    msg:'用户已经存在',
+                    data:err
+                });
+            }else{
+                res.status(500).send({
+                    code:-1,
+                    msg:'server error at account.js /create',
+                    data:err
+                });
+            }
+            
             console.log(err);
         });
     }

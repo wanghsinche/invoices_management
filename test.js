@@ -52,6 +52,36 @@ describe('login',function(){
             
     });
 });
+describe('createuser',function(){
+    it('it should be failed', function(done){
+        stamp = Date.now();
+        times++;
+        axios({
+            method:'put',
+            url: global.hostname + '/api/account/create/',
+            params: {
+                accessToken: accessToken
+            },
+            headers: {
+                'Authorization': buildAuthContent(usercode, nonce, times, stamp, getToken(usercode, usrpswd, nonce, times, stamp))
+            },
+            data:{
+                usercode:'111',
+                username:'ax',
+                emailAddress:'13082806906@163.com'
+            }
+        })
+        .then(response=>{
+            assert.notEqual(response.data.code, 1);
+            done();
+        }) 
+        .catch(err=>{
+            assert.equal(err.response.status, 400);
+            done();
+        })
+        .catch(done);
+    });
+});
 // describe('fail login',function(){
 //     it('should get nonce and account',function(done){
 

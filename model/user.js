@@ -148,6 +148,22 @@ function createUser(database) {
     return (usercode, username, password) => {
         console.log('create user ', usercode, username);
         var bigPromise = new Promise((resolve, reject) => {
+            database.get('SELECT rowid AS userid FROM users WHERE code = $usercode',  
+                {$usercode: usercode}, 
+                (err, row) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    if (row) {
+                        reject(-1);
+                    } else {
+                        resolve();
+                    }
+
+                }
+            });
+        })
+        .then(()=>new Promise((resolve, reject)=>{
             database.run('INSERT INTO users (name, pswd, code) VALUES ($username, $password, $usercode)', {
                 $username: username,
                 $password: password,
@@ -160,7 +176,7 @@ function createUser(database) {
                     resolve(this.lastID);
                 }
             });
-        });
+        }));
         return bigPromise;
     };
 }

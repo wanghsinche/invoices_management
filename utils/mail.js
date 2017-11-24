@@ -16,7 +16,7 @@ let transporter = nodemailer.createTransport({
 module.exports.init = function (emailAddress) {
     return function (good, user, link, content, type) {
         // setup email data with unicode symbols
-        let mailOptions;
+        let mailOptions, retryTime = 3;
 
         switch (type) {
             case 1:
@@ -39,12 +39,20 @@ module.exports.init = function (emailAddress) {
                 break;
         }
 
-        // send mail with defined transport object
-        transporter.sendMail(mailOptions, (error, info) => {
-            if (error) {
-                return console.log(error);
-            }
-            console.log('Message %s sent: %s', info.messageId, info.response);
-        });
+        // send mail with defined transport object, and retry when error
+        setTimeout(function ii(){
+            transporter.sendMail(mailOptions, (error, info) => {
+                if (error) {
+                    console.log(error);
+                    if(retryTime){
+                        retryTime--;
+                        console.log('retry');
+                        setTimeout(ii, 5000);
+                    }
+                }
+                console.log('Message %s sent: %s', info.messageId, info.response);
+            });
+        }, 0);
+        
     };
 };

@@ -4,6 +4,7 @@
     "main":"app.js",
     "scripts":{
         "start":"node app.js >> nodelog.log",
+        "dev":"node app.js",
         "test":"mocha test.js"
     },
     "dependencies": {
