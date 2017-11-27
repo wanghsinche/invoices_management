@@ -50,7 +50,9 @@ module.exports.init = function (emailAddress) {
                         setTimeout(ii, 5000);
                     }
                 }
-                console.log('Message %s sent: %s', info.messageId, info.response);
+                else{
+                    console.log('Message %s sent: %s', info.messageId, info.response);
+                }
             });
         }, 0);
         
