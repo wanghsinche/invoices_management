@@ -18,7 +18,7 @@ module.exports.loadFromConfig = function(){
     let config;
     if(!!argvMap.config){
         try{
-            config = fs.readFileSync(path.resolve(__dirname, argvMap.config), 'utf8');
+            config = fs.readFileSync(path.resolve(__dirname,'../', argvMap.config), 'utf8');
             config = JSON.parse(config);
         }
         catch(e){
