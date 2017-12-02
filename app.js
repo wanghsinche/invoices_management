@@ -5,6 +5,11 @@ global.nonceDataBase = argvMap.nonce||'./database/nonce.db';
 global.logDataBase = argvMap.log||'./database/log.db';
 global.linkRecv = argvMap.email||'wang.xinzhe@qq.com'; 
 global.port = argvMap.port||8000;
+console.log(global.myDataBase);
+console.log(global.nonceDataBase);
+console.log(global.logDataBase);
+console.log(global.linkRecv);
+console.log(global.port);
 let
     express = require('express'),
     app = express(),
