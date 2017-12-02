@@ -1,7 +1,21 @@
-// global.myDataBase = './database/formal.db';
-global.myDataBase = '/data/database/my_invs_server/real.db';//'./database/real.db';
-global.nonceDataBase = '/data/database/my_invs_server/nonce.db';//'./database/nonce.db';
-global.logDataBase = '/data/database/my_invs_server/log.db';//'./database/log.db';
+function simpleArgvMatch(argvls){
+    let argvmap = {}, name='', value='', matchResult;
+    const regexp = /^\-([a-zA-z_]+)\=([a-zA-z0-9\.\/]+)/;
+    argvls.forEach((val)=>{
+        matchResult = val.match(regexp);
+        if(matchResult && matchResult.length>2){
+            name = matchResult[1];
+            value = matchResult[2];   
+            argvmap[name] = value;
+        }
+    });
+    return argvmap;
+}
+let argvMap = simpleArgvMatch(process.argv);
+
+global.myDataBase = argvMap.real||'./database/real.db';
+global.nonceDataBase = argvMap.nonce||'./database/nonce.db';
+global.logDataBase = argvMap.log||'./database/log.db';
 global.linkRecv = 'vortexdoctor@zju.edu.cn';//'wang.xinzhe@qq.com'; test
 let
     express = require('express'),
