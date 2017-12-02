@@ -26,7 +26,7 @@ router.get('/csv/:users', function(req, res) {
         } else {
             getDetailList(users, from, to).then(function(list) {
                 let token = ['csv_', from, to, Date.now()].join('_');
-                let path = pathMD.resolve(__dirname, '..', 'public/static', token + '.csv');
+                let path = pathMD.resolve(__dirname, '..', 'public/static', token + '.txt');
                 let result = list.map(v => [moment(v.date).format('YYYY/MM/DD'), v.good.goodcode, v.good.priceall, v.invs.price, v.user.name, v.invs.code ? v.invs.code : '未上交', moment(v.invs.date).format('YYYY/MM/DD'), v.invs.type, v.mark.content].join('\t'));
                 result.unshift(['订单日期', '订单编号', '金额', '发票金额', '买家', '发票状态', '发票时间', '分类', '备注'].join('\t'));
                 fs.writeFile(path, result.join('\n'), function(err) {
@@ -36,7 +36,7 @@ router.get('/csv/:users', function(req, res) {
                         res.send({
                             code: 1,
                             msg: 'export successfully',
-                            data:{path: '/static/' + token + '.csv'}
+                            data:{path: '/static/' + token + '.txt'}
                         });
                         setTimeout(function() {
                             fs.unlinkSync(path);
