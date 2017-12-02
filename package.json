@@ -5,7 +5,7 @@
   "scripts": {
     "start": "node app.js >> nodelog.log",
     "dev": "node app.js",
-    "produce": "node app.js -real=/data/database/my_invs_server/real.db -nonce=/data/database/my_invs_server/nonce.db -log=/data/database/my_invs_server/log.db >> nodelog.log",
+    "produce": "node app.js -config=./config.json >> nodelog.log",
     "test": "mocha test.js"
   },
   "dependencies": {

@@ -1,0 +1,8 @@
+{
+    "name":"invioce server configure file",
+    "real":"/data/database/my_invs_server/real.db",
+    "nonce":"/data/database/my_invs_server/nonce.db",
+    "log":"/data/database/my_invs_server/log.db",
+    "email":"vortexdoctor@zju.edu.cn",
+    "port":8000
+}

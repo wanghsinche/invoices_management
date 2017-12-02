@@ -1,22 +1,10 @@
-function simpleArgvMatch(argvls){
-    let argvmap = {}, name='', value='', matchResult;
-    const regexp = /^\-([a-zA-z_]+)\=([a-zA-z0-9\.\/]+)/;
-    argvls.forEach((val)=>{
-        matchResult = val.match(regexp);
-        if(matchResult && matchResult.length>2){
-            name = matchResult[1];
-            value = matchResult[2];   
-            argvmap[name] = value;
-        }
-    });
-    return argvmap;
-}
-let argvMap = simpleArgvMatch(process.argv);
-
+const argv = require('./utils/argv.js');
+let argvMap = argv.loadFromConfig() || argv.getArgvMap();
 global.myDataBase = argvMap.real||'./database/real.db';
 global.nonceDataBase = argvMap.nonce||'./database/nonce.db';
 global.logDataBase = argvMap.log||'./database/log.db';
-global.linkRecv = 'vortexdoctor@zju.edu.cn';//'wang.xinzhe@qq.com'; test
+global.linkRecv = argvMap.email||'wang.xinzhe@qq.com'; 
+global.port = argvMap.port||8000;
 let
     express = require('express'),
     app = express(),
@@ -44,7 +32,7 @@ app.use('/api/account', account);
 app.use('/api/change', change);
 app.use('/api/export', exportDetail);
 
-app.listen(8000, () => {
+app.listen(global.port, () => {
     console.log('listening on 8000');
 });
 
