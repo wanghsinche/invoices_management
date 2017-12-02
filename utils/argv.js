@@ -1,4 +1,5 @@
 const fs = require('fs');
+const path = require('path');
 function simpleArgvMatch(argvls){
     let argvmap = {}, name='', value='', matchResult;
     const regexp = /^\-([a-zA-z_]+)\=([a-zA-z0-9\.\/\:]+)/;
@@ -17,7 +18,7 @@ module.exports.loadFromConfig = function(){
     let config;
     if(!!argvMap.config){
         try{
-            config = fs.readFileSync(argvMap.config, 'utf8');
+            config = fs.readFileSync(path.resolve(__dirname, argvMap.config), 'utf8');
             config = JSON.parse(config);
         }
         catch(e){
