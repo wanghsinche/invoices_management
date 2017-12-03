@@ -18,7 +18,7 @@ setTimeout(function clearNoncedb(period) {
 
     setTimeout(clearNoncedb, period, period);
 
-}, 1000 * 60 * 60);
+}, 1000 * 60 * 60, 1000 * 60 * 60);
 
 
 function generateNonce() {
