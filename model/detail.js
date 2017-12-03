@@ -5,7 +5,7 @@
 
 function getDetail(database) {
     return (recordid) => {
-        console.log('read data base');
+        global.logger.info('read data base');
         var bigPromise = new Promise((resolve, reject) => {
             database.get('SELECT rowid as recid, goodid, userid, invoiceid , markid, date FROM records WHERE rowid = ' + recordid, (err, row) => {
                 if (err) {
@@ -16,7 +16,7 @@ function getDetail(database) {
             });
         }).then(result => {
             let goodP, invsP, recordP, userP, markP;
-            console.log(result);
+            global.logger.info(result);
             userP = new Promise((resolve, reject) => {
                 database.get('SELECT name as username FROM users WHERE rowid = ' + result.userid, function(err, row) {
                     if (err) {
@@ -76,7 +76,7 @@ function insertDetail(database) {
     // 先 good, invs, mark
     // 再record
     return (detail) => {
-        console.log('insert detail to data base');
+        global.logger.info('insert detail to data base');
         let goodP, invsP, markP, {
             good,
             invs,
@@ -111,10 +111,10 @@ function insertDetail(database) {
                     $code: good.code
                 }, function(err) {
                     if (err) {
-                        console.log(err);
+                        global.logger.error(err);
                         reject(err);
                     } else {
-                        console.log('insert rowid is ' + this.lastID);
+                        global.logger.info('insert rowid is ' + this.lastID);
                         resolve(this.lastID);
                     }
                 });
@@ -127,10 +127,10 @@ function insertDetail(database) {
                     $type: invs.type
                 }, function(err) {
                     if (err) {
-                        console.log(err);
+                        global.logger.error(err);
                         reject(err);
                     } else {
-                        console.log('insert rowid is ' + this.lastID);
+                        global.logger.info('insert rowid is ' + this.lastID);
                         resolve(this.lastID);
                     }
                 });
@@ -141,10 +141,10 @@ function insertDetail(database) {
                     $content: mark.content
                 }, function(err) {
                     if (err) {
-                        console.log(err);
+                        global.logger.error(err);
                         reject(err);
                     } else {
-                        console.log('insert rowid is ' + this.lastID);
+                        global.logger.info('insert rowid is ' + this.lastID);
                         resolve(this.lastID);
                     }
                 });
@@ -158,10 +158,10 @@ function insertDetail(database) {
                     $date: Date.now()
                 }, function(err) {
                     if (err) {
-                        console.log(err);
+                        global.logger.error(err);
                         reject(err);
                     } else {
-                        console.log('insert rowid is ' + this.lastID);
+                        global.logger.info('insert rowid is ' + this.lastID);
                         resolve(this.lastID);
                     }
                 });
@@ -180,7 +180,7 @@ function changeDetail(database) {
     // 先 good, invs, mark
     // 再record
     return (detail) => {
-        console.log('change detail to data base');
+        global.logger.info('change detail to data base');
         let goodP, invsP, markP, {
             recordid,
             good,
@@ -221,7 +221,7 @@ function changeDetail(database) {
 
                     database.run('UPDATE goods SET ' + values.join(',') + ' WHERE rowid = ' + recordinfo.goodid, param, function(err) {
                         if (err) {
-                            console.log(err);
+                            global.logger.error(err);
                             reject(err);
                         } else {
                             resolve(recordinfo.goodid);
@@ -242,7 +242,7 @@ function changeDetail(database) {
 
                     database.run('UPDATE invoices SET ' + values.join(',') + ' WHERE rowid = ' + recordinfo.invoiceid, param, function(err) {
                         if (err) {
-                            console.log(err);
+                            global.logger.error(err);
                             reject(err);
                         } else {
                             resolve(recordinfo.invoiceid);
@@ -263,7 +263,7 @@ function changeDetail(database) {
 
                     database.run('UPDATE marks SET ' + values.join(',') + ' WHERE rowid = ' + recordinfo.markid, param, function(err) {
                         if (err) {
-                            console.log(err);
+                            global.logger.error(err);
                             reject(err);
                         } else {
                             resolve(recordinfo.markid);

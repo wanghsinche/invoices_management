@@ -3,10 +3,10 @@
   "name": "express-server",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js >> nodelog.log",
-    "dev": "node app.js",
+    "start": "node app.js -config=./config-dev.json",
+    "dev": "node app.js -config=./config-dev.json",
     "produce": "node app.js -config=./config.json >> nodelog.log",
-    "test": "mocha test.js"
+    "test": "mocha --recursive ./test"
   },
   "dependencies": {
     "axios": "^0.17.1",
@@ -19,7 +19,8 @@
     "moment": "^2.19.3",
     "node-csv": "^0.1.2",
     "nodemailer": "^4.4.0",
-    "sqlite3": "^3.1.13"
+    "sqlite3": "^3.1.13",
+    "winston": "^2.4.0"
   },
   "devDependencies": {
     "mocha": "^4.0.1"

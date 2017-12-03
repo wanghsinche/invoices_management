@@ -27,9 +27,9 @@ router.get('/csv/:users', function(req, res) {
             getDetailList(users, from, to).then(function(list) {
                 let token = ['csv_', from, to, Date.now()].join('_');
                 let path = pathMD.resolve(__dirname, '..', 'public/static', token + '.txt');
-                let result = list.map(v => [moment(v.date).format('YYYY/MM/DD'), v.good.goodcode, v.good.priceall, v.invs.price, v.user.name, v.invs.code ? v.invs.code : '未上交', moment(v.invs.date).format('YYYY/MM/DD'), v.invs.type, v.mark.content,'\r\n'].join('\t'));
-                result.unshift(['订单日期', '订单编号', '金额', '发票金额', '买家', '发票状态', '发票时间', '分类', '备注','\r\n'].join('\t'));
-                fs.writeFile(path, result.join('\n'), function(err) {
+                let result = list.map(v => [moment(v.date).format('YYYY/MM/DD'), v.good.goodcode, v.good.priceall, v.invs.price, v.user.name, v.invs.code ? v.invs.code : '未上交', moment(v.invs.date).format('YYYY/MM/DD'), v.invs.type, v.mark.content].join('\t'));
+                result.unshift(['订单日期', '订单编号', '金额', '发票金额', '买家', '发票状态', '发票时间', '分类', '备注'].join('\t'));
+                fs.writeFile(path, result.join('\r\n'), function(err) {
                     if (err) {
                         return Promise.reject(err);
                     } else {
@@ -49,7 +49,7 @@ router.get('/csv/:users', function(req, res) {
                     msg:'server error at export.js //csv/:users',
                     data:err
                 });
-                console.log(err);
+                global.logger.error(err);
             });
         }
     } else {
@@ -125,7 +125,7 @@ router.get('/docx/', function(req, res) {
                     msg:'server error at export.js //docx/',
                     data:err
                 });
-                console.log(err);
+                global.logger.error(err);
             });
     } else {
         res.status(400).send({

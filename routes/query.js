@@ -44,7 +44,7 @@ router.get('/records/:users', function (req, res) {
                     msg:'server error at query.js //records/:users',
                     data:err
                 });
-                console.log(err);
+                global.logger.error(err);
             });
         }
     } else {
@@ -84,7 +84,7 @@ router.get('/records', function (req, res) {
                     msg:'server error at query.js //records/',
                     data:err
                 });
-                console.log(err);
+                global.logger.error(err);
             });
         }
     } else {
@@ -117,7 +117,7 @@ router.get('/detail/:recordid', function (req, res) {
             }
 
         }).catch(function(err){
-            console.log(err);
+            global.logger.error(err);
             res.status(500).send({
                 code:-1,
                 msg:'server error at query.js detail/:recordid',

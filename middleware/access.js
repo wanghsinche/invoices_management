@@ -17,6 +17,6 @@ module.exports = function (req, res, next) {
         } = req.extraInfo;
     
     req.extraInfo.superuser = checkSuperUser(accessToken, userid, nonce);
-    console.log(req.extraInfo);
+    global.logger.info(req.extraInfo);
     next();
 };

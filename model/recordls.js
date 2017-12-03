@@ -10,7 +10,7 @@ function array2Map(array, map, key) {
 
 function getAllInfo(database) {
     return (users, from, to) => {
-        console.log('read data base');
+        global.logger.info('read data base');
         var bigPromise = new Promise((resolve, reject) => {
             database.all('SELECT rowid as recid, goodid, userid, invoiceid, markid, date FROM records WHERE userid in (' + users.join(',') + ') AND date <' + to + ' AND date >=' + from,
                 (err, rows) => {
@@ -85,7 +85,7 @@ function getAllInfo(database) {
 
 function getAllDetail(database) {
     return (users, from, to) => {
-        console.log('read data base');
+        global.logger.info('read data base');
         var bigPromise = new Promise((resolve, reject) => {
             database.all('SELECT rowid as recid, goodid, userid, invoiceid, markid, date FROM records WHERE userid in (' + users.join(',') + ') AND date <' + to + ' AND date >=' + from,
                 (err, rows) => {
@@ -169,7 +169,7 @@ function getAllDetail(database) {
 
 function getAllUsersList(database) {
     return (from, to) => {
-        console.log('read data base');
+        global.logger.info('read data base');
         var bigPromise = new Promise((resolve, reject) => {
             database.all('SELECT rowid as recid, goodid, userid, invoiceid, markid, date FROM records WHERE date < $to AND date >= $from',
                 {$to: to, $from: from},

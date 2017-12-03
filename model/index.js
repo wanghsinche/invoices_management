@@ -1,13 +1,12 @@
 const sqlite3 = require('sqlite3').verbose();
-const dburl = global.myDataBase;
-let database = new sqlite3.Database(dburl);
+const config = require('../utils/config.js').getConfig();
+let database = new sqlite3.Database(config.real);
 let recordls = require('./recordls');
 let detail = require('./detail');
 let user = require('./user');
-function closeDataBase(){
+function closeDatabase(){
     database.close();
 }
-
 
 
 module.exports.getAllInfo = recordls.getAllInfo(database);
@@ -24,4 +23,4 @@ module.exports.createUser = user.createUser(database);
 module.exports.changePassword = user.changePSWD(database);
 module.exports.makeSuper = user.makeSuper(database);
 module.exports.removeSuper = user.removeSuper(database);
-module.exports.closeDataBase = closeDataBase;
+module.exports.closeDatabase = closeDatabase;

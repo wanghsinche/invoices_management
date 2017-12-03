@@ -1,15 +1,4 @@
-const argv = require('./utils/argv.js');
-let argvMap = argv.loadFromConfig() || argv.getArgvMap();
-global.myDataBase = argvMap.real||'./database/real.db';
-global.nonceDataBase = argvMap.nonce||'./database/nonce.db';
-global.logDataBase = argvMap.log||'./database/log.db';
-global.linkRecv = argvMap.email||'wang.xinzhe@qq.com'; 
-global.port = argvMap.port||8000;
-console.log(global.myDataBase);
-console.log(global.nonceDataBase);
-console.log(global.logDataBase);
-console.log(global.linkRecv);
-console.log(global.port);
+const config = require('./utils/config.js').getConfig();
 let
     express = require('express'),
     app = express(),
@@ -19,16 +8,11 @@ let
     account = require('./routes/account'),
     exportDetail = require('./routes/export'),
     tokenMiddleWare = require('./middleware/token'),
-    patch = require('./utils/patch');
-
-// patch.patchConsole_log(console);
-setTimeout(function logtime(){
-    console.log((new Date()).toLocaleDateString());
-    setTimeout(logtime, 1000*3600*24);
-}, 1000*3600*24);
-
+    logger = require('./utils/logger'),
+    model = require('./model/index');
+    
+global.logger = logger.logger;
 app.use(cors());
-
 app.use(express.static('public'));
 
 app.use(tokenMiddleWare);
@@ -37,11 +21,12 @@ app.use('/api/account', account);
 app.use('/api/change', change);
 app.use('/api/export', exportDetail);
 
-app.listen(global.port, () => {
-    console.log('listening on 8000');
+app.listen(config.port, () => {
+    console.log(`listening on ${config.port}`);
 });
 
 process.on('SIGINT', function () {
+  model.closeDatabase();
   console.log('Got a exit. Goodbye cruel world');
   process.exit(0);
 });

@@ -8,7 +8,8 @@ const removeSuper = require('../model/index').removeSuper;
 const accessMiddelware = require('../middleware/access');
 const bodyParser = require('body-parser');
 const escapeHTML = require('escape-html');
-const sendMail = require('../utils/mail.js').init(global.linkRecv);
+const config = require('../utils/config.js').getConfig();
+const sendMail = require('../utils/mail.js').init(config.email);
 
 router.use(function(req, res, next) {
     res.setHeader('Content-Type', 'application/json');
@@ -62,7 +63,7 @@ router.put('/create', accessMiddelware,function (req, res) {
         })
         .catch(function(err){
             if(err === -1){
-                console.log('用户已经存在');
+                global.logger.info('用户已经存在');
                 res.send({
                     code:-1,
                     msg:'用户已经存在',
@@ -76,7 +77,7 @@ router.put('/create', accessMiddelware,function (req, res) {
                 });
             }
             
-            console.log(err);
+            global.logger.error(err);
         });
     }
     else{
@@ -116,7 +117,7 @@ router.post('/resetPSWD', accessMiddelware,function (req, res) {
                 msg:'server error at account.js /resetPSWD',
                 data:err
             });
-            console.log(err);
+            global.logger.error(err);
         });
     }
     else{
@@ -147,7 +148,7 @@ router.post('/changePSWD',function (req, res) {
             msg:'server error at account.js /changePSWD',
             data:err
         });
-        console.log(err);
+        global.logger.error(err);
     });
 
 });
@@ -169,7 +170,7 @@ router.post('/makeSuper/:userid', accessMiddelware,function (req, res) {
             msg:'server error at account.js /makeSuper',
             data:err
         });
-        console.log(err);
+        global.logger.error(err);
     });
     }
     else{
@@ -199,7 +200,7 @@ router.delete('/removeSuper/:userid', accessMiddelware,function (req, res) {
             msg:'server error at account.js /removeSuper',
             data:err
         });
-        console.log(err);
+        global.logger.error(err);
     });
     }
     else{

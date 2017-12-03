@@ -2,7 +2,7 @@ const Crypto = require('crypto');
 
 function getPSWD(database) {
     return (usercode) => {
-        console.log('getPSWD read data base');
+        global.logger.info('getPSWD read data base');
         var bigPromise = new Promise((resolve, reject) => {
             database.get('SELECT pswd, rowid FROM users WHERE code = ?', usercode, (err, row) => {
                 if (err) {
@@ -26,7 +26,7 @@ function getPSWD(database) {
 
 function getAccessls(database) {
     return (userid, nonce) => {
-        console.log('get user list');
+        global.logger.info('get user list');
         var superls;
         var bigPromise = new Promise((resolve, reject) => {
             database.get('SELECT rowid as userid, name, code FROM users WHERE rowid = ' + userid, (err, row) => {
@@ -42,7 +42,7 @@ function getAccessls(database) {
             });
         }).then(function (people) {
             return new Promise((resolve, reject) => {
-                console.log(people);
+                global.logger.info(people);
                 database.all('SELECT userid FROM superusers', (err, rows) => {
                     if (err) {
                         reject(err);
@@ -102,7 +102,7 @@ function getAccessls(database) {
 
 function getUserid(database) {
     return (usercode) => {
-        console.log('getPSWD read data base');
+        global.logger.info('getPSWD read data base');
         var bigPromise = new Promise((resolve, reject) => {
             database.get('SELECT rowid as userid FROM users WHERE code = ?',  usercode, (err, row) => {
                 if (err) {
@@ -123,7 +123,7 @@ function getUserid(database) {
 
 function getUseridByCodeAndName(database){
     return (usercode, username) => {
-        console.log('getPSWD read data base');
+        global.logger.info('getPSWD read data base');
         var bigPromise = new Promise((resolve, reject) => {
             database.get('SELECT rowid AS userid FROM users WHERE code = $usercode AND name = $username',  
                 {$usercode: usercode, $username: username}, 
@@ -146,7 +146,7 @@ function getUseridByCodeAndName(database){
 
 function createUser(database) {
     return (usercode, username, password) => {
-        console.log('create user ', usercode, username);
+        global.logger.info('create user ', usercode, username);
         var bigPromise = new Promise((resolve, reject) => {
             database.get('SELECT rowid AS userid FROM users WHERE code = $usercode',  
                 {$usercode: usercode}, 
@@ -183,7 +183,7 @@ function createUser(database) {
 
 function changePSWD(database) {
     return (userid, password) => {
-        console.log('change PSWD ');
+        global.logger.info('change PSWD ');
         var bigPromise = new Promise((resolve, reject) => {
             database.run('UPDATE users SET pswd = $password WHERE rowid = $userid', {
                 $password: password,
@@ -203,7 +203,7 @@ function changePSWD(database) {
 
 function makeSuper(database) {
     return (userid) => {
-        console.log('make super user ', userid);
+        global.logger.info('make super user ', userid);
         var bigPromise = new Promise((resolve, reject) => {
             database.run('INSERT INTO superusers (userid) VALUES ($userid)', {
                 $userid:userid
@@ -223,7 +223,7 @@ function makeSuper(database) {
 
 function removeSuper(database) {
     return (userid) => {
-        console.log('remove super user ', userid);
+        global.logger.info('remove super user ', userid);
         var bigPromise = new Promise((resolve, reject) => {
             database.run('DELETE FROM superusers WHERE userid = $userid', {
                 $userid:userid

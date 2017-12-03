@@ -1,0 +1,7 @@
+{
+    "name":"invioce server dev configure file",
+    "real":"./database/real.db",
+    "log":"./nodelog.log",
+    "email":"13082806906@163.com",
+    "port":8000
+}

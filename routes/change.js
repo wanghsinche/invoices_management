@@ -3,7 +3,8 @@ const newRecord = require('../model/index').insertDetail;
 const updateRecord = require('../model/index').updateDetail;
 const bodyParser = require('body-parser');
 const escapeHTML = require('escape-html');
-const sendMail = require('../utils/mail.js').init(global.linkRecv);
+const config = require('../utils/config.js').getConfig();
+const sendMail = require('../utils/mail.js').init(config.email);
 
 router.use(function(req, res, next) {
     res.setHeader('Content-Type', 'application/json');
@@ -65,7 +66,7 @@ router.put('/newRecord', function(req, res) {
         },
         userid: userid
     };
-    console.log(detail);
+    global.logger.info(detail);
     if (!detail.good.code) {
         res.status(400).send({
             code: -4,
@@ -112,7 +113,7 @@ router.put('/newRecord', function(req, res) {
                 data:{lastid: msg}
             });
         }).catch(function(err) {
-            console.log(err);
+            global.logger.error(err);
             res.status(500).send({
                 code:-1,
                 msg:'create order error',
@@ -166,7 +167,7 @@ router.post('/updateRecord/:recordid', function(req, res) {
                 msg: '参数错误'
             });
     } else {
-        console.log(detail);
+        global.logger.info(detail);
         if (!detail.good.price) {
             res.status(400).send({
                 code: -4,
@@ -207,7 +208,7 @@ router.post('/updateRecord/:recordid', function(req, res) {
                         data:err
                     });
                 }
-                console.log(err);
+                global.logger.error(err);
             });
         }
     }
