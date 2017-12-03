@@ -1,4 +1,5 @@
 ## Todo 
+* **修正post/put的错误，把post理解成update/modify了** 
 * auth on restful api [done]  
 * prevent replay attack [done]
 * post [done]   
